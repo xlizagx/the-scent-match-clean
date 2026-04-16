@@ -229,14 +229,20 @@ export default function PremiumQuiz() {
       .map(([k, v]) => `${k}: ${v}`)
       .join('\n');
     setQuizContext(profileSummary);
-    const response = await base44.integrations.Core.InvokeLLM({
-      prompt: buildPrompt(profileSummary, isSelf),
-      response_json_schema: llmSchema,
-      add_context_from_internet: true,
-      model: 'gemini_3_1_pro'
-    });
-    setProfile(response.personality_profile);
-    setResults(response.recommendations);
+    const response = await fetch("/.netlify/functions/generate", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    prompt: buildPrompt(profileSummary, isSelf),
+    schema: llmSchema
+  })
+});
+
+const data = await response.json();
+    setProfile(data.personality_profile);
+    setResults(data.recommendations);
     setLoading(false);
   };
 
