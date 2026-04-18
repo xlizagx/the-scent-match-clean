@@ -319,7 +319,25 @@ For each fragrance provide:
 Also generate a personality_profile:
 - summary: 2-3 sentences in warm editorial tone
 - traits: 4-6 short labels (e.g. "Quietly Confident", 
-  "Evening Wearer", "Drawn to Warmth")`
+  "Evening Wearer", "Drawn to Warmth")
+  
+FRAGRANCE VERIFICATION — CRITICAL:
+Before recommending any fragrance, verify internally: Does this exact 
+fragrance exist, made by this exact house? If you are not fully certain 
+of both the fragrance name AND the brand together, do not recommend it. 
+Never combine a fragrance name from one house with the name of a 
+different house.
+
+For each fragrance you recommend, first state to yourself: 
+[Fragrance name] is made by [House]. I am certain this is correct. 
+If you cannot confidently complete that statement, choose a different 
+fragrance.
+
+Additional checks:
+- The fragrance name is spelled correctly and exactly as it appears 
+  on the brand's official website or Fragrantica
+- The fragrance is currently available to purchase
+- Never approximate or guess a fragrance name — it must be exact`
 };
 
 const llmSchema = {
@@ -532,7 +550,7 @@ const data = await response.json();
       <CheckoutScreen
         onPurchase={() => runGeneration()}
         onBack={() => { setCheckingOut(false); setReviewing(true); }}
-        price={isAddon ? "£1.99" : "£5.00"}
+        price={isAddon ? "£1.99" : "£4.99"}
         label={isAddon ? "Unlock your next round of matched fragrance recommendations" : "Unlock your 3 individually matched fragrance recommendations"}
       />
     );
