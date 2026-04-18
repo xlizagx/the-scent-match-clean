@@ -545,7 +545,7 @@ const data = await response.json();
     );
   }
 
-  if (checkingOut) {
+  if (checkingOut && !isAddon) {
     return (
       <CheckoutScreen
         onPurchase={() => runGeneration()}
