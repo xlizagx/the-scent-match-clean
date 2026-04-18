@@ -83,6 +83,26 @@ Do not rely on outdated database entries.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
+BUDGET RULES
+
+${budgetBlock}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+CUSTOMER PROFILE
+
+${profileSummary}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ABSOLUTE PRONOUN RULE — ZERO TOLERANCE
+
+${isSelf
+  ? 'MODE: SELF-DISCOVERY. The user is finding a fragrance for THEMSELVES. Every single word of generated text must use YOU/YOUR/YOURS. Prohibited words: they, them, their, the recipient, the wearer. This applies to: personality_profile.summary, traits, why_this_works, why_this_suits, smells_like — everywhere without exception.'
+  : 'MODE: GIFT. The user is buying a fragrance for SOMEONE ELSE. Every single word of generated text must use THEY/THEM/THEIR. Prohibited words: you, your, yours. This applies to: personality_profile.summary, traits, why_this_works, why_this_suits, smells_like — everywhere without exception.'}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 CORE MATCHING PRIORITY
 
 Prioritise in this order:
@@ -160,18 +180,6 @@ originality — NOT from drifting into a different scent family.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-BUDGET RULES
-
-${budgetBlock}
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-CUSTOMER PROFILE
-
-${profileSummary}
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
 RECOMMENDATION STRUCTURE
 
 Return exactly 3 recommendations:
@@ -207,6 +215,9 @@ MUST NOT BE:
 - polarising or divisive
 - niche in a way that reduces accessibility
 - bold ouds, smoke, tar, barnyard, or animalic in character
+- dark, smoky, boozy, or heavily gourmand
+- fragrances with bold, challenging, or acquired taste profiles
+- anything that would not appeal to the majority of people
 
 OPTIMISE FOR: blind buy confidence, broad mass appeal, low rejection 
 risk, gifting reassurance.
