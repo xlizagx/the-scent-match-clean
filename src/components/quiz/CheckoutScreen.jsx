@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Sparkles, Lock, CreditCard, Smartphone, ArrowLeft, CheckCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-export default function CheckoutScreen({ onPurchase, onBack, price = "£5.00", label = "Unlock your 3 individually matched fragrance recommendations" }) {
+export default function CheckoutScreen({ onPurchase, onBack, price = "£4.99", label = "Unlock your 3 individually matched fragrance recommendations" }) {
   const [processing, setProcessing] = useState(false);
   const [method, setMethod] = useState(null);
 
