@@ -8,7 +8,6 @@ import { useLocation } from 'react-router-dom';
 import QuizQuestion from '../components/quiz/QuizQuestion';
 import ResultsDisplay from '../components/shared/ResultsDisplay';
 import QuizReview from '../components/quiz/QuizReview';
-import CheckoutScreen from '../components/quiz/CheckoutScreen';
 import RouteSelector from '../components/quiz/RouteSelector';
 import { quizQuestions } from '../lib/quizQuestions';
 
@@ -553,21 +552,15 @@ const data = await response.json();
         }}
         onBack={() => { scrollTop(); setStep(adaptedQuestions.length - 1); setReviewing(false); }}
         onConfirm={() => {
-          scrollTop();
-          setReviewing(false);
-          setCheckingOut(true);
-        }}
-      />
-    );
-  }
+  scrollTop();
+  setReviewing(false);
 
-  if (checkingOut && !isAddon) {
-    return (
-      <CheckoutScreen
-        onPurchase={() => runGeneration()}
-        onBack={() => { setCheckingOut(false); setReviewing(true); }}
-        price={isAddon ? "£1.99" : "£4.99"}
-        label={isAddon ? "Unlock your next round of matched fragrance recommendations" : "Unlock your 3 individually matched fragrance recommendations"}
+  if (isAddon) {
+    runGeneration();
+  } else {
+    startStripeCheckout();
+  }
+}}
       />
     );
   }
