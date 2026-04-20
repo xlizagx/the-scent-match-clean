@@ -391,6 +391,22 @@ export default function PremiumQuiz() {
 
   // Ensure Q1 always starts at top on initial mount
   useEffect(() => { window.scrollTo({ top: 0, behavior: 'instant' }); }, []);
+    // Handle Stripe payment return
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const payment = params.get('payment');
+    const addonParam = params.get('addon');
+    if (payment === 'success') {
+      window.history.replaceState({}, '', '/quiz');
+      if (addonParam === 'true') {
+        setIsAddon(true);
+        setRoute('gift');
+        setStep(0);
+      } else {
+        runGeneration();
+      }
+    }
+  }, []);
 
   useEffect(() => {
     if (!loading) { setPhraseIndex(0); return; }
