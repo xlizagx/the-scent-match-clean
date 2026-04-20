@@ -56,4 +56,51 @@ export default function CheckoutScreen({ onBack, price = "£4.99", label = "Unlo
             <span className="text-muted-foreground">·</span>
             <span className="text-xs font-body font-semibold text-primary tracking-wider uppercase">One-time only</span>
           </div>
-          <h2 className="font-heading​​​​​​​​​​​​​​​​
+          <h2 className="font-heading text-2xl text-foreground mb-2 leading-tight">
+            Unlock the perfect match
+          </h2>
+          <p className="text-sm text-muted-foreground font-body leading-relaxed mb-4 max-w-xs mx-auto">
+            A small one-time payment for a fragrance choice they'll remember, thoughtfully curated.
+          </p>
+          <div className="flex items-baseline justify-center gap-1.5">
+            <span className="font-heading text-5xl text-foreground">{price}</span>
+          </div>
+        </div>
+
+        {error && (
+          <p className="text-sm text-red-500 text-center mb-4 font-body">{error}</p>
+        )}
+
+        <Button
+          onClick={handlePay}
+          disabled={loading}
+          size="lg"
+          className="bg-primary text-primary-foreground hover:bg-primary/90 font-body text-sm tracking-wide rounded-full h-12 w-full mb-4"
+        >
+          {loading ? (
+            <>
+              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              Preparing payment...
+            </>
+          ) : (
+            <>
+              <Sparkles className="w-4 h-4 mr-2" />
+              Pay {price} — Unlock My Matches
+            </>
+          )}
+        </Button>
+
+        <div className="flex items-center justify-center gap-2 mt-5">
+          <CheckCircle className="w-3.5 h-3.5 text-muted-foreground" />
+          <p className="text-xs text-muted-foreground font-body">Secured by Stripe · Apple Pay & Google Pay accepted</p>
+        </div>
+
+        <div className="text-center mt-4">
+          <a href="/support#how-it-works" className="text-xs text-muted-foreground font-body hover:text-primary transition-colors underline underline-offset-2">
+            How does it work?
+          </a>
+        </div>
+      </motion.div>
+    </div>
+  );
+}
