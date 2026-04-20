@@ -1,5 +1,3 @@
-import Stripe from 'stripe';
-
 export default async (request) => {
   if (request.method !== 'POST') {
     return new Response(JSON.stringify({ error: 'Method not allowed' }), {
@@ -8,13 +6,15 @@ export default async (request) => {
     });
   }
 
-  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+  const stripeKey = process.env.STRIPE_SECRET_KEY;
+  const { default: Stripe } = await import('stripe');
+  const stripe = new Stripe(stripeKey);
 
   const body = await request.json();
   const { isAddon } = body;
   const price = isAddon ? 199 : 499;
-  const label = isAddon 
-    ? 'The Scent Match — Another Round of Recommendations' 
+  const label = isAddon
+    ? 'The Scent Match — Another Round of Recommendations'
     : 'The Scent Match — 3 Personalised Fragrance Recommendations';
 
   const session = await stripe.checkout.sessions.create({
