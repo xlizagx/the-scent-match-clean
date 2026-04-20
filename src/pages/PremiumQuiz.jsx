@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { base44 } from '@/api/base44Client';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -8,12 +7,10 @@ import { useLocation } from 'react-router-dom';
 import QuizQuestion from '../components/quiz/QuizQuestion';
 import ResultsDisplay from '../components/shared/ResultsDisplay';
 import QuizReview from '../components/quiz/QuizReview';
-import CheckoutScreen from '../components/quiz/CheckoutScreen';
 import RouteSelector from '../components/quiz/RouteSelector';
 import { quizQuestions } from '../lib/quizQuestions';
 
 const buildPrompt = (profileSummary, isSelf = false) => {
-  // Parse budget for weighting instructions
   const budgetLine = profileSummary.split('\n').find(l => l.startsWith('budget:'));
   const budgetValue = budgetLine ? budgetLine.replace('budget:', '').trim() : 'open';
   const budgetBlock = budgetValue === 'under_100'
@@ -375,7 +372,7 @@ const LOADING_PHRASES = [
 
 export default function PremiumQuiz() {
   const location = useLocation();
-  const [route, setRoute] = useState(location.state?.route || null); // null | 'gift' | 'self'
+  const [route, setRoute] = useState(location.state?.route || null);
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState({});
   const [loading, setLoading] = useState(false);
@@ -384,26 +381,42 @@ export default function PremiumQuiz() {
   const [profile, setProfile] = useState(null);
   const [quizContext, setQuizContext] = useState('');
   const [reviewing, setReviewing] = useState(false);
-  const [checkingOut, setCheckingOut] = useState(false);
   const [isAddon, setIsAddon] = useState(false);
 
   const isSelf = route === 'self';
 
-  // Ensure Q1 always starts at top on initial mount
   useEffect(() => { window.scrollTo({ top: 0, behavior: 'instant' }); }, []);
-    // Handle Stripe payment return
+
+  // Handle Stripe payment return — answers saved to sessionStorage before redirect
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const payment = params.get('payment');
     const addonParam = params.get('addon');
+
     if (payment === 'success') {
       window.history.replaceState({}, '', '/quiz');
-      if (addonParam === 'true') {
-        setIsAddon(true);
-        setRoute('gift');
-        setStep(0);
-      } else {
-        runGeneration();
+
+      // Restore saved answers and route from sessionStorage
+      const savedAnswers = sessionStorage.getItem('quizAnswers');
+      const savedRoute = sessionStorage.getItem('quizRoute');
+
+      if (savedAnswers && savedRoute) {
+        const parsedAnswers = JSON.parse(savedAnswers);
+        const parsedRoute = savedRoute;
+        const parsedIsSelf = parsedRoute === 'self';
+
+        sessionStorage.removeItem('quizAnswers');
+        sessionStorage.removeItem('quizRoute');
+
+        if (addonParam === 'true') {
+          setIsAddon(true);
+          setRoute(parsedRoute);
+          setAnswers(parsedAnswers);
+          setStep(0);
+        } else {
+          // Run generation immediately with restored answers
+          runGenerationWithData(parsedAnswers, parsedIsSelf);
+        }
       }
     }
   }, []);
@@ -416,13 +429,11 @@ export default function PremiumQuiz() {
     return () => clearInterval(interval);
   }, [loading]);
 
-  // Adapt question wording for self route
   const adaptedQuestions = quizQuestions
     .filter(q => isSelf ? q.id !== 'relationship' : true)
     .map(q => {
       if (!isSelf) return q;
 
-      // Custom overrides for self route
       if (q.id === 'scent_direction') {
         return {
           ...q,
@@ -477,30 +488,70 @@ export default function PremiumQuiz() {
 
   const scrollTop = () => window.scrollTo({ top: 0, behavior: 'instant' });
 
-  const runGeneration = async () => {
-    setCheckingOut(false);
+  // New: accepts answers and isSelf as parameters so it works after page reload
+  const runGenerationWithData = async (answersData, isSelfMode) => {
     scrollTop();
     setLoading(true);
-    const profileSummary = Object.entries(answers)
+    const profileSummary = Object.entries(answersData)
       .filter(([, v]) => v && v !== 'skip')
       .map(([k, v]) => `${k}: ${v}`)
       .join('\n');
     setQuizContext(profileSummary);
-    const response = await fetch("/.netlify/functions/generate", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({
-    prompt: buildPrompt(profileSummary, isSelf),
-    schema: llmSchema
-  })
-});
+    setRoute(isSelfMode ? 'self' : 'gift');
 
-const data = await response.json();
+    const response = await fetch("/.netlify/functions/generate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        prompt: buildPrompt(profileSummary, isSelfMode),
+        schema: llmSchema
+      })
+    });
+
+    const data = await response.json();
     setProfile(data.personality_profile);
     setResults(data.recommendations);
     setLoading(false);
+  };
+
+  const handleConfirmAndPay = async () => {
+    // Save answers and route to sessionStorage before Stripe redirect
+    sessionStorage.setItem('quizAnswers', JSON.stringify(answers));
+    sessionStorage.setItem('quizRoute', route);
+
+    try {
+      const res = await fetch('/api/create-checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ isAddon: false })
+      });
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      }
+    } catch (err) {
+      console.error('Checkout error:', err);
+    }
+  };
+
+  const handleAddonPay = async () => {
+    // Save answers and route to sessionStorage before Stripe redirect
+    sessionStorage.setItem('quizAnswers', JSON.stringify(answers));
+    sessionStorage.setItem('quizRoute', route);
+
+    try {
+      const res = await fetch('/api/create-checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ isAddon: true })
+      });
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      }
+    } catch (err) {
+      console.error('Addon checkout error:', err);
+    }
   };
 
   const startAddonQuiz = (addonRoute) => {
@@ -552,22 +603,7 @@ const data = await response.json();
           setAnswers(prev => ({ ...prev, [questionId]: value }));
         }}
         onBack={() => { scrollTop(); setStep(adaptedQuestions.length - 1); setReviewing(false); }}
-        onConfirm={() => {
-          scrollTop();
-          setReviewing(false);
-          setCheckingOut(true);
-        }}
-      />
-    );
-  }
-
-  if (checkingOut && !isAddon) {
-    return (
-      <CheckoutScreen
-        onPurchase={() => runGeneration()}
-        onBack={() => { setCheckingOut(false); setReviewing(true); }}
-        price={isAddon ? "£1.99" : "£4.99"}
-        label={isAddon ? "Unlock your next round of matched fragrance recommendations" : "Unlock your 3 individually matched fragrance recommendations"}
+        onConfirm={handleConfirmAndPay}
       />
     );
   }
@@ -579,6 +615,7 @@ const data = await response.json();
         onReset={() => { scrollTop(); setResults(null); setAnswers({}); setStep(0); setProfile(null); setRoute(null); setIsAddon(false); }}
         onAddonGift={() => startAddonQuiz('gift')}
         onAddonSelf={() => startAddonQuiz('self')}
+        onAddonPay={handleAddonPay}
         title={isSelf ? "Your Perfect Matches" : "Their Perfect Matches"}
         subtitle={isSelf ? "Expertly curated around your personality and preferences." : "Expertly curated based on their unique personality and preferences."}
         isSelf={isSelf}
