@@ -442,43 +442,15 @@ export default function PremiumQuiz() {
 
   if (reviewing) {
     return (
-      <div className="min-h-screen flex flex-col">
-        <QuizReview
-          answers={answers}
-          questions={adaptedQuestions}
-          onAnswerUpdate={(questionId, value) => {
-            setAnswers(prev => ({ ...prev, [questionId]: value }));
-          }}
-          onBack={() => { scrollTop(); setStep(adaptedQuestions.length - 1); setReviewing(false); }}
-          onConfirm={() => {}}
-        />
-        <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-border px-6 py-4">
-          <div className="max-w-md mx-auto">
-            <button
-              onClick={handleConfirmAndPay}
-              disabled={checkoutLoading}
-              className="w-full bg-primary text-primary-foreground rounded-full h-14 font-body text-sm tracking-wide flex items-center justify-center gap-2 hover:bg-primary/90 transition-colors"
-            >
-              {checkoutLoading ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  Preparing your payment…
-                </>
-              ) : (
-                <>
-                  <Sparkles className="w-4 h-4" />
-                  Pay £4.99 — Unlock My Matches
-                </>
-              )}
-            </button>
-            <div className="flex items-center justify-center gap-2 mt-3">
-              <CheckCircle className="w-3.5 h-3.5 text-muted-foreground" />
-              <p className="text-xs text-muted-foreground font-body">One-time payment · Secured by Stripe · Apple Pay & Google Pay accepted</p>
-            </div>
-          </div>
-        </div>
-        <div className="h-32" />
-      </div>
+      <QuizReview
+        answers={answers}
+        questions={adaptedQuestions}
+        onAnswerUpdate={(questionId, value) => {
+          setAnswers(prev => ({ ...prev, [questionId]: value }));
+        }}
+        onBack={() => { scrollTop(); setStep(adaptedQuestions.length - 1); setReviewing(false); }}
+        onConfirm={handleConfirmAndPay}
+      />
     );
   }
 
