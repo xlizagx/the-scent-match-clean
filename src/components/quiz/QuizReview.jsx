@@ -20,7 +20,7 @@ function getLabel(questions, questionId, value) {
   return opt?.label || value;
 }
 
-export default function QuizReview({ answers, questions, onAnswerUpdate, onConfirm, onBack }) {
+export default function QuizReview({ answers, questions, onAnswerUpdate, onConfirm, onBack, isAddon = false }) {
   const [editingId, setEditingId] = useState(null);
 
   const handleEditClick = (id) => {
@@ -95,6 +95,8 @@ export default function QuizReview({ answers, questions, onAnswerUpdate, onConfi
     })
     .filter(Boolean);
 
+  const price = isAddon ? '£1.99' : '£4.99';
+
   return (
     <div className="min-h-screen flex items-center justify-center px-6 py-20">
       <motion.div
@@ -155,7 +157,7 @@ export default function QuizReview({ answers, questions, onAnswerUpdate, onConfi
           className="bg-primary text-primary-foreground hover:bg-primary/90 font-body text-sm tracking-wide rounded-full h-12 w-full"
         >
           <Sparkles className="w-4 h-4 mr-2" />
-          Pay £4.99 — Unlock My Matches
+          Pay {price} — Unlock My Matches
         </Button>
 
         <p className="text-center text-xs text-muted-foreground font-body mt-4">
