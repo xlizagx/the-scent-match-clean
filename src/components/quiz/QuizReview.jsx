@@ -37,7 +37,6 @@ export default function QuizReview({ answers, questions, onAnswerUpdate, onConfi
     window.scrollTo({ top: 0, behavior: 'instant' });
   };
 
-  // Single question edit view
   if (editingId) {
     const question = questions.find(q => q.id === editingId);
     if (question) {
@@ -89,7 +88,6 @@ export default function QuizReview({ answers, questions, onAnswerUpdate, onConfi
     }
   }
 
-  // All questions for this route (excludes unanswered / skipped ones)
   const reviewItems = questions
     .map(q => {
       const label = getLabel(questions, q.id, answers[q.id]);
@@ -157,7 +155,7 @@ export default function QuizReview({ answers, questions, onAnswerUpdate, onConfi
           className="bg-primary text-primary-foreground hover:bg-primary/90 font-body text-sm tracking-wide rounded-full h-12 w-full"
         >
           <Sparkles className="w-4 h-4 mr-2" />
-          Unlock My Matches
+          Pay £4.99 — Unlock My Matches
         </Button>
 
         <p className="text-center text-xs text-muted-foreground font-body mt-4">
