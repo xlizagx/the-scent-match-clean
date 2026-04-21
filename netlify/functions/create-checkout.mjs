@@ -18,7 +18,7 @@ export default async (request) => {
     : 'The Scent Match — 3 Personalised Fragrance Recommendations';
 
   const session = await stripe.checkout.sessions.create({
-    payment_method_types: ['card', 'apple_pay', 'google_pay', 'paypal'],
+    payment_method_types: ['card', 'paypal'],
     line_items: [{
       price_data: {
         currency: 'gbp',
