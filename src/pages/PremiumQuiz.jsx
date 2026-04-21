@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { ArrowLeft, ArrowRight, Loader2, Sparkles } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Loader2, Sparkles, CheckCircle } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 import QuizQuestion from '../components/quiz/QuizQuestion';
 import ResultsDisplay from '../components/shared/ResultsDisplay';
@@ -20,8 +20,6 @@ const buildPrompt = (profileSummary, isSelf = false) => {
     : budgetValue === '200_plus'
     ? `BUDGET WEIGHTING — CRITICAL: The customer has indicated a budget of £200 and above. Across ALL tiers (Safe, Statement, Wildcard) and any add-on rounds, you MUST prioritise luxury, ultra-niche, and high-end fragrances that typically retail at £200 or more. Do not recommend budget or mid-range options.`
     : `BUDGET WEIGHTING: The customer is open to the best match regardless of price. Do not weight recommendations by price point — focus entirely on match quality.`;
-
-  const pronoun = isSelf ? 'the customer themselves' : 'the recipient';
 
   return `You are an expert fragrance consultant with deep knowledge of thousands 
 of currently available fragrances spanning every house, era, price point, 
@@ -55,7 +53,7 @@ GLOBAL RULES — STRICT AND NON-NEGOTIABLE
    - any fragrance with uncertain availability
 
 3. If there is ANY doubt about availability:
-   → the fragrance MUST be excluded and replaced
+   the fragrance MUST be excluded and replaced
 
 4. All recommendations must be:
    - real fragrances
@@ -63,20 +61,6 @@ GLOBAL RULES — STRICT AND NON-NEGOTIABLE
    - aligned with known scent profiles
 
 5. Do not guess. Do not invent. Do not include uncertain information.
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-SOURCE GUIDELINES
-
-You may use fragrance knowledge from:
-- Fragrantica
-- Official brand websites
-- Trusted retailer listings
-- Other trusted fragrance sources
-
-Fragrantica may be used as a reference point, but other trusted sources 
-should also be used. Availability must always be current and verified. 
-Do not rely on outdated database entries.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -100,204 +84,77 @@ ${isSelf
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-CORE MATCHING PRIORITY
+TIER SCORING — CRITICAL: INDEPENDENT EVALUATION
 
-Prioritise in this order:
-1. Fit to the person
-2. Availability (non-negotiable)
-3. Factual accuracy
-4. Category correctness
-5. Matching explanation quality
-6. Fragrance explanation quality
+Each tier must be selected by running a COMPLETELY SEPARATE scoring 
+process. Do NOT rank fragrances overall and then distribute them across 
+tiers. That approach is WRONG and will produce incorrect results.
 
-Fit must NEVER override availability or accuracy.
+STEP 1 — SAFE MATCH SELECTION:
+Evaluate against SAFE CRITERIA ONLY:
+- How broadly appealing is this fragrance? (weight: 40%)
+- How low is the rejection risk? (weight: 30%)
+- How strong is the profile fit? (weight: 30%)
+Select the highest scorer on THESE criteria only.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+STEP 2 — STATEMENT MATCH SELECTION:
+Start fresh. Evaluate against STATEMENT CRITERIA ONLY:
+- How strong is the wow factor and memorability? (weight: 40%)
+- How distinctive and elevated is the character? (weight: 30%)
+- How strong is the profile fit? (weight: 30%)
+Select the highest scorer on THESE criteria only.
+The Statement Match should make a fragrance enthusiast say "wow."
+Guerlain mainstream releases, Dior Sauvage, and similar widely-known 
+safe choices are WRONG for this tier.
+Think: Initio, Xerjoff, Amouage, Nishane, Thameen, Roja Dove, Byredo.
 
-VARIETY RULE
+STEP 3 — WILDCARD MATCH SELECTION:
+Start fresh. Evaluate against WILDCARD CRITERIA ONLY:
+- How surprising and unexpected is this? (weight: 40%)
+- How original is the note composition? (weight: 30%)
+- How strong is the profile fit? (weight: 30%)
+Select the highest scorer on THESE criteria only.
 
-Do not default to the same familiar or popular fragrances out of habit.
-Always prioritise the strongest possible match based on the user profile 
-and the full breadth of fragrances available to you.
-Do not select a fragrance simply because it is well known or comes to 
-mind quickly.
-Equally, do not avoid a well-known fragrance if it is genuinely the 
-best possible match.
-The goal is to identify the most accurate and appropriate recommendation 
-— not the most obvious or the most obscure.
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-POPULARITY GUIDANCE
-
-Match quality always comes first regardless of how well known a 
-fragrance is. A lesser known fragrance that is a stronger match always 
-beats a well known fragrance that is a weaker match. Popularity is only 
-a relevant factor for the Safe tier where broad recognition and mass 
-appeal contribute to blind buy confidence.
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-MATCH LOGIC — CRITICAL
-
-Each tier must contain the strongest possible match FOR THAT TIER'S 
-CRITERIA — not simply three fragrances ranked by overall quiz match 
-percentage and distributed across tiers.
-
-This means:
-- Safe Match = highest scoring fragrance when evaluated against Safe 
-  criteria (broad appeal, low rejection risk, blind buy confidence)
-- Statement Match = highest scoring fragrance when evaluated against 
-  Statement criteria (wow factor, memorability, enthusiast appeal)
-- Wildcard Match = highest scoring fragrance when evaluated against 
-  Wildcard criteria (surprise, unexpected note composition, discovery)
-
-Each tier has its own scoring lens. A fragrance that scores highest 
-overall may not be the right Safe Match if it lacks mass appeal. A 
-fragrance that scores lower overall may be the perfect Wildcard if 
-it delivers genuine surprise and discovery.
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-TIER PREFERENCE — CRITICAL
-
-The user may specify a preferred fragrance tier — designer, niche, or 
-Middle Eastern. This preference must be respected across ALL three 
-recommendations. Do not recommend outside the selected tier.
-If the preference is open, draw freely across all categories.
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-SCENT FAMILY LOCK — CRITICAL
-
-If a fragrance family (gourmand, floral, fresh, woody, oriental) is 
-specified in the profile, ALL 3 tiers MUST stay clearly within that 
-family. Variation between tiers comes from wearability, boldness, and 
-originality — NOT from drifting into a different scent family.
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-RECOMMENDATION STRUCTURE
-
-Return exactly 3 recommendations:
-1. Safe Match
-2. Statement Match
-3. Wildcard Match
-
-Each recommendation must feel clearly different in role and purpose.
-If two recommendations feel similar → they must be revised.
+CONFIDENCE SCORES — CRITICAL:
+Each score reflects fit against ITS OWN TIER CRITERIA only.
+It is normal for Statement or Wildcard to score higher than Safe.
+Do NOT automatically rank Safe highest, Statement second, Wildcard third.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 SAFE MATCH
 
-The easiest yes. A crowd-pleasing, widely loved fragrance that is a 
-confident blind buy for this profile.
-
-DEFINING QUALITY: Broadly likeable, universally wearable, and familiar 
-enough to feel reassuring. Low risk, low rejection, easy to gift. Must 
-be from a well-known brand OR recognisable to the majority of people. 
-Commonly stocked by mainstream retailers.
-
-MATCH LOGIC: The Safe Match is the highest scoring fragrance when the 
-quiz profile is evaluated against Safe criteria — strong profile 
-alignment COMBINED WITH broad appeal and low rejection risk. It is not 
-simply the highest overall percentage match. A fragrance that aligns 
-well with the quiz profile AND is universally loved and inoffensive will 
-always rank above one that matches the profile more closely but divides 
-opinion.
-
-MUST NOT BE:
-- obscure or difficult to source
-- polarising or divisive
-- niche in a way that reduces accessibility
-- bold ouds, smoke, tar, barnyard, or animalic in character
-- dark, smoky, boozy, or heavily gourmand
-- fragrances with bold, challenging, or acquired taste profiles
-- anything that would not appeal to the majority of people
-
-OPTIMISE FOR: blind buy confidence, broad mass appeal, low rejection 
-risk, gifting reassurance.
+Broadly likeable, universally wearable, confident blind buy.
+Must be from a well-known brand, commonly stocked by mainstream retailers.
+MUST NOT BE polarising, niche, challenging, or divisive.
+OPTIMISE FOR: blind buy confidence, broad mass appeal, low rejection risk.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 STATEMENT MATCH
 
-The wow recommendation. The one that stops people in their tracks and 
-makes them ask "what are you wearing?" More distinctive and elevated 
-than the Safe Match, with genuine wow factor.
-
-DEFINING QUALITY: Known and loved within fragrance communities rather 
-than purely by the general public. Interesting note compositions, 
-distinctive character, and a sense of intentionality that feels special 
-and considered. The Statement Choice should create an emotional reaction 
-— not just appreciation but genuine excitement. It should feel like 
-"wow, this is incredible."
-
-The Statement Match can be niche, Middle Eastern, or designer — it is 
-not limited to niche only. Designer fragrances can absolutely deliver 
-the wow factor this tier demands, particularly when the quiz respondent 
-has selected designer as their preference. Niche will often be more 
-prominent here naturally, but designer is never excluded.
-
-MATCH LOGIC: The Statement Match is the highest scoring fragrance when 
-the quiz profile is evaluated against Statement criteria — strong profile 
-alignment COMBINED WITH distinctiveness, wow factor, and elevated 
-character.
-
-Can be slightly polarising but should remain generally likeable. 
-Extreme polarisation should be avoided.
-
-OPTIMISE FOR: memorability, emotional impact, wow factor, enthusiast 
-appeal, compliment-worthy presence.
+Wow factor. Stops people in their tracks. Distinctive and elevated.
+WRONG choices: Guerlain Mon Guerlain, Dior Sauvage, YSL Black Opium.
+RIGHT choices: Initio, Xerjoff, Amouage, Nishane, Thameen, Roja Dove, Byredo.
+OPTIMISE FOR: memorability, emotional impact, wow factor, enthusiast appeal.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 WILDCARD MATCH
 
-The unexpected recommendation — something with a twist, an unusual note 
-combination, or an unconventional character that still fits this profile 
-brilliantly.
-
-DEFINING QUALITY: The Wildcard does not have to be bold or polarising. 
-It can simply be unexpected — a familiar scent direction with a 
-surprising note, an unusual combination that somehow works, or a 
-fragrance from a lesser known house that most people wouldn't have 
-encountered. It should feel like "I wouldn't have chosen this, but it 
-works brilliantly."
-
-TIER PREFERENCE APPLIES: If the user has selected a specific tier such 
-as designer only, the Wildcard must be found within that tier. If the 
-preference is open, draw freely from artisan perfumers, newer fragrance 
-houses, overlooked niche releases, Middle Eastern hidden gems, and 
-fragrances with unique or surprising note compositions.
-
-MATCH LOGIC: The Wildcard Match is the highest scoring fragrance when 
-the quiz profile is evaluated against Wildcard criteria — strong profile 
-alignment COMBINED WITH surprise, unexpected character, and discovery.
-
-MUST NOT:
-- feel random or gimmicky
-- rely on obscurity alone
-- include discontinued fragrances
-- feel like a poor fit for the profile
-
-OPTIMISE FOR: discovery, surprise, originality, unique note composition, 
-conversation-starting character.
+Unexpected, surprising, original. "I wouldn't have chosen this, but it works."
+MUST NOT feel random or gimmicky.
+OPTIMISE FOR: discovery, surprise, originality, unique note composition.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ANTI-HALLUCINATION CHECK
 
-Before finalising EACH recommendation, confirm:
-- Is this fragrance real?
-- Is it currently in production?
-- Is it currently purchasable?
+Before finalising each recommendation confirm:
+- Is this fragrance real and currently purchasable?
 - Is the description factually accurate?
-- Does it correctly fit its category?
-
-If ANY answer is uncertain:
-→ reject it and replace it
+- Does it correctly fit its tier?
+If ANY answer is uncertain: reject and replace.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -306,35 +163,14 @@ OUTPUT REQUIREMENTS
 For each fragrance provide:
 - fragrance_name: EXACTLY as listed in catalogue
 - brand: EXACTLY as listed in catalogue
-- confidence_score: 70–98
-- smells_like: accurate, vivid, plain-English description 
-  (3-5 specific notes — no exaggeration, no invented details)
+- confidence_score: 70-98 (scored against TIER CRITERIA, not overall)
+- smells_like: accurate, vivid, plain-English (3-5 specific notes)
 - why_this_works: detailed personality-connected reasoning
-- why_this_suits: concise sentence on why this suits their 
-  personality, style, and occasion
+- why_this_suits: concise sentence on fit
 
-Also generate a personality_profile:
+Also generate personality_profile:
 - summary: 2-3 sentences in warm editorial tone
-- traits: 4-6 short labels (e.g. "Quietly Confident", 
-  "Evening Wearer", "Drawn to Warmth")
-  
-FRAGRANCE VERIFICATION — CRITICAL:
-Before recommending any fragrance, verify internally: Does this exact 
-fragrance exist, made by this exact house? If you are not fully certain 
-of both the fragrance name AND the brand together, do not recommend it. 
-Never combine a fragrance name from one house with the name of a 
-different house.
-
-For each fragrance you recommend, first state to yourself: 
-[Fragrance name] is made by [House]. I am certain this is correct. 
-If you cannot confidently complete that statement, choose a different 
-fragrance.
-
-Additional checks:
-- The fragrance name is spelled correctly and exactly as it appears 
-  on the brand's official website or Fragrantica
-- The fragrance is currently available to purchase
-- Never approximate or guess a fragrance name — it must be exact`
+- traits: 4-6 short labels`;
 };
 
 const llmSchema = {
@@ -353,11 +189,11 @@ const llmSchema = {
         type: "object",
         properties: {
           fragrance_name: { type: "string" },
-            brand: { type: "string" },
-            confidence_score: { type: "number" },
-            smells_like: { type: "string" },
-            why_this_works: { type: "string" },
-            why_this_suits: { type: "string" }
+          brand: { type: "string" },
+          confidence_score: { type: "number" },
+          smells_like: { type: "string" },
+          why_this_works: { type: "string" },
+          why_this_suits: { type: "string" }
         }
       }
     }
@@ -382,12 +218,12 @@ export default function PremiumQuiz() {
   const [quizContext, setQuizContext] = useState('');
   const [reviewing, setReviewing] = useState(false);
   const [isAddon, setIsAddon] = useState(false);
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
 
   const isSelf = route === 'self';
 
   useEffect(() => { window.scrollTo({ top: 0, behavior: 'instant' }); }, []);
 
-  // Handle Stripe payment return — answers saved to sessionStorage before redirect
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const payment = params.get('payment');
@@ -396,7 +232,6 @@ export default function PremiumQuiz() {
     if (payment === 'success') {
       window.history.replaceState({}, '', '/quiz');
 
-      // Restore saved answers and route from sessionStorage
       const savedAnswers = sessionStorage.getItem('quizAnswers');
       const savedRoute = sessionStorage.getItem('quizRoute');
 
@@ -409,12 +244,14 @@ export default function PremiumQuiz() {
         sessionStorage.removeItem('quizRoute');
 
         if (addonParam === 'true') {
+          // Addon paid — start fresh quiz
           setIsAddon(true);
+          setResults(null);
+          setProfile(null);
+          setAnswers({});
           setRoute(parsedRoute);
-          setAnswers(parsedAnswers);
           setStep(0);
         } else {
-          // Run generation immediately with restored answers
           runGenerationWithData(parsedAnswers, parsedIsSelf);
         }
       }
@@ -488,7 +325,6 @@ export default function PremiumQuiz() {
 
   const scrollTop = () => window.scrollTo({ top: 0, behavior: 'instant' });
 
-  // New: accepts answers and isSelf as parameters so it works after page reload
   const runGenerationWithData = async (answersData, isSelfMode) => {
     scrollTop();
     setLoading(true);
@@ -515,7 +351,7 @@ export default function PremiumQuiz() {
   };
 
   const handleConfirmAndPay = async () => {
-    // Save answers and route to sessionStorage before Stripe redirect
+    setCheckoutLoading(true);
     sessionStorage.setItem('quizAnswers', JSON.stringify(answers));
     sessionStorage.setItem('quizRoute', route);
 
@@ -531,11 +367,11 @@ export default function PremiumQuiz() {
       }
     } catch (err) {
       console.error('Checkout error:', err);
+      setCheckoutLoading(false);
     }
   };
 
   const handleAddonPay = async () => {
-    // Save answers and route to sessionStorage before Stripe redirect
     sessionStorage.setItem('quizAnswers', JSON.stringify(answers));
     sessionStorage.setItem('quizRoute', route);
 
@@ -554,14 +390,24 @@ export default function PremiumQuiz() {
     }
   };
 
-  const startAddonQuiz = (addonRoute) => {
-    setIsAddon(true);
-    setResults(null);
-    setProfile(null);
-    setAnswers({});
-    setStep(0);
-    setRoute(addonRoute);
-    scrollTop();
+  const startAddonQuiz = async (addonRoute) => {
+    // Save current route before redirecting to Stripe for addon payment
+    sessionStorage.setItem('quizAnswers', JSON.stringify(answers));
+    sessionStorage.setItem('quizRoute', addonRoute);
+
+    try {
+      const res = await fetch('/api/create-checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ isAddon: true })
+      });
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      }
+    } catch (err) {
+      console.error('Addon checkout error:', err);
+    }
   };
 
   if (!route) {
@@ -596,15 +442,43 @@ export default function PremiumQuiz() {
 
   if (reviewing) {
     return (
-      <QuizReview
-        answers={answers}
-        questions={adaptedQuestions}
-        onAnswerUpdate={(questionId, value) => {
-          setAnswers(prev => ({ ...prev, [questionId]: value }));
-        }}
-        onBack={() => { scrollTop(); setStep(adaptedQuestions.length - 1); setReviewing(false); }}
-        onConfirm={handleConfirmAndPay}
-      />
+      <div className="min-h-screen flex flex-col">
+        <QuizReview
+          answers={answers}
+          questions={adaptedQuestions}
+          onAnswerUpdate={(questionId, value) => {
+            setAnswers(prev => ({ ...prev, [questionId]: value }));
+          }}
+          onBack={() => { scrollTop(); setStep(adaptedQuestions.length - 1); setReviewing(false); }}
+          onConfirm={() => {}}
+        />
+        <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-border px-6 py-4">
+          <div className="max-w-md mx-auto">
+            <button
+              onClick={handleConfirmAndPay}
+              disabled={checkoutLoading}
+              className="w-full bg-primary text-primary-foreground rounded-full h-14 font-body text-sm tracking-wide flex items-center justify-center gap-2 hover:bg-primary/90 transition-colors"
+            >
+              {checkoutLoading ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  Preparing your payment…
+                </>
+              ) : (
+                <>
+                  <Sparkles className="w-4 h-4" />
+                  Pay £4.99 — Unlock My Matches
+                </>
+              )}
+            </button>
+            <div className="flex items-center justify-center gap-2 mt-3">
+              <CheckCircle className="w-3.5 h-3.5 text-muted-foreground" />
+              <p className="text-xs text-muted-foreground font-body">One-time payment · Secured by Stripe · Apple Pay & Google Pay accepted</p>
+            </div>
+          </div>
+        </div>
+        <div className="h-32" />
+      </div>
     );
   }
 
@@ -651,7 +525,6 @@ export default function PremiumQuiz() {
   return (
     <div className="min-h-screen px-6 py-20">
       <div className="max-w-md mx-auto">
-        {/* Progress */}
         <div className="mb-10">
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs font-body text-muted-foreground">
@@ -664,7 +537,6 @@ export default function PremiumQuiz() {
           <Progress value={progress} className="h-1" />
         </div>
 
-        {/* Question */}
         <AnimatePresence mode="wait">
           <QuizQuestion
             key={question.id}
@@ -674,7 +546,6 @@ export default function PremiumQuiz() {
           />
         </AnimatePresence>
 
-        {/* Navigation */}
         <div className="flex items-center justify-between mt-10">
           <Button
             variant="ghost"
