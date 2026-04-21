@@ -227,7 +227,6 @@ export default function PremiumQuiz() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const payment = params.get('payment');
-    const addonParam = params.get('addon');
 
     if (payment === 'success') {
       window.history.replaceState({}, '', '/quiz');
@@ -243,17 +242,8 @@ export default function PremiumQuiz() {
         sessionStorage.removeItem('quizAnswers');
         sessionStorage.removeItem('quizRoute');
 
-        if (addonParam === 'true') {
-          // Addon paid — start fresh quiz
-          setIsAddon(true);
-          setResults(null);
-          setProfile(null);
-          setAnswers({});
-          setRoute(parsedRoute);
-          setStep(0);
-        } else {
-          runGenerationWithData(parsedAnswers, parsedIsSelf);
-        }
+        // Always run generation after payment — works for both main and addon
+        runGenerationWithData(parsedAnswers, parsedIsSelf);
       }
     }
   }, []);
@@ -350,6 +340,7 @@ export default function PremiumQuiz() {
     setLoading(false);
   };
 
+  // FIX 1: handleConfirmAndPay uses isAddon so addon pays £1.99, main pays £4.99
   const handleConfirmAndPay = async () => {
     setCheckoutLoading(true);
     sessionStorage.setItem('quizAnswers', JSON.stringify(answers));
@@ -359,7 +350,7 @@ export default function PremiumQuiz() {
       const res = await fetch('/api/create-checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ isAddon: false })
+        body: JSON.stringify({ isAddon: isAddon })
       });
       const data = await res.json();
       if (data.url) {
@@ -371,43 +362,15 @@ export default function PremiumQuiz() {
     }
   };
 
-  const handleAddonPay = async () => {
-    sessionStorage.setItem('quizAnswers', JSON.stringify(answers));
-    sessionStorage.setItem('quizRoute', route);
-
-    try {
-      const res = await fetch('/api/create-checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ isAddon: true })
-      });
-      const data = await res.json();
-      if (data.url) {
-        window.location.href = data.url;
-      }
-    } catch (err) {
-      console.error('Addon checkout error:', err);
-    }
-  };
-
-  const startAddonQuiz = async (addonRoute) => {
-    // Save current route before redirecting to Stripe for addon payment
-    sessionStorage.setItem('quizAnswers', JSON.stringify(answers));
-    sessionStorage.setItem('quizRoute', addonRoute);
-
-    try {
-      const res = await fetch('/api/create-checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ isAddon: true })
-      });
-      const data = await res.json();
-      if (data.url) {
-        window.location.href = data.url;
-      }
-    } catch (err) {
-      console.error('Addon checkout error:', err);
-    }
+  // FIX 2: startAddonQuiz just resets state and starts quiz — no payment here
+  const startAddonQuiz = (addonRoute) => {
+    setIsAddon(true);
+    setResults(null);
+    setProfile(null);
+    setAnswers({});
+    setStep(0);
+    setRoute(addonRoute);
+    scrollTop();
   };
 
   if (!route) {
@@ -450,6 +413,7 @@ export default function PremiumQuiz() {
         }}
         onBack={() => { scrollTop(); setStep(adaptedQuestions.length - 1); setReviewing(false); }}
         onConfirm={handleConfirmAndPay}
+        isAddon={isAddon}
       />
     );
   }
@@ -461,7 +425,6 @@ export default function PremiumQuiz() {
         onReset={() => { scrollTop(); setResults(null); setAnswers({}); setStep(0); setProfile(null); setRoute(null); setIsAddon(false); }}
         onAddonGift={() => startAddonQuiz('gift')}
         onAddonSelf={() => startAddonQuiz('self')}
-        onAddonPay={handleAddonPay}
         title={isSelf ? "Your Perfect Matches" : "Their Perfect Matches"}
         subtitle={isSelf ? "Expertly curated around your personality and preferences." : "Expertly curated based on their unique personality and preferences."}
         isSelf={isSelf}
