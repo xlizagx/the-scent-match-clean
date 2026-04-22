@@ -1,21 +1,13 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from "@/components/ui/button";
-import { Sparkles, Loader2, Feather, ArrowRight, Lock } from 'lucide-react';
+import { Sparkles, Feather, ArrowRight } from 'lucide-react';
 
 export default function AddOnUpsell({ onUnlockGift, onUnlockSelf }) {
-  const [stage, setStage] = useState('idle'); // idle | route | paying | processing
-  const [route, setRoute] = useState(null); // 'gift' | 'self'
+  const [stage, setStage] = useState('idle'); // idle | route
 
   const handleRouteSelect = (selected) => {
-    setRoute(selected);
-    setStage('paying');
-  };
-
-  const handlePay = async () => {
-    setStage('processing');
-    await new Promise(r => setTimeout(r, 1400));
-    if (route === 'gift') {
+    if (selected === 'gift') {
       onUnlockGift();
     } else {
       onUnlockSelf();
@@ -124,47 +116,6 @@ export default function AddOnUpsell({ onUnlockGift, onUnlockSelf }) {
             >
               Cancel
             </button>
-          </motion.div>
-        )}
-
-        {/* PAYING */}
-        {stage === 'paying' && (
-          <motion.div key="paying" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
-            <div className="text-center mb-6">
-              <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
-                <Lock className="w-5 h-5 text-primary" />
-              </div>
-              <p className="font-heading text-xl text-foreground mb-1">One-time payment</p>
-              <p className="font-heading text-4xl text-foreground mb-1">£1.99</p>
-              <p className="text-xs text-muted-foreground font-body">
-                {route === 'gift' ? 'Find Another Perfect Gift — fresh questionnaire' : 'Discover Your Next Favourite — for yourself'}
-              </p>
-            </div>
-
-            <Button
-              onClick={handlePay}
-              className="bg-primary text-primary-foreground hover:bg-primary/90 font-body text-sm tracking-wide rounded-full h-12 w-full mb-3"
-            >
-              <Sparkles className="w-4 h-4 mr-2" />
-              Confirm Payment — £1.99
-            </Button>
-            <p className="text-center text-xs text-muted-foreground font-body">Secured by Stripe · SSL encrypted</p>
-
-            <button
-              onClick={() => setStage('route')}
-              className="text-xs text-muted-foreground font-body hover:text-foreground transition-colors w-full text-center mt-3 block"
-            >
-              ← Back
-            </button>
-          </motion.div>
-        )}
-
-        {/* PROCESSING */}
-        {stage === 'processing' && (
-          <motion.div key="processing" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="text-center py-6">
-            <Loader2 className="w-7 h-7 text-primary animate-spin mx-auto mb-4" />
-            <p className="font-heading text-lg text-foreground mb-1">Processing payment...</p>
-            <p className="text-xs text-muted-foreground font-body">Preparing your new recommendations</p>
           </motion.div>
         )}
 
