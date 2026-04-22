@@ -3,15 +3,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Gem, Sparkles, Feather } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { motion } from 'framer-motion';
-
 export default function HeroSection({ heroImage }) {
   const navigate = useNavigate();
-
   const handleRoute = (route) => {
     // Navigate to quiz with route pre-selected via state
     navigate('/quiz', { state: { route } });
   };
-
   return (
     <section className="relative min-h-[75vh] flex items-center overflow-hidden">
       {/* Background image */}
@@ -23,7 +20,6 @@ export default function HeroSection({ heroImage }) {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-background/30" />
       </div>
-
       <div className="relative z-10 max-w-7xl mx-auto px-6 py-10 md:py-14 w-full">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -37,17 +33,14 @@ export default function HeroSection({ heroImage }) {
               Fragrance Intelligence
             </span>
           </div>
-
           <h1 className="font-heading text-4xl md:text-6xl lg:text-7xl leading-tight tracking-tight text-foreground mb-6">
             Never Get a{' '}
             <span className="text-primary">Fragrance Gift</span>{' '}
             Wrong Again
           </h1>
-
           <p className="font-body text-base md:text-lg text-foreground/75 leading-relaxed mb-8 max-w-lg font-light tracking-wide">
-            Choosing a fragrance as a gift can feel overwhelming. We've spent years developing our knowledge so you don't have to. No time to browse? Tell us a little about them and we'll do the rest.
+            Choosing the perfect fragrance gift isn't easy. We've spent years developing our knowledge so you don't have to. Just answer a few questions and leave the rest to us.
           </p>
-
           {/* Route pills */}
           <div className="flex flex-col sm:flex-row gap-3 mb-3">
             <Button
@@ -68,14 +61,11 @@ export default function HeroSection({ heroImage }) {
               Discover Your Next Favourite
             </Button>
           </div>
-
-
           <p className="text-xs text-primary font-body font-medium">
             Premium scent match • £4.99
           </p>
         </motion.div>
       </div>
-
       {/* Scroll indicator */}
       <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center animate-bounce opacity-60">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="hsl(var(--primary))" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
