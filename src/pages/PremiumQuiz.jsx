@@ -64,6 +64,41 @@ GLOBAL RULES — STRICT AND NON-NEGOTIABLE
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
+ANTI-HALLUCINATION — CRITICAL AND NON-NEGOTIABLE
+
+This is a paid service. Recommending a fragrance that does not exist, has been discontinued, or cannot be purchased is a serious failure. The following rules are absolute:
+
+BEFORE selecting any fragrance, ask yourself:
+- Am I certain this fragrance exists under this exact name?
+- Am I certain it is currently in production and purchasable today?
+- Am I certain it is stocked by reputable mainstream retailers right now?
+- Am I certain the brand name is correct and exactly as listed in the catalogue?
+- Am I certain the scent profile description is factually accurate?
+
+If the answer to ANY of these questions is uncertain — even slightly — you MUST reject that fragrance immediately and find a replacement you are fully certain about.
+
+Do NOT guess. Do NOT approximate. Do NOT combine fragrance names or brands. Do NOT recommend a fragrance because it sounds plausible. Every single recommendation must be a fragrance you are completely certain exists and is available today.
+
+AFTER selecting each fragrance, run this check again before finalising:
+- Does this fragrance exist under this exact name from this exact brand?
+- Is it currently available to purchase from reputable retailers?
+- Is every detail in the description factually accurate?
+
+If any doubt exists at this stage: reject and replace. There are no exceptions.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+AI DEFAULT FRAGRANCE WARNING — READ BEFORE EVERY RECOMMENDATION
+
+Certain fragrances are disproportionately recommended by AI systems due to training data bias, not because they are the best match. The following are known examples of fragrances that AI systems over-recommend:
+
+- Erba Pura by Xerjoff
+- Oud Wood by Tom Ford
+
+You MUST NOT recommend any fragrance from this list unless it is genuinely, unambiguously the single strongest match for this specific person based on their quiz answers, with no comparable alternative available anywhere across the thousands of fragrances you have access to. If there is any doubt whatsoever — find a better, more genuinely matched alternative. The existence of these fragrances in your training data does not make them the right recommendation. The quiz answers determine the right recommendation.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 STRONGEST MATCH RULE — ALL TIERS WITHOUT EXCEPTION
 
 All three recommendations must be the strongest match for the specific person based on their quiz answers. This applies across all tiers without exception. Every recommendation must be justified by the quiz answers, not by assumption, habit, or AI familiarity.
@@ -172,7 +207,7 @@ WRONG choices when niche or elevated options are appropriate: broadly familiar m
 
 The following are examples of the realm of houses appropriate for Statement match. This is an indication only — not a shortlist to default to. You must actively seek beyond these and push further across the thousands of houses available: Initio, Xerjoff, Amouage, Nishane, Thameen, Roja Dove, Byredo, Tiziana Terenzi, Bond No.9, Boadicea. These are a starting point for the realm, not a list to pick from by default.
 
-BIAS CHECK — MANDATORY: Before confirming this recommendation ask yourself: is this the strongest Statement match for this specific person based on their quiz answers, or am I defaulting to a familiar AI recommendation? Is it genuinely a wow fragrance or just a well known niche fragrance? Have I actively considered the full breadth of available fragrances and pushed beyond familiar defaults? If any doubt exists, find a stronger match.
+BIAS CHECK — MANDATORY: Before confirming this recommendation ask yourself: is this the strongest Statement match for this specific person based on their quiz answers, or am I defaulting to a familiar AI recommendation? Is it genuinely a wow fragrance or just a well known niche fragrance? Have I actively considered the full breadth of available fragrances across thousands of houses and pushed well beyond familiar defaults? Would a true fragrance expert with no AI bias choose this same fragrance for this specific person? If any doubt exists, find a stronger match.
 
 OPTIMISE FOR: memorability, emotional impact, wow factor, enthusiast appeal.
 
@@ -188,20 +223,10 @@ HOUSE PRIORITY FOR WILDCARD:
 - If the quiz is open to any style: draw from the full breadth — indie houses, artisan perfumers, lesser known niche houses, unexpected picks from any category. Actively avoid defaulting to the same houses used in Statement
 - If the quiz restricts to a style: find the most unexpected, original offering within that constraint
 
-BIAS CHECK — MANDATORY: Before confirming this recommendation ask yourself: is this genuinely the most surprising and fitting Wildcard for this specific person, or is it just a familiar AI default dressed up as unusual? Have I considered the full breadth of available fragrances including lesser known houses and unexpected picks? If any doubt exists, find something more original.
+BIAS CHECK — MANDATORY: Before confirming this recommendation ask yourself: is this genuinely the most surprising and fitting Wildcard for this specific person, or is it just a familiar AI default dressed up as unusual? Have I considered the full breadth of available fragrances including lesser known houses, indie perfumers, and unexpected picks from across the entire fragrance world? Would a true fragrance expert with no AI bias choose this as the most surprising and coherent match for this specific person? If any doubt exists, find something more original.
 
 MUST NOT feel random or gimmicky. The surprise must be rooted in genuine fit.
 OPTIMISE FOR: discovery, surprise, originality, unique and complex note composition.
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-ANTI-HALLUCINATION CHECK
-
-Before finalising each recommendation confirm:
-- Is this fragrance real and currently purchasable?
-- Is the description factually accurate?
-- Does it correctly fit its tier?
-If ANY answer is uncertain: reject and replace.
 ${addonRule}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -389,7 +414,6 @@ export default function PremiumQuiz() {
     setProfile(data.personality_profile);
     setResults(data.recommendations);
 
-    // Store recommendation names for potential add-on deduplication
     if (data.recommendations) {
       const names = data.recommendations.map(r => `${r.fragrance_name} by ${r.brand}`);
       setPreviousRecommendations(names);
