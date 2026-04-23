@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 
 export default function TermsAndConditions() {
+  useEffect(() => { window.scrollTo(0, 0); }, []);
+
   return (
     <div className="max-w-2xl mx-auto px-6 py-16">
       <Link to="/" className="flex items-center gap-1.5 text-xs text-muted-foreground font-body hover:text-foreground transition-colors mb-10">
