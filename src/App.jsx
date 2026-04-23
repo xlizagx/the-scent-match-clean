@@ -42,6 +42,7 @@ const AuthenticatedApp = () => {
         <Route path="/match" element={<KnownFragrance />} />
         <Route path="/quiz" element={<PremiumQuiz />} />
         <Route path="/support" element={<Support />} />
+        <Route path="/contact" element={<Support />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/terms" element={<TermsAndConditions />} />
         <Route path="/cookies" element={<CookiePolicy />} />
