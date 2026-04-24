@@ -3,61 +3,42 @@ import { motion } from 'framer-motion';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Mail, CheckCircle, Loader2 } from 'lucide-react';
-import { base44 } from '@/api/base44Client';
 
 export default function EmailCapture({ results, profile, quizContext }) {
   const [email, setEmail] = useState('');
   const [optIn, setOptIn] = useState(false);
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleSend = async (e) => {
     e.preventDefault();
     if (!email) return;
     setSending(true);
+    setError(null);
 
-    // Generate premium email-friendly results via LLM
-    const recsList = results.map((r, i) => {
-      const tiers = ['Safe Choice', 'Exciting Choice', 'Unexpected Wow'];
-      return `${tiers[i]}: ${r.fragrance_name} by ${r.brand}\nSmells like: ${r.smells_like}\nWhy they'll love this: ${r.why_this_works}\nMatch confidence: ${r.confidence_score}%`;
-    }).join('\n\n');
+    try {
+      const res = await fetch('/.netlify/functions/send-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email,
+          optIn,
+          results,
+          profile,
+          quizContext,
+        }),
+      });
 
-    const profileSummary = profile
-      ? `Recipient personality: ${profile.summary}\nTraits: ${profile.traits?.join(', ')}`
-      : '';
+      if (res.ok) {
+        setSent(true);
+      } else {
+        setError('Something went wrong. Please try again.');
+      }
+    } catch (err) {
+      setError('Something went wrong. Please try again.');
+    }
 
-    const emailBody = await base44.integrations.Core.InvokeLLM({
-      prompt: `You are a premium fragrance gifting concierge writing a beautiful, warm email on behalf of The Scent Match (thescentmatch.com).
-
-Write a well-structured, elegant HTML email body (no full HTML document — just the inner body content) for a customer who just received their personalised fragrance gift recommendations.
-
-RECIPIENT PROFILE:
-${profileSummary}
-
-QUIZ CONTEXT:
-${quizContext || 'No additional context'}
-
-RECOMMENDATIONS:
-${recsList}
-
-The email should:
-- Open warmly, thanking them for trusting The Scent Match with their gifting
-- Present each of the 3 recommendations clearly with a short summary, smells-like description, and why it suits the recipient
-- Note which is the safe choice, exciting choice, and wow choice
-- Include gifting notes (e.g. "perfect for an evening occasion", "a great first impression")
-- Encourage them to revisit anytime and save for future gifting moments
-- Close warmly in a boutique concierge tone, signed "The Scent Match Team"
-
-Format as clean HTML with inline styles (no CSS classes). Use a dark background (#0a0a0a), warm gold (#C9A84C) accents, serif headings, and readable sans-serif body text.`,
-    });
-
-    await base44.integrations.Core.SendEmail({
-      to: email,
-      subject: "Your Personalised Fragrance Matches — The Scent Match",
-      body: typeof emailBody === 'string' ? emailBody : JSON.stringify(emailBody),
-    });
-
-    setSent(true);
     setSending(false);
   };
 
@@ -114,9 +95,13 @@ Format as clean HTML with inline styles (no CSS classes). Use a dark background 
             className="mt-0.5 accent-primary w-4 h-4 shrink-0"
           />
           <span className="text-xs text-muted-foreground font-body leading-relaxed">
-              Yes, I'd love to receive occasional gifting ideas and new fragrance launches from The Scent Match
-            </span>
+            Yes, I'd love to receive occasional gifting ideas and new fragrance launches from The Scent Match
+          </span>
         </label>
+
+        {error && (
+          <p className="text-xs text-red-500 font-body">{error}</p>
+        )}
 
         <Button
           type="submit"
