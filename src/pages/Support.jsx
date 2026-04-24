@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { base44 } from '@/api/base44Client';
+import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -36,24 +36,6 @@ const FAQS = [
   },
 ];
 
-const HOW_IT_WORKS = [
-  {
-    step: "01",
-    title: "Answer a few thoughtful questions",
-    description: "Tell us about the person you're gifting — their personality, style, scent preferences, and the occasion. A few quick questions, done in minutes."
-  },
-  {
-    step: "02",
-    title: "We thoughtfully interpret your answers",
-    description: "We carefully consider their personality, style, gifting moment, and the kind of scent they'd genuinely love to receive — then match against our verified fragrance catalogue."
-  },
-  {
-    step: "03",
-    title: "Receive three individually matched recommendations instantly",
-    description: "A Safe Match, a Statement Choice, and a Wildcard Discovery — each selected around the recipient, with a confidence score, easy-to-understand description, and direct buy links."
-  },
-];
-
 const ISSUE_TYPES = [
   { value: 'general-enquiry', label: 'General enquiry' },
   { value: 'duplicate-result', label: 'Duplicate result received' },
@@ -85,12 +67,40 @@ export default function Support() {
   const [form, setForm] = useState({ name: '', email: '', issue_type: 'general-enquiry', message: '' });
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.pathname === '/contact') {
+      setTimeout(() => {
+        const el = document.getElementById('contact');
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    } else {
+      window.scrollTo(0, 0);
+    }
+  }, [location.pathname]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitting(true);
-    await base44.entities.SupportTicket.create({ ...form, status: 'open' });
-    setSubmitted(true);
+    try {
+      const formData = new FormData();
+      formData.append('form-name', 'contact');
+      formData.append('name', form.name);
+      formData.append('email', form.email);
+      formData.append('issue_type', form.issue_type);
+      formData.append('message', form.message);
+
+      await fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(formData).toString(),
+      });
+
+      setSubmitted(true);
+    } catch (err) {
+      console.error('Form submission error:', err);
+    }
     setSubmitting(false);
   };
 
@@ -132,11 +142,19 @@ export default function Support() {
               <p className="text-sm text-muted-foreground font-body">We'll be in touch shortly.</p>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="bg-card border border-border/40 rounded-2xl p-8 space-y-5">
+            <form
+              name="contact"
+              method="POST"
+              data-netlify="true"
+              onSubmit={handleSubmit}
+              className="bg-card border border-border/40 rounded-2xl p-8 space-y-5"
+            >
+              <input type="hidden" name="form-name" value="contact" />
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div className="space-y-2">
                   <label className="text-xs font-body font-medium text-muted-foreground uppercase tracking-wider">Full Name</label>
                   <Input
+                    name="name"
                     value={form.name}
                     onChange={e => setForm({ ...form, name: e.target.value })}
                     placeholder="Your name"
@@ -148,6 +166,7 @@ export default function Support() {
                   <label className="text-xs font-body font-medium text-muted-foreground uppercase tracking-wider">Email Address</label>
                   <Input
                     type="email"
+                    name="email"
                     value={form.email}
                     onChange={e => setForm({ ...form, email: e.target.value })}
                     placeholder="you@example.com"
@@ -160,6 +179,7 @@ export default function Support() {
               <div className="space-y-2">
                 <label className="text-xs font-body font-medium text-muted-foreground uppercase tracking-wider">Issue Type</label>
                 <select
+                  name="issue_type"
                   value={form.issue_type}
                   onChange={e => setForm({ ...form, issue_type: e.target.value })}
                   className="w-full bg-secondary border border-border/50 rounded-xl h-11 font-body text-sm text-foreground px-3 focus:outline-none focus:ring-1 focus:ring-ring"
@@ -173,6 +193,7 @@ export default function Support() {
               <div className="space-y-2">
                 <label className="text-xs font-body font-medium text-muted-foreground uppercase tracking-wider">Message</label>
                 <textarea
+                  name="message"
                   value={form.message}
                   onChange={e => setForm({ ...form, message: e.target.value })}
                   placeholder="Tell us what happened or what you need help with..."
@@ -210,8 +231,23 @@ function ReviewSection() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitting(true);
-    await base44.entities.Testimonial.create({ ...form, star_rating: 5, is_featured: false, sort_order: 99 });
-    setSubmitted(true);
+    try {
+      const formData = new FormData();
+      formData.append('form-name', 'review');
+      formData.append('name', form.name);
+      formData.append('location', form.location);
+      formData.append('quote', form.quote);
+
+      await fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(formData).toString(),
+      });
+
+      setSubmitted(true);
+    } catch (err) {
+      console.error('Review submission error:', err);
+    }
     setSubmitting(false);
   };
 
@@ -232,11 +268,19 @@ function ReviewSection() {
           <p className="text-sm text-muted-foreground font-body">Your gifting story means a lot to us.</p>
         </div>
       ) : (
-        <form onSubmit={handleSubmit} className="bg-card border border-border/40 rounded-2xl p-8 space-y-5">
+        <form
+          name="review"
+          method="POST"
+          data-netlify="true"
+          onSubmit={handleSubmit}
+          className="bg-card border border-border/40 rounded-2xl p-8 space-y-5"
+        >
+          <input type="hidden" name="form-name" value="review" />
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <div className="space-y-2">
               <label className="text-xs font-body font-medium text-muted-foreground uppercase tracking-wider">Your Name</label>
               <Input
+                name="name"
                 value={form.name}
                 onChange={e => setForm({ ...form, name: e.target.value })}
                 placeholder="e.g. Sophie R."
@@ -247,6 +291,7 @@ function ReviewSection() {
             <div className="space-y-2">
               <label className="text-xs font-body font-medium text-muted-foreground uppercase tracking-wider">Location</label>
               <Input
+                name="location"
                 value={form.location}
                 onChange={e => setForm({ ...form, location: e.target.value })}
                 placeholder="e.g. London, UK"
@@ -257,6 +302,7 @@ function ReviewSection() {
           <div className="space-y-2">
             <label className="text-xs font-body font-medium text-muted-foreground uppercase tracking-wider">Your Gifting Story</label>
             <textarea
+              name="quote"
               value={form.quote}
               onChange={e => setForm({ ...form, quote: e.target.value })}
               placeholder="Tell us how the gift was received, or what made the match so right..."
