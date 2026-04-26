@@ -61,7 +61,7 @@ exports.handler = async function(event) {
       body: JSON.stringify({
         sender: {
           name: "The Scent Match",
-          email: "hello@thescentmatch.com"
+          email: "info@thescentmatch.com"
         },
         to: [{ email }],
         subject: "Your Personalised Fragrance Matches — The Scent Match",
