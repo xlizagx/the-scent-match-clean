@@ -36,7 +36,7 @@ export default function MemorySection({ memoryImage }) {
             </h2>
             <div className="space-y-4 text-muted-foreground font-body leading-relaxed">
               <p>
-                A single note can transport someone back to their favourite moment — a summer evening, a first date, a feeling of pure joy.
+                A single note can transport someone back to their favourite moment- a summer evening, a first date, a feeling of pure joy.
               </p>
               <p>
                 Scent is the only sense directly linked to the brain's memory and emotion centres.
