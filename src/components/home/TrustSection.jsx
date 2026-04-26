@@ -11,7 +11,7 @@ const items = [
   {
     icon: Heart,
     title: "Avoid expensive misses",
-    description: "Reduce the risk of buying a fragrance they'll never wear. Our matching considers personality, taste, and occasion — turning a risky purchase into a memorable moment."
+    description: "Reduce the risk of buying a fragrance they'll never wear. Our matching considers personality, taste, and occasion- turning a risky purchase into a memorable moment."
   },
   {
     icon: Globe,
@@ -21,7 +21,7 @@ const items = [
   {
     icon: Sparkles,
     title: "Skip the shop overwhelm",
-    description: "No confusing counters, fragrance fatigue, or endless testing. Get clear, personalised recommendations in minutes — without the stress of the fragrance hall."
+    description: "No confusing counters, fragrance fatigue, or endless testing. Get clear, personalised recommendations in minutes- without the stress of the fragrance hall."
   }
 ];
 
