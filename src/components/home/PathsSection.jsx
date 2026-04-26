@@ -18,12 +18,12 @@ const howItWorksSteps = [
   {
     step: "01",
     title: "Answer a few thoughtful questions",
-    description: "Tell us about the person — their personality, style, occasion, and scent preferences. A few quick questions, done in minutes. No fragrance knowledge needed.",
+    description: "Tell us about the person- their personality, style, occasion, and scent preferences. A few quick questions, done in minutes. No fragrance knowledge needed.",
   },
   {
     step: "02",
     title: "We curate the match",
-    description: "Your answers are carefully interpreted and matched against our verified fragrance catalogue — every result is a real, purchasable fragrance selected around their profile.",
+    description: "Your answers are carefully interpreted and matched against our verified fragrance catalogue- every result is a real, purchasable fragrance selected around their profile.",
   },
   {
     step: "03",
