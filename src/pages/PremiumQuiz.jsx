@@ -276,7 +276,7 @@ const llmSchema = {
 const LOADING_PHRASES = [
   "Consulting our fragrance expertise…",
   "Refining your recommendations…",
-  "Finding the perfect match…",
+  "Almost there, putting the finishing touches on your matches…",
 ];
 
 export default function PremiumQuiz() {
@@ -479,6 +479,9 @@ export default function PremiumQuiz() {
               {LOADING_PHRASES[phraseIndex]}
             </motion.p>
           </AnimatePresence>
+          <p className="font-body text-sm text-muted-foreground mt-4">
+            This may take a few moments
+          </p>
         </motion.div>
       </div>
     );
