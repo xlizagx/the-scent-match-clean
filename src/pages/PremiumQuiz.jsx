@@ -9,7 +9,7 @@ import ResultsDisplay from '../components/shared/ResultsDisplay';
 import QuizReview from '../components/quiz/QuizReview';
 import RouteSelector from '../components/quiz/RouteSelector';
 import { quizQuestions } from '../lib/quizQuestions';
-
+ 
 const buildPrompt = (profileSummary, isSelf = false, previousRecommendations = []) => {
   const budgetLine = profileSummary.split('\n').find(l => l.startsWith('budget:'));
   const budgetValue = budgetLine ? budgetLine.replace('budget:', '').trim() : 'open';
