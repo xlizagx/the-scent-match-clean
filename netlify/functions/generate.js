@@ -1,7 +1,6 @@
 exports.handler = async function(event) {
   try {
     const { prompt, schema } = JSON.parse(event.body);
-
     const response = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
       headers: {
@@ -11,7 +10,7 @@ exports.handler = async function(event) {
       },
       body: JSON.stringify({
         model: "claude-sonnet-4-6",
-        max_tokens: 2800,
+        max_tokens: 4000,
         tools: [{ type: "web_search_20250305", name: "web_search" }],
         system: "Return ONLY valid JSON. Do not include markdown, explanation, or code fences.",
         messages: [
@@ -22,42 +21,34 @@ exports.handler = async function(event) {
         ]
       })
     });
-
     const data = await response.json();
-
     if (!response.ok) {
       return {
         statusCode: response.status,
         body: JSON.stringify(data)
       };
     }
-
     const text = data.content
       ?.filter(item => item.type === "text")
       ?.map(item => item.text)
       ?.join("") || "";
-
     if (!text) {
       return {
         statusCode: 500,
         body: JSON.stringify({ error: "No content returned from Claude", data })
       };
     }
-
     const clean = text
       .replace(/^```json\s*/i, "")
       .replace(/^```\s*/i, "")
       .replace(/\s*```$/, "")
       .trim();
-
     const parsed = JSON.parse(clean);
-
     return {
       statusCode: 200,
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(parsed)
     };
-
   } catch (error) {
     return {
       statusCode: 500,
