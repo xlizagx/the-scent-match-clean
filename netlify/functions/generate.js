@@ -11,7 +11,6 @@ exports.handler = async function(event) {
       body: JSON.stringify({
         model: "claude-sonnet-4-6",
         max_tokens: 4000,
-        tools: [{ type: "web_search_20250305", name: "web_search" }],
         system: "Return ONLY valid JSON. Do not include markdown, explanation, or code fences.",
         messages: [
           {
@@ -28,10 +27,7 @@ exports.handler = async function(event) {
         body: JSON.stringify(data)
       };
     }
-    const text = data.content
-      ?.filter(item => item.type === "text")
-      ?.map(item => item.text)
-      ?.join("") || "";
+    const text = data.content?.[0]?.text?.trim();
     if (!text) {
       return {
         statusCode: 500,
