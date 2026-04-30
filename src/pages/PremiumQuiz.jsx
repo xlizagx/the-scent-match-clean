@@ -9,14 +9,14 @@ import ResultsDisplay from '../components/shared/ResultsDisplay';
 import QuizReview from '../components/quiz/QuizReview';
 import RouteSelector from '../components/quiz/RouteSelector';
 import { quizQuestions } from '../lib/quizQuestions';
-  
+
 const buildPrompt = (profileSummary, isSelf = false, previousRecommendations = []) => {
   const budgetLine = profileSummary.split('\n').find(l => l.startsWith('budget:'));
   const budgetValue = budgetLine ? budgetLine.replace('budget:', '').trim() : 'open';
   const budgetBlock = budgetValue === 'under_100'
     ? `BUDGET WEIGHTING — CRITICAL: The customer has indicated a budget of under £100. Across ALL tiers (Safe, Statement, Wildcard) and any add-on rounds, you MUST prioritise fragrances that are typically priced under £100 at retail. Do not recommend fragrances that typically retail above £100 unless there is absolutely no suitable alternative within budget.`
     : budgetValue === '100_200'
-    ? `BUDGET WEIGHTING — CRITICAL: The customer has indicated a budget of £100–£200. Across ALL tiers (Safe, Statement, Wildcard) and any add-on rounds, you MUST prioritise fragrances that typically retail between £100 and £200. Avoid fragrances well below or well above this range unless they are genuinely the strongest match.`
+    ? `BUDGET WEIGHTING — CRITICAL: The customer has indicated a budget of £100-£200. Across ALL tiers (Safe, Statement, Wildcard) and any add-on rounds, you MUST prioritise fragrances that typically retail between £100 and £200. Avoid fragrances well below or well above this range unless they are genuinely the strongest match.`
     : budgetValue === '200_plus'
     ? `BUDGET WEIGHTING — CRITICAL: The customer has indicated a budget of £200 and above. Across ALL tiers (Safe, Statement, Wildcard) and any add-on rounds, you MUST prioritise luxury, ultra-niche, and high-end fragrances that typically retail at £200 or more. Do not recommend budget or mid-range options.`
     : `BUDGET WEIGHTING: The customer is open to the best match regardless of price. Do not weight recommendations by price point — focus entirely on match quality.`;
@@ -118,7 +118,7 @@ Start fresh. Evaluate against STATEMENT CRITERIA ONLY:
 Select the highest scorer on THESE criteria only. This Statement Match should make a fragrance enthusiast say "wow." Mainstream releases and widely-known safe choices are WRONG for this tier.
 
 HOUSE PRIORITY FOR STATEMENT MATCH:
-Recommend the most wow, most elevated and luxurious option that fits the quiz criteria. If the quiz specifies designer only, recommend the most elevated, distinctive and wow offerings within the designer fragrance realm. YSL's private line, Dior's Privée collection and similar elevated designer ranges count as statement level. They must still fit the note profile. Basic designer releases are not appropriate for this tier. If the quiz specifies niche fragrances, these take priority but must deliver wow factor and still fit the note profile. If the quiz is open to Middle Eastern houses, recommend the most wow, elevated and luxurious option that fits the requested profile.
+Recommend the most wow, most elevated and luxurious option that fits the quiz criteria. If the quiz specifies designer only, recommend the most elevated, distinctive and wow offerings within the designer fragrance realm. YSL's private line, Dior's Privee collection and similar elevated designer ranges count as statement level. They must still fit the note profile. Basic designer releases are not appropriate for this tier. If the quiz specifies niche fragrances, these take priority but must deliver wow factor and still fit the note profile. If the quiz is open to Middle Eastern houses, recommend the most wow, elevated and luxurious option that fits the requested profile.
 
 Broadly familiar mainstream releases such as Dior Sauvage, YSL Black Opium and Guerlain Mon Guerlain belong in Safe Match, not here.
 
