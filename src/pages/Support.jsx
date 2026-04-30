@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,19 +15,19 @@ const FAQS = [
   },
   {
     q: "Can I choose more than one fragrance world?",
-    a: "Yes — you can select up to two fragrance worlds. For example, you might choose 'Luxury niche & discovery' and 'Middle Eastern' to receive a blend of elevated niche and oud-rich oriental recommendations. Selecting 'Open to the best fit' lets us curate the best overall fit for them based on their full profile."
+    a: "Yes - you can select up to two fragrance worlds. For example, you might choose 'Luxury niche & discovery' and 'Middle Eastern' to receive a blend of elevated niche and oud-rich oriental recommendations. Selecting 'Open to the best fit' lets us curate the best overall fit for them based on their full profile."
   },
   {
     q: "What's the difference between Designer, Luxury niche & discovery, and Middle Eastern options?",
-    a: "Designer houses (such as Dior, Chanel, YSL, and Jo Malone) are widely recognised names offering consistent, approachable quality. Luxury niche & discovery houses (such as Maison Francis Kurkdjian, Parfums de Marly, and Nishane) are typically independent, artisan-led European or American brands focused on elevated, distinctive compositions. Middle Eastern luxury houses (such as Afnan, Lattafa, and Armaf) specialise in rich, oud-forward and oriental styles rooted in the tradition of Arabic perfumery — often offering extraordinary quality at surprisingly accessible prices. You can choose up to two worlds to blend across categories."
+    a: "Designer houses (such as Dior, Chanel, YSL, and Jo Malone) are widely recognised names offering consistent, approachable quality. Luxury niche & discovery houses (such as Maison Francis Kurkdjian, Parfums de Marly, and Nishane) are typically independent, artisan-led European or American brands focused on elevated, distinctive compositions. Middle Eastern luxury houses (such as Afnan, Lattafa, and Armaf) specialise in rich, oud-forward and oriental styles rooted in the tradition of Arabic perfumery - often offering extraordinary quality at surprisingly accessible prices. You can choose up to two worlds to blend across categories."
   },
   {
     q: "Why use a personalised scent match instead of choosing a bestseller?",
-    a: "Bestsellers are popular for a reason, but they're designed to appeal to the widest possible audience — not to a specific person. A personalised match considers their personality, style, the occasion, and how they carry a scent, so the result feels genuinely tailored. You're far more likely to surprise and delight someone with something they wouldn't have found themselves than with a fragrance they've already seen in every shop window."
+    a: "Bestsellers are popular for a reason, but they're designed to appeal to the widest possible audience - not to a specific person. A personalised match considers their personality, style, the occasion, and how they carry a scent, so the result feels genuinely tailored. You're far more likely to surprise and delight someone with something they wouldn't have found themselves than with a fragrance they've already seen in every shop window."
   },
   {
     q: "Can I change my answers before the recommendations are generated?",
-    a: "Absolutely. After completing all questions you will reach a Review step that displays your key selections. You can edit any answer before confirming — your payment only triggers the final generation step, so you are always in control."
+    a: "Absolutely. After completing all questions you will reach a Review step that displays your key selections. You can edit any answer before confirming - your payment only triggers the final generation step, so you are always in control."
   },
   {
     q: "What if the fragrance recommendations don't feel quite right?",
@@ -40,17 +39,17 @@ const HOW_IT_WORKS = [
   {
     step: "01",
     title: "Answer a few thoughtful questions",
-    description: "Tell us about the person you're gifting — their personality, style, scent preferences, and the occasion. A few quick questions, done in minutes."
+    description: "Tell us about the person you're gifting - their personality, style, scent preferences, and the occasion. A few quick questions, done in minutes."
   },
   {
     step: "02",
     title: "We thoughtfully interpret your answers",
-    description: "We carefully consider their personality, style, gifting moment, and the kind of scent they'd genuinely love to receive — then match against our verified fragrance catalogue."
+    description: "We carefully consider their personality, style, gifting moment, and the kind of scent they'd genuinely love to receive - then match against our verified fragrance catalogue."
   },
   {
     step: "03",
     title: "Receive three individually matched recommendations instantly",
-    description: "A Safe Match, a Statement Choice, and a Wildcard Discovery — each selected around the recipient, with a confidence score, easy-to-understand description, and direct buy links."
+    description: "A Safe Match, a Statement Choice, and a Wildcard Discovery - each selected around the recipient, with a confidence score, easy-to-understand description, and direct buy links."
   },
 ];
 
@@ -85,12 +84,29 @@ export default function Support() {
   const [form, setForm] = useState({ name: '', email: '', issue_type: 'general-enquiry', message: '' });
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitting(true);
-    await base44.entities.SupportTicket.create({ ...form, status: 'open' });
-    setSubmitted(true);
+    setError(null);
+
+    try {
+      const res = await fetch('/.netlify/functions/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: 'contact', ...form })
+      });
+
+      if (res.ok) {
+        setSubmitted(true);
+      } else {
+        setError('Something went wrong. Please try again.');
+      }
+    } catch (err) {
+      setError('Something went wrong. Please try again.');
+    }
+
     setSubmitting(false);
   };
 
@@ -182,6 +198,10 @@ export default function Support() {
                 />
               </div>
 
+              {error && (
+                <p className="text-xs text-red-500 font-body">{error}</p>
+              )}
+
               <Button
                 type="submit"
                 disabled={submitting}
@@ -206,12 +226,29 @@ function ReviewSection() {
   const [form, setForm] = useState({ name: '', location: '', quote: '' });
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitting(true);
-    await base44.entities.Testimonial.create({ ...form, star_rating: 5, is_featured: false, sort_order: 99 });
-    setSubmitted(true);
+    setError(null);
+
+    try {
+      const res = await fetch('/.netlify/functions/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: 'review', ...form })
+      });
+
+      if (res.ok) {
+        setSubmitted(true);
+      } else {
+        setError('Something went wrong. Please try again.');
+      }
+    } catch (err) {
+      setError('Something went wrong. Please try again.');
+    }
+
     setSubmitting(false);
   };
 
@@ -265,6 +302,11 @@ function ReviewSection() {
               className="w-full bg-secondary border border-border/50 rounded-xl font-body text-sm text-foreground px-4 py-3 focus:outline-none focus:ring-1 focus:ring-ring resize-none"
             />
           </div>
+
+          {error && (
+            <p className="text-xs text-red-500 font-body">{error}</p>
+          )}
+
           <Button
             type="submit"
             disabled={submitting}
