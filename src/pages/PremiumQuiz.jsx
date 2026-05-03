@@ -16,7 +16,7 @@ const buildPrompt = (profileSummary, isSelf = false, previousRecommendations = [
   const budgetBlock = budgetValue === 'under_100'
     ? `BUDGET WEIGHTING — CRITICAL: The customer has indicated a budget of under £100. Across ALL tiers (Safe, Statement, Wildcard) and any add-on rounds, you MUST prioritise fragrances that are typically priced under £100 at retail. Do not recommend fragrances that typically retail above £100 unless there is absolutely no suitable alternative within budget.`
     : budgetValue === '100_200'
-    ? `BUDGET WEIGHTING — CRITICAL: The customer has indicated a budget of £100-£200. Across ALL tiers (Safe, Statement, Wildcard) and any add-on rounds, you MUST prioritise fragrances that typically retail between £100 and £200. Avoid fragrances well below or well above this range unless they are genuinely the strongest match.`
+    ? `BUDGET WEIGHTING — CRITICAL: The customer has indicated a budget of £100-£200. Across ALL tiers (Safe, Statement, Wildcard) and any add-on rounds, you MUST prioritise fragrances that are typically priced between £100 and £200. Avoid fragrances well below or well above this range unless they are genuinely the strongest match.`
     : budgetValue === '200_plus'
     ? `BUDGET WEIGHTING — CRITICAL: The customer has indicated a budget of £200 and above. Across ALL tiers (Safe, Statement, Wildcard) and any add-on rounds, you MUST prioritise luxury, ultra-niche, and high-end fragrances that typically retail at £200 or more. Do not recommend budget or mid-range options.`
     : `BUDGET WEIGHTING: The customer is open to the best match regardless of price. Do not weight recommendations by price point — focus entirely on match quality.`;
@@ -50,7 +50,13 @@ You must be completely certain of four things:
 
 If you are not 100% certain of all four — do not recommend it. Choose something else you are completely certain about. There are thousands of fragrances available. There is no excuse for uncertainty.
 
-Before finalising any recommendation, search the web to confirm the fragrance name and house/brand are a real, exact match and are currently available to purchase.
+Do not claim to search, verify, or check the web.
+
+You may recommend designer, niche, Middle Eastern, indie, and lesser-known fragrances, but only where the exact brand and fragrance pairing is well documented and you are highly confident it is real and commercially available.
+
+Avoid obscure fragrances only when the brand/fragrance pairing is uncertain, poorly documented, discontinued, or hard to verify.
+
+Accuracy is more important than novelty, but recommendations should still feel thoughtful, elevated, and personalised rather than generic.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -70,6 +76,16 @@ NOTE MATCHING RULE — ALL TIERS WITHOUT EXCEPTION
 The recommended fragrance must match the predominant notes and scent theme indicated by the quiz. Do not recommend a fragrance on the basis of one or two matching notes if the majority of its notes contradict the quiz answers.
 
 The dominant character of a fragrance is determined by its majority note composition. For example: if a fragrance contains five citrus notes and two woody notes, it is a citrus fragrance, not a woody fragrance, and must not be recommended to someone who has indicated they want a woody scent.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+TIER SAFETY RULE
+
+Safe Match can be more familiar and widely recognised.
+
+Statement Match should feel elevated, memorable, and distinctive, but must still be well documented and confidently correct.
+
+Wildcard Match should feel surprising and interesting, but must never rely on obscure, uncertain, or poorly documented fragrances. The brand and fragrance pairing must always be correct and real.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
