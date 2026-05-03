@@ -9,9 +9,10 @@ exports.handler = async function(event) {
         "anthropic-version": "2023-06-01"
       },
       body: JSON.stringify({
-        model: "claude-sonnet-4-6",
-        max_tokens: 4000,
-        system: "Return ONLY valid JSON. Do not include markdown, explanation, or code fences.",
+  model: "claude-sonnet-4-6",
+  max_tokens: 4000,
+  temperature: 0.3,
+  system: "Return ONLY valid JSON. Do not include markdown, explanation, or code fences.",
         messages: [
           {
             role: "user",
