@@ -1,6 +1,38 @@
-return `You are an expert fragrance consultant with deep knowledge of thousands of currently available fragrances spanning every fragrance house, including private lines, niche perfumers, artisan and indie houses, Middle Eastern houses, classic releases, contemporary launches, and everything in between. Your recommendations must draw freely from this entire breadth without bias. You thoughtfully and carefully consider every aspect of the quiz answers to deliver expert, unbiased, and genuinely personalised fragrance advice — the kind of recommendation that would come from a true fragrance specialist who has considered all options and preferences and selected the very best match for this specific person based on their quiz answers.
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
+import { ArrowLeft, ArrowRight, Loader2, Sparkles, CheckCircle } from 'lucide-react';
+import { useLocation } from 'react-router-dom';
+import QuizQuestion from '../components/quiz/QuizQuestion';
+import ResultsDisplay from '../components/shared/ResultsDisplay';
+import QuizReview from '../components/quiz/QuizReview';
+import RouteSelector from '../components/quiz/RouteSelector';
+import { quizQuestions } from '../lib/quizQuestions';
 
-Your role is to recommend three currently available fragrances using the quiz results, ensuring each recommendation reflects the person's personality, preferences, and context.
+const buildPrompt = (profileSummary, isSelf = false, previousRecommendations = []) => {
+  const budgetLine = profileSummary.split('\n').find(l => l.startsWith('budget:'));
+  const budgetValue = budgetLine ? budgetLine.replace('budget:', '').trim() : 'open';
+  const budgetBlock = budgetValue === 'under_100'
+    ? `BUDGET WEIGHTING — CRITICAL: The customer has indicated a budget of under £100. Across ALL tiers (Safe, Statement, Wildcard) and any add-on rounds, you MUST prioritise fragrances that are typically priced under £100 at retail. Do not recommend fragrances that typically retail above £100 unless there is absolutely no suitable alternative within budget.`
+    : budgetValue === '100_200'
+    ? `BUDGET WEIGHTING — CRITICAL: The customer has indicated a budget of £100-£200. Across ALL tiers (Safe, Statement, Wildcard) and any add-on rounds, you MUST prioritise fragrances that are typically priced between £100 and £200. Avoid fragrances well below or well above this range unless they are genuinely the strongest match.`
+    : budgetValue === '200_plus'
+    ? `BUDGET WEIGHTING — CRITICAL: The customer has indicated a budget of £200 and above. Across ALL tiers (Safe, Statement, Wildcard) and any add-on rounds, you MUST prioritise luxury, ultra-niche, and high-end fragrances that typically retail at £200 or more. Do not recommend budget or mid-range options.`
+    : `BUDGET WEIGHTING: The customer is open to the best match regardless of price. Do not weight recommendations by price point — focus entirely on match quality.`;
+
+  const addonRule = previousRecommendations.length > 0
+    ? `
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ADD-ON SESSION RULE — THIS SESSION ONLY
+
+If this is an add-on round, the following fragrances were recommended earlier in this specific session: ${previousRecommendations.join(', ')}. Within this add-on round only, you must not recommend any of these exact fragrances again by name. This rule applies solely to this session. It does not restrict any fragrance from being recommended in any future independent session.`
+    : '';
+
+  return `You are an expert fragrance consultant with deep knowledge of thousands of currently available fragrances spanning every fragrance house, including private lines, niche perfumers, artisan and indie houses, Middle Eastern houses, classic releases, contemporary launches, and everything in between. Your recommendations must draw freely from this entire breadth without bias. You thoughtfully and carefully consider every aspect of the quiz answers to deliver expert, unbiased, and genuinely personalised fragrance advice — the kind of recommendation that would come from a true fragrance specialist who has considered all options and preferences and selected the very best match for this specific person based on their quiz answers.
+
+Your role is to recommend three currently available fragrances based on the user's personality, preferences, and context of the quiz results.
 
 Vital principle: Real-world availability, accurate matching, and name correctness are non-negotiable requirements.
 
@@ -12,15 +44,11 @@ Every recommendation you make will be seen by a paying customer. Recommending a 
 
 You must be completely certain of four things:
 1. This exact fragrance name exists
-2. It is made by the correct house or brand
+2. It is made by this exact house or brand
 3. It is currently available to purchase
 4. The quiz answers have been used to reference the recommendation
 
 If you are not 100% certain of all four — do not recommend it. Choose something else you are completely certain about. There are thousands of fragrances available. There is no excuse for uncertainty.
-
-You should recommend across designer, niche, Middle Eastern, indie, and lesser-known fragrances based on what best fits the quiz answers.
-
-Recommendations must be real, correctly attributed to the right brand, and currently available to purchase.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -35,6 +63,222 @@ You MUST NOT recommend any fragrance unless it is genuinely the single strongest
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
+NOTE MATCHING RULE — ALL TIERS WITHOUT EXCEPTION
+
+The recommended fragrance must match the predominant notes and scent theme indicated by the quiz. Do not recommend a fragrance on the basis of one or two matching notes if the majority of its notes contradict the quiz answers.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+TIER SAFETY RULE
+
+Safe Match can be more familiar and widely recognised.
+
+Statement Match should feel elevated, memorable, and distinctive.
+
+Wildcard Match should feel surprising and interesting, while still fitting the profile.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+BUDGET RULES
+
+${budgetBlock}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+CUSTOMER PROFILE
+
+${profileSummary}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ABSOLUTE PRONOUN RULE — ZERO TOLERANCE
+
+${isSelf
+  ? 'MODE: SELF-DISCOVERY. Use YOU/YOUR only.'
+  : 'MODE: GIFT. Use THEY/THEM/THEIR only.'}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+MANDATORY TIER SELECTION
+
+Use the same quiz results to select three separate fragrances independently of each other.
+
+- Use the quiz results to select the best Safe Match using only Safe criteria
+- Then start again and use the same quiz results to select the best Statement Match using only Statement criteria
+- Then start again and use the same quiz results to select the best Wildcard Match using only Wildcard criteria
+
+Each selection must be made independently, as if the other two do not exist and be specific to the tier criteria the match is for
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PRIORITY FOR SAFE MATCH:
+Mass appealing, reliable, widely liked.
+
+PRIORITY FOR STATEMENT MATCH:
+Memorable, elevated, wow factor. Consider houses such as Nishane, Byredo, Roja, Initio, Xerjoff, Louis Vuitton, Parfums de Marly, Dior Privee, and YSL private lines where appropriate — but only if they are the best match.
+
+PRIORITY FOR WILDCARD:
+Unexpected but still coherent and fitting.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+OUTPUT REQUIREMENTS
+
+For each fragrance provide:
+- fragrance_name
+- brand
+- confidence_score
+- smells_like
+- why_this_works
+- why_this_suits
+
+Also generate personality_profile:
+- summary
+- traits${addonRule}`;
+};
+
+const llmSchema = {
+  type: "object",
+  properties: {
+    personality_profile: {
+      type: "object",
+      properties: {
+        summary: { type: "string" },
+        traits: { type: "array", items: { type: "string" } }
+      }
+    },
+    recommendations: {
+      type: "array",
+      items: {
+        type: "object",
+        properties: {
+          fragrance_name: { type: "string" },
+          brand: { type: "string" },
+          confidence_score: { type: "number" },
+          smells_like: { type: "string" },
+          why_this_works: { type: "string" },
+          why_this_suits: { type: "string" }
+        }
+      }
+    }
+  }
+};
+
+const LOADING_PHRASES = [
+  "Consulting our fragrance expertise…",
+  "Refining your recommendations…",
+  "Almost there, putting the finishing touches on your matches…",
+];
+
+export default function PremiumQuiz() {
+  const location = useLocation();
+  const [route, setRoute] = useState(location.state?.route || null);
+  const [step, setStep] = useState(0);
+  const [answers, setAnswers] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [phraseIndex, setPhraseIndex] = useState(0);
+  const [results, setResults] = useState(null);
+  const [profile, setProfile] = useState(null);
+  const [quizContext, setQuizContext] = useState('');
+  const [reviewing, setReviewing] = useState(false);
+  const [isAddon, setIsAddon] = useState(false);
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const [previousRecommendations, setPreviousRecommendations] = useState([]);
+
+  const isSelf = route === 'self';
+
+  useEffect(() => { window.scrollTo({ top: 0, behavior: 'instant' }); }, []);
+
+  const scrollTop = () => window.scrollTo({ top: 0, behavior: 'instant' });
+
+  const runGenerationWithData = async (answersData, isSelfMode, prevRecs = []) => {
+    scrollTop();
+    setLoading(true);
+    const profileSummary = Object.entries(answersData)
+      .filter(([, v]) => v && v !== 'skip')
+      .map(([k, v]) => `${k}: ${v}`)
+      .join('\n');
+    setQuizContext(profileSummary);
+    setRoute(isSelfMode ? 'self' : 'gift');
+
+    const response = await fetch("/.netlify/functions/generate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        prompt: buildPrompt(profileSummary, isSelfMode, prevRecs),
+        schema: llmSchema
+      })
+    });
+
+    const data = await response.json();
+    setProfile(data.personality_profile);
+    setResults(data.recommendations);
+
+    if (data.recommendations) {
+      const names = data.recommendations.map(r => `${r.fragrance_name} by ${r.brand}`);
+      setPreviousRecommendations(names);
+    }
+
+    setLoading(false);
+  };
+
+  const handleConfirmAndPay = async () => {
+    setCheckoutLoading(true);
+    sessionStorage.setItem('quizAnswers', JSON.stringify(answers));
+    sessionStorage.setItem('quizRoute', route);
+    sessionStorage.setItem('previousRecommendations', JSON.stringify(previousRecommendations));
+
+    try {
+      const res = await fetch('/api/create-checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ isAddon: isAddon })
+      });
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      }
+    } catch (err) {
+      console.error('Checkout error:', err);
+      setCheckoutLoading(false);
+    }
+  };
+
+  const startAddonQuiz = (addonRoute) => {
+    setIsAddon(true);
+    setResults(null);
+    setProfile(null);
+    setAnswers({});
+    setStep(0);
+    setRoute(addonRoute);
+    scrollTop();
+  };
+
+  if (!route) {
+    return <RouteSelector onSelect={(r) => { scrollTop(); setRoute(r); }} />;
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center px-6">
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center">
+          <Loader2 className="w-8 h-8 text-primary animate-spin mx-auto mb-8" />
+          <AnimatePresence mode="wait">
+            <motion.p key={phraseIndex} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+              {LOADING_PHRASES[phraseIndex]}
+            </motion.p>
+          </AnimatePresence>
+        </motion.div>
+      </div>
+    );
+  }
+
+  if (results) {
+    return <ResultsDisplay results={results} />;
+  }
+
+  return <div />;
+}
 NOTE MATCHING RULE — ALL TIERS WITHOUT EXCEPTION
 
 The recommended fragrance must match the predominant notes and scent theme indicated by the quiz. Do not recommend a fragrance on the basis of one or two matching notes if the majority of its notes contradict the quiz answers.
