@@ -67,222 +67,6 @@ NOTE MATCHING RULE — ALL TIERS WITHOUT EXCEPTION
 
 The recommended fragrance must match the predominant notes and scent theme indicated by the quiz. Do not recommend a fragrance on the basis of one or two matching notes if the majority of its notes contradict the quiz answers.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-TIER SAFETY RULE
-
-Safe Match can be more familiar and widely recognised.
-
-Statement Match should feel elevated, memorable, and distinctive.
-
-Wildcard Match should feel surprising and interesting, while still fitting the profile.
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-BUDGET RULES
-
-${budgetBlock}
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-CUSTOMER PROFILE
-
-${profileSummary}
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-ABSOLUTE PRONOUN RULE — ZERO TOLERANCE
-
-${isSelf
-  ? 'MODE: SELF-DISCOVERY. Use YOU/YOUR only.'
-  : 'MODE: GIFT. Use THEY/THEM/THEIR only.'}
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-MANDATORY TIER SELECTION
-
-Use the same quiz results to select three separate fragrances independently of each other.
-
-- Use the quiz results to select the best Safe Match using only Safe criteria
-- Then start again and use the same quiz results to select the best Statement Match using only Statement criteria
-- Then start again and use the same quiz results to select the best Wildcard Match using only Wildcard criteria
-
-Each selection must be made independently, as if the other two do not exist and be specific to the tier criteria the match is for
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-PRIORITY FOR SAFE MATCH:
-Mass appealing, reliable, widely liked.
-
-PRIORITY FOR STATEMENT MATCH:
-Memorable, elevated, wow factor. Consider houses such as Nishane, Byredo, Roja, Initio, Xerjoff, Louis Vuitton, Parfums de Marly, Dior Privee, and YSL private lines where appropriate — but only if they are the best match.
-
-PRIORITY FOR WILDCARD:
-Unexpected but still coherent and fitting.
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-OUTPUT REQUIREMENTS
-
-For each fragrance provide:
-- fragrance_name
-- brand
-- confidence_score
-- smells_like
-- why_this_works
-- why_this_suits
-
-Also generate personality_profile:
-- summary
-- traits${addonRule}`;
-};
-
-const llmSchema = {
-  type: "object",
-  properties: {
-    personality_profile: {
-      type: "object",
-      properties: {
-        summary: { type: "string" },
-        traits: { type: "array", items: { type: "string" } }
-      }
-    },
-    recommendations: {
-      type: "array",
-      items: {
-        type: "object",
-        properties: {
-          fragrance_name: { type: "string" },
-          brand: { type: "string" },
-          confidence_score: { type: "number" },
-          smells_like: { type: "string" },
-          why_this_works: { type: "string" },
-          why_this_suits: { type: "string" }
-        }
-      }
-    }
-  }
-};
-
-const LOADING_PHRASES = [
-  "Consulting our fragrance expertise…",
-  "Refining your recommendations…",
-  "Almost there, putting the finishing touches on your matches…",
-];
-
-export default function PremiumQuiz() {
-  const location = useLocation();
-  const [route, setRoute] = useState(location.state?.route || null);
-  const [step, setStep] = useState(0);
-  const [answers, setAnswers] = useState({});
-  const [loading, setLoading] = useState(false);
-  const [phraseIndex, setPhraseIndex] = useState(0);
-  const [results, setResults] = useState(null);
-  const [profile, setProfile] = useState(null);
-  const [quizContext, setQuizContext] = useState('');
-  const [reviewing, setReviewing] = useState(false);
-  const [isAddon, setIsAddon] = useState(false);
-  const [checkoutLoading, setCheckoutLoading] = useState(false);
-  const [previousRecommendations, setPreviousRecommendations] = useState([]);
-
-  const isSelf = route === 'self';
-
-  useEffect(() => { window.scrollTo({ top: 0, behavior: 'instant' }); }, []);
-
-  const scrollTop = () => window.scrollTo({ top: 0, behavior: 'instant' });
-
-  const runGenerationWithData = async (answersData, isSelfMode, prevRecs = []) => {
-    scrollTop();
-    setLoading(true);
-    const profileSummary = Object.entries(answersData)
-      .filter(([, v]) => v && v !== 'skip')
-      .map(([k, v]) => `${k}: ${v}`)
-      .join('\n');
-    setQuizContext(profileSummary);
-    setRoute(isSelfMode ? 'self' : 'gift');
-
-    const response = await fetch("/.netlify/functions/generate", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        prompt: buildPrompt(profileSummary, isSelfMode, prevRecs),
-        schema: llmSchema
-      })
-    });
-
-    const data = await response.json();
-    setProfile(data.personality_profile);
-    setResults(data.recommendations);
-
-    if (data.recommendations) {
-      const names = data.recommendations.map(r => `${r.fragrance_name} by ${r.brand}`);
-      setPreviousRecommendations(names);
-    }
-
-    setLoading(false);
-  };
-
-  const handleConfirmAndPay = async () => {
-    setCheckoutLoading(true);
-    sessionStorage.setItem('quizAnswers', JSON.stringify(answers));
-    sessionStorage.setItem('quizRoute', route);
-    sessionStorage.setItem('previousRecommendations', JSON.stringify(previousRecommendations));
-
-    try {
-      const res = await fetch('/api/create-checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ isAddon: isAddon })
-      });
-      const data = await res.json();
-      if (data.url) {
-        window.location.href = data.url;
-      }
-    } catch (err) {
-      console.error('Checkout error:', err);
-      setCheckoutLoading(false);
-    }
-  };
-
-  const startAddonQuiz = (addonRoute) => {
-    setIsAddon(true);
-    setResults(null);
-    setProfile(null);
-    setAnswers({});
-    setStep(0);
-    setRoute(addonRoute);
-    scrollTop();
-  };
-
-  if (!route) {
-    return <RouteSelector onSelect={(r) => { scrollTop(); setRoute(r); }} />;
-  }
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center px-6">
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center">
-          <Loader2 className="w-8 h-8 text-primary animate-spin mx-auto mb-8" />
-          <AnimatePresence mode="wait">
-            <motion.p key={phraseIndex} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-              {LOADING_PHRASES[phraseIndex]}
-            </motion.p>
-          </AnimatePresence>
-        </motion.div>
-      </div>
-    );
-  }
-
-  if (results) {
-    return <ResultsDisplay results={results} />;
-  }
-
-  return <div />;
-}
-NOTE MATCHING RULE — ALL TIERS WITHOUT EXCEPTION
-
-The recommended fragrance must match the predominant notes and scent theme indicated by the quiz. Do not recommend a fragrance on the basis of one or two matching notes if the majority of its notes contradict the quiz answers.
-
 The dominant character of a fragrance is determined by its majority note composition. For example: if a fragrance contains five citrus notes and two woody notes, it is a citrus fragrance, not a woody fragrance, and must not be recommended to someone who has indicated they want a woody scent.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -406,3 +190,356 @@ For each fragrance provide:
 Also generate personality_profile:
 - summary: 2-3 sentences in warm editorial tone
 - traits: 4-6 short labels`;
+};
+
+const llmSchema = {
+  type: "object",
+  properties: {
+    personality_profile: {
+      type: "object",
+      properties: {
+        summary: { type: "string" },
+        traits: { type: "array", items: { type: "string" } }
+      }
+    },
+    recommendations: {
+      type: "array",
+      items: {
+        type: "object",
+        properties: {
+          fragrance_name: { type: "string" },
+          brand: { type: "string" },
+          confidence_score: { type: "number" },
+          smells_like: { type: "string" },
+          why_this_works: { type: "string" },
+          why_this_suits: { type: "string" }
+        }
+      }
+    }
+  }
+};
+
+const LOADING_PHRASES = [
+  "Consulting our fragrance expertise…",
+  "Refining your recommendations…",
+  "Almost there, putting the finishing touches on your matches…",
+];
+
+export default function PremiumQuiz() {
+  const location = useLocation();
+  const [route, setRoute] = useState(location.state?.route || null);
+  const [step, setStep] = useState(0);
+  const [answers, setAnswers] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [phraseIndex, setPhraseIndex] = useState(0);
+  const [results, setResults] = useState(null);
+  const [profile, setProfile] = useState(null);
+  const [quizContext, setQuizContext] = useState('');
+  const [reviewing, setReviewing] = useState(false);
+  const [isAddon, setIsAddon] = useState(false);
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const [previousRecommendations, setPreviousRecommendations] = useState([]);
+
+  const isSelf = route === 'self';
+
+  useEffect(() => { window.scrollTo({ top: 0, behavior: 'instant' }); }, []);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const payment = params.get('payment');
+
+    if (payment === 'success') {
+      window.history.replaceState({}, '', '/quiz');
+
+      const savedAnswers = sessionStorage.getItem('quizAnswers');
+      const savedRoute = sessionStorage.getItem('quizRoute');
+      const savedPrevious = sessionStorage.getItem('previousRecommendations');
+
+      if (savedAnswers && savedRoute) {
+        const parsedAnswers = JSON.parse(savedAnswers);
+        const parsedRoute = savedRoute;
+        const parsedIsSelf = parsedRoute === 'self';
+        const parsedPrevious = savedPrevious ? JSON.parse(savedPrevious) : [];
+
+        sessionStorage.removeItem('quizAnswers');
+        sessionStorage.removeItem('quizRoute');
+        sessionStorage.removeItem('previousRecommendations');
+
+        runGenerationWithData(parsedAnswers, parsedIsSelf, parsedPrevious);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!loading) { setPhraseIndex(0); return; }
+    const interval = setInterval(() => {
+      setPhraseIndex(prev => (prev + 1) % LOADING_PHRASES.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [loading]);
+
+  const adaptedQuestions = quizQuestions
+    .filter(q => isSelf ? q.id !== 'relationship' : true)
+    .map(q => {
+      if (!isSelf) return q;
+
+      if (q.id === 'scent_direction') {
+        return {
+          ...q,
+          title: 'What scent style would suit you best?',
+          subtitle: "Choose the fragrance energy you naturally gravitate towards.",
+          options: q.options.map(o => ({
+            ...o,
+            description: o.description?.replace(/their/gi, 'your').replace(/\bthem\b/gi, 'you'),
+          })),
+        };
+      }
+
+      if (q.id === 'occasion') {
+        return {
+          ...q,
+          title: 'When will you wear this fragrance?',
+          subtitle: 'The occasion shapes the ideal projection, mood, and character of the scent.',
+          options: [
+            { value: 'everyday', label: 'Everyday Signature', description: 'Your daily go-to — versatile and reliable' },
+            { value: 'evening', label: 'Evening & Going Out', description: 'Seductive, deeper, more intimate' },
+            { value: 'special', label: 'Special Occasions', description: 'Events, celebrations, memorable moments' },
+            { value: 'work', label: 'Professional Setting', description: 'Office-appropriate, sophisticated, not overpowering' },
+            { value: 'open_exploring', label: "I'm open to exploring", description: 'No fixed occasion — just discovering what feels right' },
+          ],
+        };
+      }
+
+      if (q.id === 'known_fragrance') {
+        return {
+          ...q,
+          title: 'Do you already have a favourite perfume?',
+          subtitle: "Don't worry if you're unsure, but if you do, it helps us refine the match even further.",
+          placeholder: 'e.g. Chanel No.5, Aventus, Black Opium... or leave blank',
+        };
+      }
+
+      return {
+        ...q,
+        title: q.title
+          .replace(/their/gi, 'your')
+          .replace(/\bthem\b/gi, 'you')
+          .replace(/\bthey\b/gi, 'you'),
+        subtitle: q.subtitle
+          ? q.subtitle.replace(/their/gi, 'your').replace(/\bthem\b/gi, 'you').replace(/\bthey\b/gi, 'you')
+          : q.subtitle,
+        options: q.options?.map(o => ({
+          ...o,
+          description: o.description?.replace(/their/gi, 'your').replace(/\bthem\b/gi, 'you'),
+        })),
+      };
+    });
+
+  const scrollTop = () => window.scrollTo({ top: 0, behavior: 'instant' });
+
+  const runGenerationWithData = async (answersData, isSelfMode, prevRecs = []) => {
+    scrollTop();
+    setLoading(true);
+    const profileSummary = Object.entries(answersData)
+      .filter(([, v]) => v && v !== 'skip')
+      .map(([k, v]) => `${k}: ${v}`)
+      .join('\n');
+    setQuizContext(profileSummary);
+    setRoute(isSelfMode ? 'self' : 'gift');
+
+    const response = await fetch("/.netlify/functions/generate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        prompt: buildPrompt(profileSummary, isSelfMode, prevRecs),
+        schema: llmSchema
+      })
+    });
+
+    const data = await response.json();
+    setProfile(data.personality_profile);
+    setResults(data.recommendations);
+
+    if (data.recommendations) {
+      const names = data.recommendations.map(r => `${r.fragrance_name} by ${r.brand}`);
+      setPreviousRecommendations(names);
+    }
+
+    setLoading(false);
+  };
+
+  const handleConfirmAndPay = async () => {
+    setCheckoutLoading(true);
+    sessionStorage.setItem('quizAnswers', JSON.stringify(answers));
+    sessionStorage.setItem('quizRoute', route);
+    sessionStorage.setItem('previousRecommendations', JSON.stringify(previousRecommendations));
+
+    try {
+      const res = await fetch('/api/create-checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ isAddon: isAddon })
+      });
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      }
+    } catch (err) {
+      console.error('Checkout error:', err);
+      setCheckoutLoading(false);
+    }
+  };
+
+  const startAddonQuiz = (addonRoute) => {
+    setIsAddon(true);
+    setResults(null);
+    setProfile(null);
+    setAnswers({});
+    setStep(0);
+    setRoute(addonRoute);
+    scrollTop();
+  };
+
+  if (!route) {
+    return <RouteSelector onSelect={(r) => { scrollTop(); setRoute(r); }} />;
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center px-6">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="text-center"
+        >
+          <Loader2 className="w-8 h-8 text-primary animate-spin mx-auto mb-8" />
+          <AnimatePresence mode="wait">
+            <motion.p
+              key={phraseIndex}
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -6 }}
+              transition={{ duration: 0.4 }}
+              className="font-heading text-xl text-foreground"
+            >
+              {LOADING_PHRASES[phraseIndex]}
+            </motion.p>
+          </AnimatePresence>
+          <p className="font-body text-sm text-muted-foreground mt-4">
+            This may take a few moments
+          </p>
+        </motion.div>
+      </div>
+    );
+  }
+
+  if (reviewing) {
+    return (
+      <QuizReview
+        answers={answers}
+        questions={adaptedQuestions}
+        onAnswerUpdate={(questionId, value) => {
+          setAnswers(prev => ({ ...prev, [questionId]: value }));
+        }}
+        onBack={() => { scrollTop(); setStep(adaptedQuestions.length - 1); setReviewing(false); }}
+        onConfirm={handleConfirmAndPay}
+        isAddon={isAddon}
+      />
+    );
+  }
+
+  if (results) {
+    return (
+      <ResultsDisplay
+        results={results}
+        onReset={() => { scrollTop(); setResults(null); setAnswers({}); setStep(0); setProfile(null); setRoute(null); setIsAddon(false); setPreviousRecommendations([]); }}
+        onAddonGift={() => startAddonQuiz('gift')}
+        onAddonSelf={() => startAddonQuiz('self')}
+        title={isSelf ? "Your Perfect Matches" : "Their Perfect Matches"}
+        subtitle={isSelf ? "Expertly curated around your personality and preferences." : "Expertly curated based on their unique personality and preferences."}
+        isSelf={isSelf}
+        profile={profile}
+        onProfileUpdate={setProfile}
+        quizContext={quizContext}
+      />
+    );
+  }
+
+  const question = adaptedQuestions[step];
+  const progress = ((step + 1) / adaptedQuestions.length) * 100;
+  const canProceed =
+    question.type === 'text' ||
+    (question.type === 'multiselect'
+      ? Array.isArray(answers[question.id]) && answers[question.id].length > 0
+      : !!answers[question.id]);
+  const isLast = step === adaptedQuestions.length - 1;
+
+  const handleAnswer = (value) => {
+    setAnswers({ ...answers, [question.id]: value });
+  };
+
+  const handleNext = () => {
+    scrollTop();
+    if (!isLast) {
+      setStep(step + 1);
+    } else {
+      setReviewing(true);
+    }
+  };
+
+  return (
+    <div className="min-h-screen px-6 py-20">
+      <div className="max-w-md mx-auto">
+        <div className="mb-10">
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-xs font-body text-muted-foreground">
+              Question {step + 1} of {adaptedQuestions.length}
+            </span>
+            <span className="text-xs font-body text-primary font-medium">
+              {Math.round(progress)}%
+            </span>
+          </div>
+          <Progress value={progress} className="h-1" />
+        </div>
+
+        <AnimatePresence mode="wait">
+          <QuizQuestion
+            key={question.id}
+            question={question}
+            onAnswer={handleAnswer}
+            currentAnswer={answers[question.id]}
+          />
+        </AnimatePresence>
+
+        <div className="flex items-center justify-between mt-10">
+          <Button
+            variant="ghost"
+            onClick={() => { scrollTop(); step === 0 ? setRoute(null) : setStep(step - 1); }}
+            className="font-body text-sm text-muted-foreground"
+          >
+            <ArrowLeft className="w-4 h-4 mr-1" />
+            Back
+          </Button>
+
+          <Button
+            onClick={handleNext}
+            disabled={!canProceed && question.type !== 'text'}
+            className="bg-primary text-primary-foreground hover:bg-primary/90 font-body text-sm tracking-wide rounded-full px-6 h-11"
+          >
+            {isLast ? (
+              <>
+                <Sparkles className="w-4 h-4 mr-2" />
+                Review Answers
+              </>
+            ) : (
+              <>
+                Next
+                <ArrowRight className="w-4 h-4 ml-1" />
+              </>
+            )}
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}
