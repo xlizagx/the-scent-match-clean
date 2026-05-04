@@ -32,6 +32,7 @@ export default async (request) => {
      quantity: 1,
    }],
    mode: 'payment',
+  allow_promotion_codes:true,
    success_url: `https://thescentmatch.com/quiz?payment=success&addon=${isAddon ? 'true' : 'false'}`,
    cancel_url: `https://thescentmatch.com/quiz?payment=cancelled`,
  });
