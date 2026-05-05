@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Star } from 'lucide-react';
 import { Button } from "@/components/ui/button";
-
 export default function FooterCTA() {
   return (
     <>
@@ -20,14 +19,13 @@ export default function FooterCTA() {
             Loved your match? Leave a review
           </h2>
           <p className="text-muted-foreground font-body text-base mb-8 max-w-md mx-auto leading-relaxed">
-            Help others choose the perfect fragrance gift with confidence.
+            Loved your match? Tell us which fragrance won.
           </p>
           <Button asChild size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 font-body text-sm tracking-wide rounded-full px-8 h-12">
             <a href="/support#review">Leave a Review</a>
           </Button>
         </motion.div>
       </section>
-
       {/* Footer */}
       <footer className="border-t border-border/50 py-10 px-6">
         <div className="max-w-5xl mx-auto flex flex-col items-center gap-6">
