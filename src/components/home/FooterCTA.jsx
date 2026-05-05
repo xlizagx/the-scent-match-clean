@@ -19,7 +19,7 @@ export default function FooterCTA() {
             Loved your match? Leave a review
           </h2>
           <p className="text-muted-foreground font-body text-base mb-8 max-w-md mx-auto leading-relaxed">
-            Loved your match? Tell us which fragrance won.
+            Tell us - which fragrance won their heart?
           </p>
           <Button asChild size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 font-body text-sm tracking-wide rounded-full px-8 h-12">
             <a href="/support#review">Leave a Review</a>
@@ -40,9 +40,4 @@ export default function FooterCTA() {
             <Link to="/cookies" className="text-xs text-muted-foreground font-body hover:text-foreground transition-colors">Cookie Policy</Link>
             <Link to="/refunds" className="text-xs text-muted-foreground font-body hover:text-foreground transition-colors">Refund Policy</Link>
           </nav>
-          <p className="text-xs text-muted-foreground font-body">© {new Date().getFullYear()} The Scent Match. All rights reserved.</p>
-        </div>
-      </footer>
-    </>
-  );
-}
+          <p className="text-xs text-m
