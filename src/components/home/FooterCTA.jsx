@@ -40,4 +40,9 @@ export default function FooterCTA() {
             <Link to="/cookies" className="text-xs text-muted-foreground font-body hover:text-foreground transition-colors">Cookie Policy</Link>
             <Link to="/refunds" className="text-xs text-muted-foreground font-body hover:text-foreground transition-colors">Refund Policy</Link>
           </nav>
-          <p className="text-xs text-m
+          <p className="text-xs text-muted-foreground font-body">© {new Date().getFullYear()} The Scent Match. All rights reserved.</p>
+        </div>
+      </footer>
+    </>
+  );
+}
