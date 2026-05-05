@@ -37,11 +37,14 @@ export default function HeroSection({ heroImage }) {
             <span className="text-primary">Fragrance Gift</span>{' '}
             Wrong Again
           </h1>
-          <p className="font-body text-base md:text-lg text-foreground/75 leading-relaxed mb-8 max-w-lg font-light tracking-wide">
+          <p className="font-body text-base md:text-lg text-foreground/75 leading-relaxed mb-4 max-w-lg font-light tracking-wide">
             We've spent years developing our fragrance expertise so you don't have to. Just answer a few questions and leave the rest to us.
           </p>
+          <p className="text-xs text-primary font-body font-medium mb-6">
+            Premium scent match • £4.99
+          </p>
           {/* Route pills */}
-          <div className="flex flex-col sm:flex-row gap-3 mb-3">
+          <div className="flex flex-col sm:flex-row gap-3 mb-4">
             <Button
               onClick={() => handleRoute('gift')}
               size="lg"
@@ -59,10 +62,7 @@ export default function HeroSection({ heroImage }) {
               Discover Your Next Favourite
             </Button>
           </div>
-          <p className="text-xs text-primary font-body font-medium mb-3">
-            Premium scent match • £4.99
-          </p>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 mb-4">
             <div className="flex items-center gap-0.5">
               {[...Array(5)].map((_, i) => (
                 <svg key={i} className="w-4 h-4 text-primary" fill="currentColor" viewBox="0 0 20 20">
@@ -71,6 +71,14 @@ export default function HeroSection({ heroImage }) {
               ))}
             </div>
             <span className="text-xs text-foreground/60 font-body">"Finally found a fragrance he actually loves." - Sarah M., Manchester</span>
+          </div>
+          {/* Trust bar */}
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+            <span className="text-xs text-foreground/50 font-body">Less than your last coffee</span>
+            <span className="text-foreground/30 text-xs">·</span>
+            <span className="text-xs text-foreground/50 font-body">No subscription</span>
+            <span className="text-foreground/30 text-xs">·</span>
+            <span className="text-xs text-foreground/50 font-body">Results in minutes</span>
           </div>
         </motion.div>
       </div>
