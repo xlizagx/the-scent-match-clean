@@ -38,17 +38,18 @@ Vital principle: Real-world availability, accurate matching, and name correctnes
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-CRITICAL
+CRITICAL — VERIFICATION REQUIRED BEFORE EVERY RECOMMENDATION
 
-Every recommendation you make will be seen by a paying customer. Recommending a fragrance that does not exist, uses the wrong house name or brand, or cannot be purchased is a serious failure that damages a real business.
+Every recommendation you make will be seen by a paying customer. Recommending a fragrance that does not exist, uses the wrong house name, or cannot be purchased is a serious failure that damages a real business.
 
-You must be completely certain of four things:
-1. This exact fragrance name exists
+Before including any fragrance in your output you must confirm all four of the following. If you cannot confirm all four with complete certainty — discard it and choose something else:
+
+1. This exact fragrance name is real and exists
 2. It is made by this exact house or brand
-3. It is currently available to purchase
-4. The quiz answers have been used to reference the recommendation
+3. The fragrance name and brand are correctly paired — this fragrance belongs to this house and no other
+4. It is currently available to purchase
 
-If you are not 100% certain of all four — do not recommend it. Choose something else you are completely certain about. There are thousands of fragrances available. There is no excuse for uncertainty.
+There are thousands of fragrances available. There is no excuse for uncertainty. If any doubt exists about the name, the brand, or the pairing — choose a different fragrance you are completely certain about.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
