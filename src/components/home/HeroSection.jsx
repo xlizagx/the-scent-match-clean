@@ -70,15 +70,15 @@ export default function HeroSection({ heroImage }) {
                 </svg>
               ))}
             </div>
-            <span className="text-xs text-foreground/60 font-body">"Finally found a fragrance he actually loves." - Sarah M., Manchester</span>
+            <span className="text-xs text-foreground/75 font-body">"Finally found a fragrance he actually loves." - Sarah M., Manchester</span>
           </div>
           {/* Trust bar */}
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-            <span className="text-xs text-foreground/50 font-body">Less than your last coffee</span>
-            <span className="text-foreground/30 text-xs">·</span>
-            <span className="text-xs text-foreground/50 font-body">No subscription</span>
-            <span className="text-foreground/30 text-xs">·</span>
-            <span className="text-xs text-foreground/50 font-body">Results in minutes</span>
+            <span className="text-xs text-foreground/75 font-body">Less than your last coffee</span>
+            <span className="text-foreground/40 text-xs">·</span>
+            <span className="text-xs text-foreground/75 font-body">No subscription</span>
+            <span className="text-foreground/40 text-xs">·</span>
+            <span className="text-xs text-foreground/75 font-body">Results in minutes</span>
           </div>
         </motion.div>
       </div>
