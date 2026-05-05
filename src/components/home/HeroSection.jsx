@@ -70,7 +70,7 @@ export default function HeroSection({ heroImage }) {
                 </svg>
               ))}
             </div>
-            <span className="text-xs text-foreground/60 font-body">"Finally found a fragrance he actually loves." — Sarah M., Manchester</span>
+            <span className="text-xs text-foreground/60 font-body">"Finally found a fragrance he actually loves." - Sarah M., Manchester</span>
           </div>
         </motion.div>
       </div>
