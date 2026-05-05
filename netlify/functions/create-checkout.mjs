@@ -1,48 +1,39 @@
 export default async (request) => {
- if (request.method !== 'POST') {
-   return new Response(JSON.stringify({ error: 'Method not allowed' }), {
-     status: 405,
-     headers: { 'Content-Type': 'application/json' }
-   });
- }
-
- const stripeKey = process.env.STRIPE_SECRET_KEY;
- const { default: Stripe } = await import('stripe');
- const stripe = new Stripe(stripeKey);
-
- const body = await request.json();
- const { isAddon } = body;
-
- const price = isAddon ? 199 : 499;
-
- const label = isAddon
-   ? 'The Scent Match - Another Round of Recommendations'
-   : 'The Scent Match - 3 Personalised Fragrance Recommendations';
-
- const session = await stripe.checkout.sessions.create({
-   automatic_payment_methods: {
-     enabled: true,
-   },
-   line_items: [{
-     price_data: {
-       currency: 'gbp',
-       product_data: { name: label },
-       unit_amount: price,
-     },
-     quantity: 1,
-   }],
-   mode: 'payment',
-  allow_promotion_codes:true,
-   success_url: `https://thescentmatch.com/quiz?payment=success&addon=${isAddon ? 'true' : 'false'}`,
-   cancel_url: `https://thescentmatch.com/quiz?payment=cancelled`,
- });
-
- return new Response(JSON.stringify({ url: session.url }), {
-   status: 200,
-   headers: { 'Content-Type': 'application/json' }
- });
+  if (request.method !== 'POST') {
+    return new Response(JSON.stringify({ error: 'Method not allowed' }), {
+      status: 405,
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
+  const stripeKey = process.env.STRIPE_SECRET_KEY;
+  const { default: Stripe } = await import('stripe');
+  const stripe = new Stripe(stripeKey);
+  const body = await request.json();
+  const { isAddon } = body;
+  const price = isAddon ? 199 : 499;
+  const label = isAddon
+    ? 'The Scent Match - Another Round of Recommendations'
+    : 'The Scent Match - 3 Personalised Fragrance Recommendations';
+  const session = await stripe.checkout.sessions.create({
+    payment_method_types: ['card', 'link'],
+    line_items: [{
+      price_data: {
+        currency: 'gbp',
+        product_data: { name: label },
+        unit_amount: price,
+      },
+      quantity: 1,
+    }],
+    mode: 'payment',
+    allow_promotion_codes: true,
+    success_url: `https://thescentmatch.com/quiz?payment=success&addon=${isAddon ? 'true' : 'false'}`,
+    cancel_url: `https://thescentmatch.com/quiz?payment=cancelled`,
+  });
+  return new Response(JSON.stringify({ url: session.url }), {
+    status: 200,
+    headers: { 'Content-Type': 'application/json' }
+  });
 };
-
 export const config = {
- path: '/api/create-checkout'
+  path: '/api/create-checkout'
 };
