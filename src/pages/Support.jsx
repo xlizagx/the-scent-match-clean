@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -35,26 +36,9 @@ const FAQS = [
   },
 ];
 
-const HOW_IT_WORKS = [
-  {
-    step: "01",
-    title: "Answer a few thoughtful questions",
-    description: "Tell us about the person you're gifting - their personality, style, scent preferences, and the occasion. A few quick questions, done in minutes."
-  },
-  {
-    step: "02",
-    title: "We thoughtfully interpret your answers",
-    description: "We carefully consider their personality, style, gifting moment, and the kind of scent they'd genuinely love to receive - then match against our verified fragrance catalogue."
-  },
-  {
-    step: "03",
-    title: "Receive three individually matched recommendations instantly",
-    description: "A Safe Match, a Statement Choice, and a Wildcard Discovery - each selected around the recipient, with a confidence score, easy-to-understand description, and direct buy links."
-  },
-];
-
 const ISSUE_TYPES = [
   { value: 'general-enquiry', label: 'General enquiry' },
+  { value: 'personal-scent-session', label: 'Personal Scent Session - Early Access' },
   { value: 'duplicate-result', label: 'Duplicate result received' },
   { value: 'technical-issue', label: 'Technical issue' },
   { value: 'other', label: 'Other' },
@@ -81,10 +65,28 @@ function FAQItem({ faq }) {
 }
 
 export default function Support() {
-  const [form, setForm] = useState({ name: '', email: '', issue_type: 'general-enquiry', message: '' });
+  const location = useLocation();
+  const isConsultation = location.state?.issueType === 'Personal Scent Session - Early Access';
+
+  const [form, setForm] = useState({
+    name: '',
+    email: '',
+    issue_type: isConsultation ? 'personal-scent-session' : 'general-enquiry',
+    message: ''
+  });
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
+
+  useEffect(() => {
+    if (isConsultation) {
+      setForm(f => ({ ...f, issue_type: 'personal-scent-session' }));
+      setTimeout(() => {
+        const el = document.getElementById('contact');
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    }
+  }, [isConsultation]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -138,14 +140,26 @@ export default function Support() {
         <motion.section id="contact" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-16 scroll-mt-28">
           <div className="flex items-center justify-center gap-2 mb-8">
             <MessageSquare className="w-4 h-4 text-primary" />
-            <h2 className="font-heading text-2xl text-foreground">Get in Touch</h2>
+            <h2 className="font-heading text-2xl text-foreground">
+              {isConsultation ? 'Register Your Interest' : 'Get in Touch'}
+            </h2>
           </div>
+
+          {isConsultation && (
+            <p className="text-sm text-muted-foreground font-body text-center mb-6 leading-relaxed">
+              Leave your details below and we'll be in touch to confirm your space and introductory rate.
+            </p>
+          )}
 
           {submitted ? (
             <div className="text-center py-14 bg-card border border-border/40 rounded-2xl">
               <CheckCircle className="w-10 h-10 text-primary mx-auto mb-4" />
-              <p className="font-heading text-xl text-foreground mb-2">Message received</p>
-              <p className="text-sm text-muted-foreground font-body">We'll be in touch shortly.</p>
+              <p className="font-heading text-xl text-foreground mb-2">
+                {isConsultation ? 'Interest registered' : 'Message received'}
+              </p>
+              <p className="text-sm text-muted-foreground font-body">
+                {isConsultation ? "We'll be in touch shortly to confirm your space." : "We'll be in touch shortly."}
+              </p>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="bg-card border border-border/40 rounded-2xl p-8 space-y-5">
@@ -174,7 +188,7 @@ export default function Support() {
               </div>
 
               <div className="space-y-2">
-                <label className="text-xs font-body font-medium text-muted-foreground uppercase tracking-wider">Issue Type</label>
+                <label className="text-xs font-body font-medium text-muted-foreground uppercase tracking-wider">Enquiry Type</label>
                 <select
                   value={form.issue_type}
                   onChange={e => setForm({ ...form, issue_type: e.target.value })}
@@ -191,7 +205,7 @@ export default function Support() {
                 <textarea
                   value={form.message}
                   onChange={e => setForm({ ...form, message: e.target.value })}
-                  placeholder="Tell us what happened or what you need help with..."
+                  placeholder={isConsultation ? "Tell us a little about yourself and what you're looking for..." : "Tell us what happened or what you need help with..."}
                   required
                   rows={5}
                   className="w-full bg-secondary border border-border/50 rounded-xl font-body text-sm text-foreground px-4 py-3 focus:outline-none focus:ring-1 focus:ring-ring resize-none"
@@ -208,7 +222,7 @@ export default function Support() {
                 size="lg"
                 className="bg-primary text-primary-foreground hover:bg-primary/90 font-body text-sm tracking-wide rounded-full h-12 w-full"
               >
-                {submitting ? 'Sending...' : 'Send Message'}
+                {submitting ? 'Sending...' : isConsultation ? 'Register My Interest' : 'Send Message'}
               </Button>
             </form>
           )}
