@@ -4,6 +4,7 @@ import TrustSection from '../components/home/TrustSection';
 import MemorySection from '../components/home/MemorySection';
 import PathsSection from '../components/home/PathsSection';
 import TestimonialsSection from '../components/home/TestimonialsSection';
+import ConsultationTeaser from '../components/home/ConsultationTeaser';
 import FooterCTA from '../components/home/FooterCTA';
 
 const HERO_IMAGE = 'https://media.base44.com/images/public/69cac3f60d3002bf060b0af7/6f6a5c1f7_generated_image.png';
@@ -18,6 +19,7 @@ export default function Home() {
       <MemorySection memoryImage={MEMORY_IMAGE} />
       <PathsSection />
       <TestimonialsSection />
+      <ConsultationTeaser />
       <FooterCTA />
     </div>
   );
