@@ -49,15 +49,15 @@ export default function Navbar() {
           <a href="/#reviews" onClick={e => handleAnchorNav(e, '/', 'reviews')} className="text-xs font-body text-foreground/80 hover:text-primary transition-colors tracking-wide">Reviews</a>
           <a href="/support#support-guidance" onClick={e => handleAnchorNav(e, '/support', 'support-guidance')} className="text-xs font-body text-foreground/80 hover:text-primary transition-colors tracking-wide">FAQs</a>
           <a href="/support#contact" onClick={e => handleAnchorNav(e, '/support', 'contact')} className="text-xs font-body text-foreground/80 hover:text-primary transition-colors tracking-wide">Get in touch</a>
-          <Link
-            to="/support#contact"
-            state={{ issueType: 'Personal Scent Session - Early Access' }}
+          <a
+            href="/#consultation"
+            onClick={e => handleAnchorNav(e, '/', 'consultation')}
             className="inline-flex items-center gap-1.5 text-xs font-body text-foreground/80 hover:text-primary transition-colors tracking-wide"
           >
             <Sparkles className="w-3 h-3 text-primary" />
             Personal Consultations
             <span className="text-primary/70 text-[10px] font-medium">(Coming Soon)</span>
-          </Link>
+          </a>
           <a
             href="/#premium-match"
             onClick={e => handleAnchorNav(e, '/', 'premium-match')}
@@ -80,16 +80,15 @@ export default function Navbar() {
           <a href="/#reviews" onClick={e => handleAnchorNav(e, '/', 'reviews')} className="text-sm font-body text-foreground/80 hover:text-primary transition-colors">Reviews</a>
           <a href="/support#support-guidance" onClick={e => handleAnchorNav(e, '/support', 'support-guidance')} className="text-sm font-body text-foreground/80 hover:text-primary transition-colors">FAQs</a>
           <a href="/support#contact" onClick={e => handleAnchorNav(e, '/support', 'contact')} className="text-sm font-body text-foreground/80 hover:text-primary transition-colors">Get in touch</a>
-          <Link
-            to="/support#contact"
-            state={{ issueType: 'Personal Scent Session - Early Access' }}
+          <a
+            href="/#consultation"
+            onClick={e => handleAnchorNav(e, '/', 'consultation')}
             className="inline-flex items-center gap-1.5 text-sm font-body text-foreground/80 hover:text-primary transition-colors"
-            onClick={() => setMobileOpen(false)}
           >
             <Sparkles className="w-3 h-3 text-primary" />
             Personal Consultations
             <span className="text-primary/70 text-xs font-medium">(Coming Soon)</span>
-          </Link>
+          </a>
           <a href="/#premium-match" onClick={e => handleAnchorNav(e, '/', 'premium-match')} className="text-sm font-body font-medium text-primary">Get Started →</a>
         </div>
       )}
