@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 
 export default function ConsultationTeaser() {
   return (
-    <section className="py-16 px-6">
+    <section id="consultation" className="py-16 px-6 scroll-mt-24">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
