@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Sparkles } from 'lucide-react';
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -45,10 +45,19 @@ export default function Navbar() {
 
         {/* Desktop nav */}
         <div className="hidden md:flex items-center gap-6">
-          <a href="/#how-it-works" onClick={e => handleAnchorNav(e, '/', 'how-it-works')} className="text-xs font-body text-muted-foreground hover:text-primary transition-colors tracking-wide">How it works</a>
-          <a href="/#reviews" onClick={e => handleAnchorNav(e, '/', 'reviews')} className="text-xs font-body text-muted-foreground hover:text-primary transition-colors tracking-wide">Reviews</a>
-          <a href="/support#support-guidance" onClick={e => handleAnchorNav(e, '/support', 'support-guidance')} className="text-xs font-body text-muted-foreground hover:text-primary transition-colors tracking-wide">FAQs</a>
-          <a href="/support#contact" onClick={e => handleAnchorNav(e, '/support', 'contact')} className="text-xs font-body text-muted-foreground hover:text-primary transition-colors tracking-wide">Get in touch</a>
+          <a href="/#how-it-works" onClick={e => handleAnchorNav(e, '/', 'how-it-works')} className="text-xs font-body text-foreground/80 hover:text-primary transition-colors tracking-wide">How it works</a>
+          <a href="/#reviews" onClick={e => handleAnchorNav(e, '/', 'reviews')} className="text-xs font-body text-foreground/80 hover:text-primary transition-colors tracking-wide">Reviews</a>
+          <a href="/support#support-guidance" onClick={e => handleAnchorNav(e, '/support', 'support-guidance')} className="text-xs font-body text-foreground/80 hover:text-primary transition-colors tracking-wide">FAQs</a>
+          <a href="/support#contact" onClick={e => handleAnchorNav(e, '/support', 'contact')} className="text-xs font-body text-foreground/80 hover:text-primary transition-colors tracking-wide">Get in touch</a>
+          <Link
+            to="/support#contact"
+            state={{ issueType: 'Personal Scent Session - Early Access' }}
+            className="inline-flex items-center gap-1.5 text-xs font-body text-foreground/80 hover:text-primary transition-colors tracking-wide"
+          >
+            <Sparkles className="w-3 h-3 text-primary" />
+            Personal Consultations
+            <span className="text-primary/70 text-[10px] font-medium">(Coming Soon)</span>
+          </Link>
           <a
             href="/#premium-match"
             onClick={e => handleAnchorNav(e, '/', 'premium-match')}
@@ -67,10 +76,20 @@ export default function Navbar() {
       {/* Mobile dropdown */}
       {mobileOpen && (
         <div className="md:hidden bg-background border-t border-border/50 px-5 py-4 flex flex-col gap-4">
-          <a href="/#how-it-works" onClick={e => handleAnchorNav(e, '/', 'how-it-works')} className="text-sm font-body text-muted-foreground hover:text-primary transition-colors">How it works</a>
-          <a href="/#reviews" onClick={e => handleAnchorNav(e, '/', 'reviews')} className="text-sm font-body text-muted-foreground hover:text-primary transition-colors">Reviews</a>
-          <a href="/support#support-guidance" onClick={e => handleAnchorNav(e, '/support', 'support-guidance')} className="text-sm font-body text-muted-foreground hover:text-primary transition-colors">FAQs</a>
-          <a href="/support#contact" onClick={e => handleAnchorNav(e, '/support', 'contact')} className="text-sm font-body text-muted-foreground hover:text-primary transition-colors">Get in touch</a>
+          <a href="/#how-it-works" onClick={e => handleAnchorNav(e, '/', 'how-it-works')} className="text-sm font-body text-foreground/80 hover:text-primary transition-colors">How it works</a>
+          <a href="/#reviews" onClick={e => handleAnchorNav(e, '/', 'reviews')} className="text-sm font-body text-foreground/80 hover:text-primary transition-colors">Reviews</a>
+          <a href="/support#support-guidance" onClick={e => handleAnchorNav(e, '/support', 'support-guidance')} className="text-sm font-body text-foreground/80 hover:text-primary transition-colors">FAQs</a>
+          <a href="/support#contact" onClick={e => handleAnchorNav(e, '/support', 'contact')} className="text-sm font-body text-foreground/80 hover:text-primary transition-colors">Get in touch</a>
+          <Link
+            to="/support#contact"
+            state={{ issueType: 'Personal Scent Session - Early Access' }}
+            className="inline-flex items-center gap-1.5 text-sm font-body text-foreground/80 hover:text-primary transition-colors"
+            onClick={() => setMobileOpen(false)}
+          >
+            <Sparkles className="w-3 h-3 text-primary" />
+            Personal Consultations
+            <span className="text-primary/70 text-xs font-medium">(Coming Soon)</span>
+          </Link>
           <a href="/#premium-match" onClick={e => handleAnchorNav(e, '/', 'premium-match')} className="text-sm font-body font-medium text-primary">Get Started →</a>
         </div>
       )}
