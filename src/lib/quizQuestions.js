@@ -68,10 +68,10 @@ export const quizQuestions = [
     type: 'multiselect',
     maxSelections: 2,
     options: [
-      { value: 'designer', label: 'Designer', description: 'Trusted names — Dior, Chanel, YSL, Hermès, Jo Malone' },
-      { value: 'luxury_niche', label: 'Luxury niche & discovery', description: 'Elevated — MFK, Amouage, Parfums de Marly, Xerjoff, Nishane, BDK, Goldfield & Banks' },
-      { value: 'middle_eastern', label: 'Middle Eastern', description: 'Rich & opulent — Afnan, Lattafa, Armaf, Rasasi, Swiss Arabian' },
-      { value: 'surprise', label: 'Open to the best fit', description: 'This lets us curate the best overall fit for them.' },
+      { value: 'designer', label: 'Designer', description: 'Think trusted names you\'ll recognise - Dior, Chanel, YSL, Hermès and Jo Malone' },
+      { value: 'luxury_niche', label: 'Luxury niche & discovery', description: 'Elevated, less mainstream brands like Amouage, Parfums de Marly, Xerjoff and Nishane' },
+      { value: 'middle_eastern', label: 'Middle Eastern', description: 'Rich and opulent - think houses like Afnan, Lattafa, Armaf, Rasasi and Swiss Arabian' },
+      { value: 'surprise', label: 'Open to the best fit', description: 'Surprise me - I\'m open to discovering something new, even if I haven\'t heard of it before' },
     ]
   },
   {
