@@ -17,8 +17,8 @@ export default function Home() {
       <HeroSection heroImage={HERO_IMAGE} />
       <TrustSection />
       <PathsSection />
-      <MemorySection memoryImage={MEMORY_IMAGE} />
       <ConsultationTeaser />
+      <MemorySection memoryImage={MEMORY_IMAGE} />
       <TestimonialsSection />
       <FooterCTA />
     </div>
