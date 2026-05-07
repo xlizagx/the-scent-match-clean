@@ -19,7 +19,7 @@ export const quizQuestions = [
     type: 'select',
     options: [
       { value: 'quiet', label: 'Quiet & Reserved', description: 'Calm, introspective, thoughtful presence' },
-      { value: 'confident', label: 'Confident & Assured', description: 'Self-possessed, natural leader energy' },
+      { value: 'confident', label: 'Confident & Assured', description: 'Confident in who they are, a natural born leader' },
       { value: 'bold', label: 'Bold & Magnetic', description: 'Commanding attention, fearless, charismatic' },
       { value: 'soft', label: 'Soft & Gentle', description: 'Warm, nurturing, approachable and kind' },
       { value: 'playful', label: 'Playful & Vibrant', description: 'Energetic, fun-loving, lights up a room' },
@@ -43,7 +43,7 @@ export const quizQuestions = [
     subtitle: "How they present themselves to the world tells us a lot about scent preference.",
     type: 'select',
     options: [
-      { value: 'minimal', label: 'Minimal & Clean', description: 'Less is more — refined simplicity' },
+      { value: 'minimal', label: 'Minimal & Clean', description: 'Less is more - refined simplicity' },
       { value: 'polished', label: 'Polished & Classic', description: 'Timeless elegance, always well put-together' },
       { value: 'statement', label: 'Statement & Luxe', description: 'Bold choices, high-impact fashion, designer-led' },
       { value: 'trendy', label: 'Trendy & Current', description: 'Always ahead, loves what\'s new and now' },
@@ -55,10 +55,10 @@ export const quizQuestions = [
     subtitle: "Don't worry if you're unsure, we've explained each fragrance style to help you.",
     type: 'select',
     options: [
-      { value: 'gourmand', label: 'Gourmand', description: 'Sweet, edible notes — think vanilla, caramel, chocolate, warm cookies' },
-      { value: 'fresh', label: 'Fresh', description: 'Clean and airy — citrus, cool water, crisp linen, morning dew' },
-      { value: 'floral', label: 'Floral', description: 'Soft petals and romantic blooms — rose, jasmine, peony, feminine elegance' },
-      { value: 'woody', label: 'Woody', description: 'Warm depth — creamy sandalwood, smoky oud, cedar, earthy sophistication' },
+      { value: 'gourmand', label: 'Gourmand', description: 'Sweet, edible notes - think vanilla, caramel, chocolate, warm cookies' },
+      { value: 'fresh', label: 'Fresh', description: 'Clean and airy - citrus, cool water, crisp linen, morning dew' },
+      { value: 'floral', label: 'Floral', description: 'Freshly cut flowers - ranging from light, dewy and powdery to rich and intoxicating' },
+      { value: 'woody', label: 'Woody', description: 'Warm depth - creamy sandalwood, smoky oud, cedar, earthy sophistication' },
     ]
   },
   {
@@ -80,7 +80,7 @@ export const quizQuestions = [
     subtitle: "The occasion helps shape the ideal projection, mood, and character of the scent.",
     type: 'select',
     options: [
-      { value: 'everyday', label: 'Everyday Signature', description: 'Their daily go-to — versatile and reliable' },
+      { value: 'everyday', label: 'Everyday Signature', description: 'Their daily go-to. Versatile and reliable' },
       { value: 'evening', label: 'Evening & Date Night', description: 'Seductive, deeper, more intimate' },
       { value: 'special', label: 'Special Occasions', description: 'Events, celebrations, memorable moments' },
       { value: 'work', label: 'Professional Setting', description: 'Office-appropriate, sophisticated, not overpowering' },
@@ -92,9 +92,9 @@ export const quizQuestions = [
     subtitle: "Seasonality helps shape the ideal depth, warmth, and character of the scent.",
     type: 'select',
     options: [
-      { value: 'spring', label: 'Spring', description: 'Fresh, floral, light and uplifting' },
-      { value: 'summer', label: 'Summer', description: 'Airy, citrus-bright, effortless warmth' },
-      { value: 'autumn', label: 'Autumn', description: 'Spiced, amber-rich, cosy and warm' },
+      { value: 'spring', label: 'Spring', description: 'Light and uplifting' },
+      { value: 'summer', label: 'Summer', description: 'Fresh, uplifting and heat-ready. Citrus, aquatic, green and fruity notes' },
+      { value: 'autumn', label: 'Autumn', description: 'Cosy and warm' },
       { value: 'winter', label: 'Winter', description: 'Deep, opulent, rich and enveloping' },
       { value: 'all_year', label: 'Perfect all year round', description: 'A versatile signature for every season' },
     ]
@@ -105,9 +105,9 @@ export const quizQuestions = [
     subtitle: "This helps us refine towards age-appropriate choices.",
     type: 'select',
     options: [
-      { value: '18-25', label: '18–25', description: 'Youthful, fresh, trend-aware' },
-      { value: '26-35', label: '26–35', description: 'Established taste, open to discovery' },
-      { value: '36-50', label: '36–50', description: 'Refined preferences, quality-focused' },
+      { value: '18-25', label: '18-25', description: 'Youthful, fresh, trend-aware' },
+      { value: '26-35', label: '26-35', description: 'Established taste, open to discovery' },
+      { value: '36-50', label: '36-50', description: 'Refined preferences, quality-focused' },
       { value: '50+', label: '50+', description: 'Classic elegance, timeless choices' },
       { value: 'skip', label: 'Prefer not to say', description: 'Skip this question' },
     ]
@@ -119,7 +119,7 @@ export const quizQuestions = [
     type: 'select',
     options: [
       { value: 'under_100', label: 'Under £100', description: 'Great value picks across all fragrance worlds' },
-      { value: '100_200', label: '£100–£200', description: 'Mid-to-premium range, broad selection' },
+      { value: '100_200', label: '£100-£200', description: 'Mid-to-premium range, broad selection' },
       { value: '200_plus', label: '£200+', description: 'Luxury and ultra-niche territory' },
       { value: 'open', label: 'Open to the best match', description: 'Let the best fit guide the recommendation' },
     ]
