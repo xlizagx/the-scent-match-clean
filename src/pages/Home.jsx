@@ -18,8 +18,8 @@ export default function Home() {
       <TrustSection />
       <MemorySection memoryImage={MEMORY_IMAGE} />
       <PathsSection />
-      <TestimonialsSection />
       <ConsultationTeaser />
+      <TestimonialsSection />
       <FooterCTA />
     </div>
   );
