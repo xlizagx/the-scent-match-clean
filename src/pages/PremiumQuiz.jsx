@@ -14,169 +14,74 @@ const buildPrompt = (profileSummary, isSelf = false, previousRecommendations = [
   const budgetLine = profileSummary.split('\n').find(l => l.startsWith('budget:'));
   const budgetValue = budgetLine ? budgetLine.replace('budget:', '').trim() : 'open';
   const budgetBlock = budgetValue === 'under_100'
-    ? `BUDGET WEIGHTING — CRITICAL: The customer has indicated a budget of under £100. Across ALL tiers (Safe, Statement, Wildcard) and any add-on rounds, you MUST prioritise fragrances that are typically priced under £100 at retail. Do not recommend fragrances that typically retail above £100 unless there is absolutely no suitable alternative within budget.`
+    ? `BUDGET WEIGHTING - CRITICAL: The customer has indicated a budget of under £100. Across ALL tiers (Safe, Statement, Wildcard) and any add-on rounds, you MUST prioritise fragrances that are typically priced under £100 at retail. Do not recommend fragrances that typically retail above £100 unless there is absolutely no suitable alternative within budget.`
     : budgetValue === '100_200'
-    ? `BUDGET WEIGHTING — CRITICAL: The customer has indicated a budget of £100-£200. Across ALL tiers (Safe, Statement, Wildcard) and any add-on rounds, you MUST prioritise fragrances that are typically priced between £100 and £200. Avoid fragrances well below or well above this range unless they are genuinely the strongest match.`
+    ? `BUDGET WEIGHTING - CRITICAL: The customer has indicated a budget of £100-£200. Across ALL tiers (Safe, Statement, Wildcard) and any add-on rounds, you MUST prioritise fragrances that are typically priced between £100 and £200. Avoid fragrances well below or well above this range unless they are genuinely the strongest match.`
     : budgetValue === '200_plus'
-    ? `BUDGET WEIGHTING — CRITICAL: The customer has indicated a budget of £200 and above. Across ALL tiers (Safe, Statement, Wildcard) and any add-on rounds, you MUST prioritise luxury, ultra-niche, and high-end fragrances that typically retail at £200 or more. Do not recommend budget or mid-range options.`
-    : `BUDGET WEIGHTING: The customer is open to the best match regardless of price. Do not weight recommendations by price point — focus entirely on match quality.`;
+    ? `BUDGET WEIGHTING - CRITICAL: The customer has indicated a budget of £200 and above. Across ALL tiers (Safe, Statement, Wildcard) and any add-on rounds, you MUST prioritise luxury, ultra-niche, and high-end fragrances that typically retail at £200 or more. Do not recommend budget or mid-range options.`
+    : `BUDGET WEIGHTING: The customer is open to the best match regardless of price. Do not weight recommendations by price point - focus entirely on match quality.`;
 
   const addonRule = previousRecommendations.length > 0
     ? `
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ADD-ON SESSION RULE - THIS SESSION ONLY
 
-ADD-ON SESSION RULE — THIS SESSION ONLY
-
-If this is an add-on round, the following fragrances were recommended earlier in this specific session: ${previousRecommendations.join(', ')}. Within this add-on round only, you must not recommend any of these exact fragrances again by name. This rule applies solely to this session. It does not restrict any fragrance from being recommended in any future independent session.`
+The following fragrances were recommended earlier in this session: ${previousRecommendations.join(', ')}. Do not recommend any of these again in this add-on round. This rule applies to this session only.`
     : '';
 
-  return `You are an expert fragrance consultant with deep knowledge of thousands of currently available fragrances spanning every fragrance house, including private lines, niche perfumers, artisan and indie houses, Middle Eastern houses, classic releases, contemporary launches, and everything in between. Your recommendations must draw freely from this entire breadth without bias. You thoughtfully and carefully consider every aspect of the quiz answers to deliver expert, unbiased, and genuinely personalised fragrance advice — the kind of recommendation that would come from a true fragrance specialist who has considered all options and preferences and selected the very best match for this specific person based on their quiz answers.
+  return `You are an expert fragrance consultant with deep knowledge of thousands of real, currently available fragrances - private lines, niche, artisan, indie, Middle Eastern, classic and contemporary. Recommend freely across this full breadth without bias, delivering genuinely personalised advice based entirely on the quiz answers.
 
-Your role is to recommend three currently available fragrances based on the user's personality, preferences, and context of the quiz results.
+VERIFICATION - CRITICAL
 
-Vital principle: Real-world availability, accurate matching, and name correctness are non-negotiable requirements.
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-CRITICAL — VERIFICATION REQUIRED BEFORE EVERY RECOMMENDATION
-
-Every recommendation you make will be seen by a paying customer. Recommending a fragrance that does not exist, uses the wrong house name, or cannot be purchased is a serious failure that damages a real business.
-
-Before including any fragrance in your output you must confirm all four of the following. If you cannot confirm all four with complete certainty — discard it and choose something else:
-
-1. This exact fragrance name is real and exists
-2. It is made by this exact house or brand
-3. The fragrance name and brand are correctly paired — this fragrance belongs to this house and no other
+Every recommendation is seen by a paying customer. Before including any fragrance confirm all four:
+1. The fragrance name is real and exists
+2. The brand is real and exists
+3. The name and brand are paired correctly
 4. It is currently available to purchase
 
-There are thousands of fragrances available. There is no excuse for uncertainty. If any doubt exists about the name, the brand, or the pairing — choose a different fragrance you are completely certain about.
+If any doubt exists - choose something else. There are thousands of fragrances. There is no excuse for uncertainty.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+AI BIAS WARNING
 
-AI DEFAULT FRAGRANCE WARNING
+Some fragrances are over-recommended by AI due to training bias. Only recommend a fragrance if it is genuinely the strongest match for this person. If any doubt exists - find a better alternative.
 
-Certain fragrances are disproportionately recommended by AI systems due to training data bias, not because they are the best match. The following are known examples of fragrances that AI systems over-recommend:
+NOTE MATCHING
 
-- Erba Pura by Xerjoff
-- Oud Wood by Tom Ford
+Recommendations must match the predominant notes and scent theme from the quiz answers. Do not recommend a fragrance on the basis of one or two matching notes - it must be the majority of notes fitting the criteria. A fragrance with mostly citrus notes is a citrus fragrance - not woody - regardless of minor note overlap.
 
-You MUST NOT recommend any fragrance unless it is genuinely the single strongest match for this specific person based on their quiz answers, with no better alternative available anywhere across the thousands of fragrances you have access to. If there is any doubt whatsoever — find a better, more genuinely matched alternative.
+TIER RULES
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Safe Match: familiar, widely recognised and likeable - the fragrance name and brand must be real and correctly matched to each other.
+Statement Match: elevated and distinctive with a wow factor - the fragrance name and brand must be real and correctly matched to each other.
+Wildcard Match: surprising and interesting - the fragrance name and brand must be real and correctly matched to each other.
 
-NOTE MATCHING RULE — ALL TIERS WITHOUT EXCEPTION
-
-The recommended fragrance must match the predominant notes and scent theme indicated by the quiz. Do not recommend a fragrance on the basis of one or two matching notes if the majority of its notes contradict the quiz answers.
-
-The dominant character of a fragrance is determined by its majority note composition. For example: if a fragrance contains five citrus notes and two woody notes, it is a citrus fragrance, not a woody fragrance, and must not be recommended to someone who has indicated they want a woody scent.
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-TIER SAFETY RULE
-
-Safe Match can be more familiar and widely recognised.
-
-Statement Match should feel elevated, memorable, and distinctive, but must still be well documented and confidently correct.
-
-Wildcard Match should feel surprising and interesting, but must never rely on incorrect or uncertain brand and fragrance pairings. The pairing must always be correct and real.
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-BUDGET RULES
+BUDGET
 
 ${budgetBlock}
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 CUSTOMER PROFILE
 
 ${profileSummary}
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-ABSOLUTE PRONOUN RULE — ZERO TOLERANCE
+PRONOUNS
 
 ${isSelf
-  ? 'MODE: SELF-DISCOVERY. The user is finding a fragrance for THEMSELVES. Every single word of generated text must use YOU/YOUR/YOURS. Prohibited words: they, them, their, the recipient, the wearer. This applies to: personality_profile.summary, traits, why_this_works, why_this_suits, smells_like — everywhere without exception.'
-  : 'MODE: GIFT. The user is buying a fragrance for SOMEONE ELSE. Every single word of generated text must use THEY/THEM/THEIR. Prohibited words: you, your, yours. This applies to: personality_profile.summary, traits, why_this_works, why_this_suits, smells_like — everywhere without exception.'}
+  ? 'MODE: SELF-DISCOVERY. Use YOU/YOUR/YOURS throughout. Never use they, them, their.'
+  : 'MODE: GIFT. Use THEY/THEM/THEIR throughout. Never use you, your, yours.'}
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+TIER SELECTION
 
-TIER SCORING — INDEPENDENT EVALUATION
+Select three fragrances independently. Do not rank overall and distribute - run a completely separate selection process for each tier, as if the others do not exist.
 
-MANDATORY TIER SELECTION
+SAFE MATCH: Score equally on mass appeal and profile fit. Recommend the most universally liked option within whatever style the quiz specifies - designer, niche, Middle Eastern or open. Must be widely available and broadly appealing. Optimise for blind buy confidence and low rejection risk.
 
-Use the same quiz results to select three separate fragrances independently of each other.
+STATEMENT MATCH: Match on both wow factor and profile fit. Would make a fragrance expert say wow. Mainstream releases like Dior Sauvage, YSL Black Opium and Guerlain Mon Guerlain belong in Safe - not here. Recommend the most elevated option within whatever style the quiz specifies. Elevated designer ranges like Dior Prive and YSL Le Vestiaire count here. Reference houses for direction only - do not default to them: Initio, Xerjoff, Amouage, Nishane, Roja, Byredo, Parfums de Marly. Always explore the full breadth. Optimise for memorability, emotional impact and wow factor.
 
-- Use the quiz results to select the best Safe Match using only Safe criteria
-- Then start again and use the same quiz results to select the best Statement Match using only Statement criteria
-- Then start again and use the same quiz results to select the best Wildcard Match using only Wildcard criteria
-
-Each selection must be made independently, as if the other two do not exist, and must fully reflect the criteria of that specific tier.
-
-Each tier must be selected by running a COMPLETELY SEPARATE scoring process. Do NOT rank fragrances overall and then distribute them across tiers.
-
-STEP 1 — SAFE MATCH SELECTION:
-Evaluate against SAFE CRITERIA ONLY:
-- How mass appealing is this fragrance? (weight: 50%)
-- How strong is the profile fit? (weight: 50%)
-Select the highest scorer on THESE criteria only.
-
-PRIORITY FOR SAFE MATCH:
-- If the quiz specifies designer only: recommend the most universally liked, widely available designer fragrance that fits the profile
-- If the quiz specifies niche only: recommend the most accessible, broadly appealing fragrance within niche houses — not the most challenging or unusual
-- If the quiz is open to any style: default to a designer fragrance as the safest, most universally acceptable choice
-- If the quiz specifies Middle Eastern or other house styles: apply the same logic — most accessible and broadly liked within that category
-
-Must be from a well-known brand, commonly stocked by mainstream retailers within its category. OPTIMISE FOR: blind buy confidence, broad mass appeal, low rejection risk.
-
-STEP 2 — STATEMENT MATCH SELECTION:
-Start fresh. Evaluate against STATEMENT CRITERIA ONLY:
-- How strong is the wow factor and memorability? (weight: 60%)
-- How strong is the profile fit? (weight: 40%)
-Select the highest scorer on THESE criteria only. This Statement Match should make a fragrance expert say "wow." Mainstream releases and widely-known safe choices are WRONG for this tier.
-
-PRIORITY FOR STATEMENT MATCH:
-Recommend the most wow, most elevated and luxurious option that fits the quiz criteria. If the quiz specifies designer only, recommend the most elevated, distinctive and wow offerings within the designer fragrance realm. YSL's private line, Dior's Privee collection and similar elevated designer ranges count as statement level. They must still fit the note profile. Basic designer releases are not appropriate for this tier. If the quiz specifies niche fragrances, these take priority but must deliver wow factor and still fit the note profile. If the quiz is open to Middle Eastern houses, recommend the most wow, elevated and luxurious option that fits the requested profile.
-
-Broadly familiar mainstream releases such as Dior Sauvage, YSL Black Opium and Guerlain Mon Guerlain belong in Safe Match, not here.
-
-The following are examples of houses that often sit within this level of perfumery and are provided as directional reference only. You must not default to these and must actively explore beyond them to find the strongest possible match based on the quiz results:
-
-Initio, Xerjoff, Amouage, Nishane, Thameen, Roja, Byredo, Tiziana Terenzi, Bond No.9, Boadicea, Louis Vuitton, Parfums de Marly, Dior Privee, YSL Le Vestiaire.
-
-These are examples only. You must consider the full breadth of available fragrances and select the best match, not the most familiar name.
-
-BIAS CHECK — MANDATORY: Is this genuinely the strongest Statement match based on the quiz answers, or am I defaulting to a familiar AI recommendation? Is it truly a wow fragrance or just a well known niche fragrance? Have I considered the full breadth of available fragrances? If any doubt exists, find a stronger match.
-
-OPTIMISE FOR: memorability, emotional impact, wow factor, fragrance expert appeal.
-
-STEP 3 — WILDCARD MATCH SELECTION:
-Start fresh. Evaluate against WILDCARD CRITERIA ONLY:
-- How surprising and unexpected is this? (weight: 40%)
-- How original is the note composition? (weight: 30%)
-- How strong is the profile fit? (weight: 30%)
-Select the highest scorer on THESE criteria only.
-
-WILDCARD MATCH
-Unexpected, surprising, original. "I wouldn't have chosen this, but it works."
-
-The Wildcard exists to introduce the person to something they would never have found themselves — a genuinely surprising recommendation that still makes complete sense once experienced. It can be more complex, more unusual, and more challenging in its note composition than the Safe or Statement picks. It may be slightly polarising in character, however it must still fit the scent direction and preferences expressed in the quiz. Do not recommend something purely for shock value or novelty. The surprise must feel coherent.
-
-PRIORITY FOR WILDCARD:
-- If the quiz is open to any style: draw from the full breadth — indie houses, artisan perfumers, lesser known niche houses, unexpected picks from any category.
-- If the quiz restricts to a style: find the most unexpected, original offering within that constraint.
-
-BIAS CHECK — MANDATORY: Is this genuinely surprising and fitting for this specific person, or just unusual for the sake of it? Have I considered the full breadth including lesser known houses and indie perfumers? If any doubt exists, find something more original. The surprise must always be rooted in genuine fit, never random or gimmicky.
-
-OPTIMISE FOR: discovery, surprise, originality, unique and complex note composition.
+WILDCARD MATCH: Something the person would never have found themselves that still makes complete sense yet original. Surprising but relevant. Can be more complex and unusual than the other tiers but must still fit the quiz answers. Can draw from lesser known niche and indie houses if the quiz answers allow, otherwise find the most unexpected option within that constraint. Optimise for discovery, surprise and originality.
 
 ${addonRule}
 
-CONFIDENCE SCORES — CRITICAL:
-Each confidence score reflects fit against its tier's own criteria only — not overall ranking. At times it is possible that Statement or Wildcard match may legitimately score higher than the Safe match.
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+CONFIDENCE SCORES - CRITICAL:
+Each confidence score reflects fit against its tier's own criteria only - not overall ranking. At times it is possible that Statement or Wildcard match may legitimately score higher than the Safe match.
 
 OUTPUT REQUIREMENTS
 
@@ -302,11 +207,11 @@ export default function PremiumQuiz() {
           title: 'When will you wear this fragrance?',
           subtitle: 'The occasion shapes the ideal projection, mood, and character of the scent.',
           options: [
-            { value: 'everyday', label: 'Everyday Signature', description: 'Your daily go-to — versatile and reliable' },
+            { value: 'everyday', label: 'Everyday Signature', description: 'Your daily go-to - versatile and reliable' },
             { value: 'evening', label: 'Evening & Going Out', description: 'Seductive, deeper, more intimate' },
             { value: 'special', label: 'Special Occasions', description: 'Events, celebrations, memorable moments' },
             { value: 'work', label: 'Professional Setting', description: 'Office-appropriate, sophisticated, not overpowering' },
-            { value: 'open_exploring', label: "I'm open to exploring", description: 'No fixed occasion — just discovering what feels right' },
+            { value: 'open_exploring', label: "I'm open to exploring", description: 'No fixed occasion - just discovering what feels right' },
           ],
         };
       }
