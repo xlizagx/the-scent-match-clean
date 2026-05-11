@@ -237,7 +237,7 @@ export default function Support() {
 }
 
 function ReviewSection() {
-  const [form, setForm] = useState({ name: '', location: '', quote: '' });
+  const [form, setForm] = useState({ name: '', email: '', location: '', quote: '' });
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
@@ -291,6 +291,17 @@ function ReviewSection() {
                 value={form.name}
                 onChange={e => setForm({ ...form, name: e.target.value })}
                 placeholder="e.g. Sophie R."
+                required
+                className="bg-secondary border-border/50 rounded-xl h-11 font-body text-sm"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-xs font-body font-medium text-muted-foreground uppercase tracking-wider">Email Address</label>
+              <Input
+                type="email"
+                value={form.email}
+                onChange={e => setForm({ ...form, email: e.target.value })}
+                placeholder="you@example.com"
                 required
                 className="bg-secondary border-border/50 rounded-xl h-11 font-body text-sm"
               />
