@@ -32,6 +32,16 @@ export default function Navbar() {
     }
   };
 
+  const handleGetInTouch = (e) => {
+    e.preventDefault();
+    setMobileOpen(false);
+    navigate('/support', { state: null });
+    setTimeout(() => {
+      const el = document.getElementById('contact');
+      if (el) el.scrollIntoView({ behavior: 'instant' });
+    }, 100);
+  };
+
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-xl border-b border-border/50">
       <div className="max-w-7xl mx-auto px-5 py-2 flex items-center justify-between">
@@ -48,8 +58,8 @@ export default function Navbar() {
           <a href="/#how-it-works" onClick={e => handleAnchorNav(e, '/', 'how-it-works')} className="text-xs font-body text-foreground/80 hover:text-primary transition-colors tracking-wide">How it works</a>
           <a href="/#reviews" onClick={e => handleAnchorNav(e, '/', 'reviews')} className="text-xs font-body text-foreground/80 hover:text-primary transition-colors tracking-wide">Reviews</a>
           <a href="/support#support-guidance" onClick={e => handleAnchorNav(e, '/support', 'support-guidance')} className="text-xs font-body text-foreground/80 hover:text-primary transition-colors tracking-wide">FAQs</a>
-          <a href="/support#contact" onClick={e => handleAnchorNav(e, '/support', 'contact')} className="text-xs font-body text-foreground/80 hover:text-primary transition-colors tracking-wide">Get in touch</a>
-          <a
+          <a href="/support#contact" onClick={handleGetInTouch} className="text-xs font-body text-foreground/80 hover:text-primary transition-colors tracking-wide">Get in touch</a>
+          
             href="/#consultation"
             onClick={e => handleAnchorNav(e, '/', 'consultation')}
             className="inline-flex items-center gap-1.5 text-xs font-body text-foreground/80 hover:text-primary transition-colors tracking-wide"
@@ -58,7 +68,7 @@ export default function Navbar() {
             Personal Consultations
             <span className="text-primary/70 text-[10px] font-medium">(Coming Soon)</span>
           </a>
-          <a
+          
             href="/#premium-match"
             onClick={e => handleAnchorNav(e, '/', 'premium-match')}
             className="text-xs font-body font-medium text-primary border border-primary/40 rounded-full px-4 py-1.5 hover:bg-primary/10 transition-colors"
@@ -79,8 +89,8 @@ export default function Navbar() {
           <a href="/#how-it-works" onClick={e => handleAnchorNav(e, '/', 'how-it-works')} className="text-sm font-body text-foreground/80 hover:text-primary transition-colors">How it works</a>
           <a href="/#reviews" onClick={e => handleAnchorNav(e, '/', 'reviews')} className="text-sm font-body text-foreground/80 hover:text-primary transition-colors">Reviews</a>
           <a href="/support#support-guidance" onClick={e => handleAnchorNav(e, '/support', 'support-guidance')} className="text-sm font-body text-foreground/80 hover:text-primary transition-colors">FAQs</a>
-          <a href="/support#contact" onClick={e => handleAnchorNav(e, '/support', 'contact')} className="text-sm font-body text-foreground/80 hover:text-primary transition-colors">Get in touch</a>
-          <a
+          <a href="/support#contact" onClick={handleGetInTouch} className="text-sm font-body text-foreground/80 hover:text-primary transition-colors">Get in touch</a>
+          
             href="/#consultation"
             onClick={e => handleAnchorNav(e, '/', 'consultation')}
             className="inline-flex items-center gap-1.5 text-sm font-body text-foreground/80 hover:text-primary transition-colors"
