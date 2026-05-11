@@ -90,14 +90,14 @@ exports.handler = async function(event) {
     const safeList = buildFragranceList(filtered);
     const safeResult = await callClaude(`${prompt}
 
-FRAGRANCE DATABASE - ONLY RECOMMEND FROM THIS LIST:
+FRAGRANCE LIST - SELECT FROM THIS LIST ONLY:
 ${safeList}
 
-Select the single best SAFE MATCH from the list above only. Return JSON with:
+Select the single best SAFE MATCH from the list above. Use the exact fragrance_name and brand as shown. Return JSON with:
 {
   "personality_profile": { "summary": "2-3 sentences warm editorial tone", "traits": ["4-6 short labels"] },
-  "fragrance_name": "exact name from list",
-  "brand": "exact brand from list",
+  "fragrance_name": "copy exact name from list",
+  "brand": "copy exact brand from list",
   "confidence_score": 70-98,
   "smells_like": "3-5 notes plain English",
   "why_this_works": "personality-connected reasoning",
@@ -108,13 +108,13 @@ Select the single best SAFE MATCH from the list above only. Return JSON with:
     const statementList = buildFragranceList(filtered);
     const statementResult = await callClaude(`${prompt}
 
-FRAGRANCE DATABASE - ONLY RECOMMEND FROM THIS LIST:
+FRAGRANCE LIST - SELECT FROM THIS LIST ONLY:
 ${statementList}
 
-Select the single best STATEMENT MATCH from the list above only. Return JSON with:
+Select the single best STATEMENT MATCH from the list above. Use the exact fragrance_name and brand as shown. Return JSON with:
 {
-  "fragrance_name": "exact name from list",
-  "brand": "exact brand from list",
+  "fragrance_name": "copy exact name from list",
+  "brand": "copy exact brand from list",
   "confidence_score": 70-98,
   "smells_like": "3-5 notes plain English",
   "why_this_works": "personality-connected reasoning",
@@ -125,13 +125,13 @@ Select the single best STATEMENT MATCH from the list above only. Return JSON wit
     const wildcardList = buildFragranceList(filtered);
     const wildcardResult = await callClaude(`${prompt}
 
-FRAGRANCE DATABASE - ONLY RECOMMEND FROM THIS LIST:
+FRAGRANCE LIST - SELECT FROM THIS LIST ONLY:
 ${wildcardList}
 
-Select the single best WILDCARD MATCH from the list above only. Return JSON with:
+Select the single best WILDCARD MATCH from the list above. Use the exact fragrance_name and brand as shown. Return JSON with:
 {
-  "fragrance_name": "exact name from list",
-  "brand": "exact brand from list",
+  "fragrance_name": "copy exact name from list",
+  "brand": "copy exact brand from list",
   "confidence_score": 70-98,
   "smells_like": "3-5 notes plain English",
   "why_this_works": "personality-connected reasoning",
