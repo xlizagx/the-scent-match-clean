@@ -35,48 +35,15 @@ function filterByGender(fragrances, profileSummary) {
   if (lower.includes('scent_direction: feminine')) {
     return fragrances.filter(f => f.gender === 'women' || f.gender === 'unisex');
   }
-  // unisex, open, or not specified - return all
   return fragrances;
 }
 
 // Build a randomised shortlist to pass to the AI
-function buildFragranceList(fragrances, limit = 600) {
+function buildFragranceList(fragrances, limit = 500) {
   const shuffled = [...fragrances].sort(() => Math.random() - 0.5).slice(0, limit);
   return shuffled.map(f =>
     `${f.name} by ${f.brand} | Notes: ${[f.topNotes, f.middleNotes, f.baseNotes].filter(Boolean).join(', ')} | Accords: ${f.accords}`
   ).join('\n');
-}
-
-// Single API call helper
-async function callClaude(userPrompt) {
-  const response = await fetch("https://api.anthropic.com/v1/messages", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "x-api-key": process.env.ANTHROPIC_API_KEY,
-      "anthropic-version": "2023-06-01"
-    },
-    body: JSON.stringify({
-      model: "claude-sonnet-4-6",
-      max_tokens: 1000,
-      system: "Return ONLY valid JSON. Do not include markdown, explanation, or code fences.",
-      messages: [{ role: "user", content: userPrompt }]
-    })
-  });
-
-  const data = await response.json();
-  if (!response.ok) throw new Error(JSON.stringify(data));
-
-  const text = data.content?.[0]?.text?.trim();
-  if (!text) throw new Error("No content returned");
-
-  const clean = text
-    .replace(/^```json\s*/i, "")
-    .replace(/^```\s*/i, "")
-    .replace(/\s*```$/, "")
-    .trim();
-
-  return JSON.parse(clean);
 }
 
 exports.handler = async function(event) {
@@ -86,94 +53,84 @@ exports.handler = async function(event) {
     // Load and filter database
     const allFragrances = loadFragranceDatabase();
     const filtered = filterByGender(allFragrances, prompt);
+    const fragranceList = buildFragranceList(filtered);
 
-    // CALL 1 - Safe Match + personality profile
-    const safeList = buildFragranceList(filtered);
-    const safeResult = await callClaude(`${prompt}
-
-FRAGRANCE LIST - SELECT FROM THIS LIST ONLY:
-${safeList}
-
-Select the single best SAFE MATCH from the list above. Use the exact fragrance_name and brand as shown. Return JSON with:
-{
-  "personality_profile": { "summary": "2-3 sentences warm editorial tone", "traits": ["4-6 short labels"] },
-  "fragrance_name": "copy exact name from list",
-  "brand": "copy exact brand from list",
-  "confidence_score": 70-98,
-  "smells_like": "3-5 notes plain English",
-  "why_this_works": "personality-connected reasoning",
-  "why_this_suits": "concise sentence"
-}`);
-
-    // CALL 2 - Statement Match
-    const statementList = buildFragranceList(filtered);
-    const statementResult = await callClaude(`${prompt}
+    const response = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": process.env.ANTHROPIC_API_KEY,
+        "anthropic-version": "2023-06-01"
+      },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-6",
+        max_tokens: 2000,
+        system: "Return ONLY valid JSON. Do not include markdown, explanation, or code fences.",
+        messages: [{
+          role: "user",
+          content: `${prompt}
 
 FRAGRANCE LIST - SELECT FROM THIS LIST ONLY:
-${statementList}
+${fragranceList}
 
-Select the single best STATEMENT MATCH from the list above. Use the exact fragrance_name and brand as shown. Return JSON with:
+Select one Safe Match, one Statement Match and one Wildcard Match from the list above only. Copy fragrance_name and brand exactly as they appear in the list.
+
+Return JSON in this exact format:
 {
-  "fragrance_name": "copy exact name from list",
-  "brand": "copy exact brand from list",
-  "confidence_score": 70-98,
-  "smells_like": "3-5 notes plain English",
-  "why_this_works": "personality-connected reasoning",
-  "why_this_suits": "concise sentence"
-}`);
+  "personality_profile": { "summary": "2-3 sentences", "traits": ["trait1", "trait2"] },
+  "recommendations": [
+    {
+      "fragrance_name": "exact name from list",
+      "brand": "exact brand from list",
+      "confidence_score": 85,
+      "smells_like": "3-5 notes",
+      "why_this_works": "reasoning",
+      "why_this_suits": "one sentence"
+    },
+    {
+      "fragrance_name": "exact name from list",
+      "brand": "exact brand from list",
+      "confidence_score": 85,
+      "smells_like": "3-5 notes",
+      "why_this_works": "reasoning",
+      "why_this_suits": "one sentence"
+    },
+    {
+      "fragrance_name": "exact name from list",
+      "brand": "exact brand from list",
+      "confidence_score": 85,
+      "smells_like": "3-5 notes",
+      "why_this_works": "reasoning",
+      "why_this_suits": "one sentence"
+    }
+  ]
+}`
+        }]
+      })
+    });
 
-    // CALL 3 - Wildcard Match
-    const wildcardList = buildFragranceList(filtered);
-    const wildcardResult = await callClaude(`${prompt}
+    const data = await response.json();
+    if (!response.ok) {
+      return { statusCode: response.status, body: JSON.stringify(data) };
+    }
 
-FRAGRANCE LIST - SELECT FROM THIS LIST ONLY:
-${wildcardList}
+    const text = data.content?.[0]?.text?.trim();
+    if (!text) {
+      return { statusCode: 500, body: JSON.stringify({ error: "No content returned" }) };
+    }
 
-Select the single best WILDCARD MATCH from the list above. Use the exact fragrance_name and brand as shown. Return JSON with:
-{
-  "fragrance_name": "copy exact name from list",
-  "brand": "copy exact brand from list",
-  "confidence_score": 70-98,
-  "smells_like": "3-5 notes plain English",
-  "why_this_works": "personality-connected reasoning",
-  "why_this_suits": "concise sentence"
-}`);
+    const clean = text
+      .replace(/^```json\s*/i, "")
+      .replace(/^```\s*/i, "")
+      .replace(/\s*```$/, "")
+      .trim();
 
-    // Assemble final response
-    const finalResponse = {
-      personality_profile: safeResult.personality_profile,
-      recommendations: [
-        {
-          fragrance_name: safeResult.fragrance_name,
-          brand: safeResult.brand,
-          confidence_score: safeResult.confidence_score,
-          smells_like: safeResult.smells_like,
-          why_this_works: safeResult.why_this_works,
-          why_this_suits: safeResult.why_this_suits
-        },
-        {
-          fragrance_name: statementResult.fragrance_name,
-          brand: statementResult.brand,
-          confidence_score: statementResult.confidence_score,
-          smells_like: statementResult.smells_like,
-          why_this_works: statementResult.why_this_works,
-          why_this_suits: statementResult.why_this_suits
-        },
-        {
-          fragrance_name: wildcardResult.fragrance_name,
-          brand: wildcardResult.brand,
-          confidence_score: wildcardResult.confidence_score,
-          smells_like: wildcardResult.smells_like,
-          why_this_works: wildcardResult.why_this_works,
-          why_this_suits: wildcardResult.why_this_suits
-        }
-      ]
-    };
+    const parsed = JSON.parse(clean);
 
     return {
       statusCode: 200,
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(finalResponse)
+      body: JSON.stringify(parsed)
     };
 
   } catch (error) {
