@@ -26,15 +26,16 @@ function loadFragranceDatabase() {
   return fragrances;
 }
 
-// Filter by gender based on quiz answers
+// Filter by gender based on quiz scent_direction answer
 function filterByGender(fragrances, profileSummary) {
   const lower = profileSummary.toLowerCase();
-  if (lower.includes('gender: male') || lower.includes('gender: men') || lower.includes('for: men')) {
+  if (lower.includes('scent_direction: masculine')) {
     return fragrances.filter(f => f.gender === 'men' || f.gender === 'unisex');
   }
-  if (lower.includes('gender: female') || lower.includes('gender: women') || lower.includes('for: women')) {
+  if (lower.includes('scent_direction: feminine')) {
     return fragrances.filter(f => f.gender === 'women' || f.gender === 'unisex');
   }
+  // unisex, open, or not specified - return all
   return fragrances;
 }
 
