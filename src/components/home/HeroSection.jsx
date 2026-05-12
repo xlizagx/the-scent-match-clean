@@ -1,8 +1,16 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Gem, Sparkles, Feather } from 'lucide-react';
+import { Gem, Sparkles, Feather, Star, Lightbulb, Clock, BookOpen } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { motion } from 'framer-motion';
+
+const badges = [
+  { icon: Star, label: '3 Expert Picks' },
+  { icon: Lightbulb, label: 'Insights Into Why They Work' },
+  { icon: Clock, label: 'Only £4.99 • Instant Results' },
+  { icon: BookOpen, label: 'No Fragrance Knowledge Needed' },
+];
+
 export default function HeroSection({ heroImage }) {
   const navigate = useNavigate();
   const handleRoute = (route) => {
@@ -33,18 +41,28 @@ export default function HeroSection({ heroImage }) {
             </span>
           </div>
           <h1 className="font-heading text-4xl md:text-6xl lg:text-7xl leading-tight tracking-tight text-foreground mb-6">
-            Never Get a{' '}
-            <span className="text-primary">Fragrance Gift</span>{' '}
-            Wrong Again
+            The Smarter Way to{' '}
+            <span className="text-primary">Buy Fragrance</span>
           </h1>
-          <p className="font-body text-base md:text-lg text-foreground/75 leading-relaxed mb-4 max-w-lg font-light tracking-wide">
-            We've spent years developing our fragrance expertise so you don't have to. Just answer a few questions and leave the rest to us.
+          <p className="font-body text-base md:text-lg text-foreground/75 leading-relaxed mb-8 max-w-lg font-light tracking-wide">
+            Because life's too short to not smell incredible. The perfect match for you - or the perfect gift for them.
           </p>
-          <p className="text-xs text-primary font-body font-medium mb-6">
-            Premium scent match • £4.99
-          </p>
+
+          {/* Badges */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
+            {badges.map(({ icon: Icon, label }) => (
+              <div
+                key={label}
+                className="flex flex-col items-center gap-1.5 bg-foreground/5 border border-primary/20 rounded-xl px-3 py-3 text-center"
+              >
+                <Icon className="w-4 h-4 text-primary flex-shrink-0" />
+                <span className="text-xs font-body text-foreground/75 leading-snug">{label}</span>
+              </div>
+            ))}
+          </div>
+
           {/* Route pills */}
-          <div className="flex flex-col sm:flex-row gap-3 mb-4">
+          <div className="flex flex-col sm:flex-row gap-3 mb-6">
             <Button
               onClick={() => handleRoute('gift')}
               size="lg"
@@ -61,24 +79,6 @@ export default function HeroSection({ heroImage }) {
               <Feather className="w-4 h-4" />
               Discover Your Next Favourite
             </Button>
-          </div>
-          <div className="flex items-center gap-2 mb-4">
-            <div className="flex items-center gap-0.5">
-              {[...Array(5)].map((_, i) => (
-                <svg key={i} className="w-4 h-4 text-primary" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                </svg>
-              ))}
-            </div>
-            <span className="text-xs text-foreground/75 font-body">"Finally found a fragrance he actually loves." - Sarah M., Manchester</span>
-          </div>
-          {/* Trust bar */}
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-            <span className="text-xs text-foreground/75 font-body">Less than your last coffee</span>
-            <span className="text-foreground/40 text-xs">·</span>
-            <span className="text-xs text-foreground/75 font-body">No subscription</span>
-            <span className="text-foreground/40 text-xs">·</span>
-            <span className="text-xs text-foreground/75 font-body">Results in minutes</span>
           </div>
         </motion.div>
       </div>
