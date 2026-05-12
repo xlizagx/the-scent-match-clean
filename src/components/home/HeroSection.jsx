@@ -42,7 +42,7 @@ export default function HeroSection({ heroImage }) {
           </div>
           <h1 className="font-heading text-4xl md:text-6xl lg:text-7xl leading-tight tracking-tight text-foreground mb-6">
             The Smarter Way<br />
-            to Buy{' '}
+            to Buy<br />
             <span className="text-primary">Fragrance</span>
           </h1>
           <p className="font-body text-base md:text-lg text-foreground/75 leading-relaxed mb-8 max-w-lg font-light tracking-wide">
