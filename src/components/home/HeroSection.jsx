@@ -8,7 +8,7 @@ const badges = [
   { icon: Star, label: '3 Expert Picks' },
   { icon: Lightbulb, label: 'Insights Into Why They Work' },
   { icon: Clock, label: 'Only £4.99 • Instant Results' },
-  { icon: BookOpen, label: 'No Fragrance Knowledge Needed' },
+  { icon: BookOpen, label: 'No Expertise Required' },
 ];
 
 export default function HeroSection({ heroImage }) {
@@ -46,7 +46,7 @@ export default function HeroSection({ heroImage }) {
             <span className="text-primary">Fragrance</span>
           </h1>
           <p className="font-body text-base md:text-lg text-foreground/75 leading-relaxed mb-8 max-w-lg font-light tracking-wide">
-            Because life's too short to not smell incredible. We've spent years developing our fragrance expertise so you don't have to - just answer a few questions and leave the rest to us.
+            Because life's too short to not smell incredible. The perfect match for you - or the perfect gift for them.
           </p>
 
           {/* Badges */}
