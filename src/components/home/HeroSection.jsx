@@ -41,8 +41,9 @@ export default function HeroSection({ heroImage }) {
             </span>
           </div>
           <h1 className="font-heading text-4xl md:text-6xl lg:text-7xl leading-tight tracking-tight text-foreground mb-6">
-            The Smarter Way to{' '}
-            <span className="text-primary">Buy Fragrance</span>
+            The Smarter Way<br />
+            to Buy{' '}
+            <span className="text-primary">Fragrance</span>
           </h1>
           <p className="font-body text-base md:text-lg text-foreground/75 leading-relaxed mb-8 max-w-lg font-light tracking-wide">
             Because life's too short to not smell incredible. The perfect match for you - or the perfect gift for them.
@@ -53,10 +54,15 @@ export default function HeroSection({ heroImage }) {
             {badges.map(({ icon: Icon, label }) => (
               <div
                 key={label}
-                className="flex flex-col items-center gap-1.5 bg-foreground/5 border border-primary/20 rounded-xl px-3 py-3 text-center"
+                className="flex flex-col items-center gap-1.5 rounded-xl px-3 py-3 text-center"
+                style={{
+                  background: 'linear-gradient(145deg, rgba(255,255,255,0.07), rgba(255,255,255,0.02))',
+                  border: '1px solid rgba(var(--primary-rgb, 212,175,55), 0.35)',
+                  boxShadow: '0 4px 15px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.08)',
+                }}
               >
                 <Icon className="w-4 h-4 text-primary flex-shrink-0" />
-                <span className="text-xs font-body text-foreground/75 leading-snug">{label}</span>
+                <span className="text-xs font-body text-foreground/90 leading-snug">{label}</span>
               </div>
             ))}
           </div>
