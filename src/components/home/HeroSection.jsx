@@ -8,7 +8,7 @@ const badges = [
   { icon: Star, label: '3 Expert Picks' },
   { icon: Lightbulb, label: 'Insights Into Why They Work' },
   { icon: Clock, label: 'Only £4.99 • Instant Results' },
-  { icon: BookOpen, label: 'No Expertise Required' },
+  { icon: BookOpen, label: 'Just a Few Quick Questions' },
 ];
 
 export default function HeroSection({ heroImage }) {
