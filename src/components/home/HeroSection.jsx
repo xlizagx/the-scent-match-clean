@@ -64,8 +64,10 @@ export default function HeroSection({ heroImage }) {
             to Buy<br />
             <span className="text-primary">Fragrance</span>
           </h1>
+
+          {/* UPDATED SUBTITLE */}
           <p className="font-body text-base md:text-lg text-foreground/75 leading-relaxed mb-8 max-w-lg font-light tracking-wide">
-            Because life's too short not to smell incredible. Get 3 expert fragrance recommendations - perfectly matched to you, or the ideal gift for them.
+            Take the guesswork out of gifting.<br />Expert fragrance recommendations perfectly matched to the person you're buying for - or find your own next favourite.
           </p>
 
           {/* Badges */}
@@ -86,25 +88,41 @@ export default function HeroSection({ heroImage }) {
             ))}
           </div>
 
-          {/* Route pills */}
-          <div className="flex flex-col sm:flex-row gap-3 mb-6">
-            <Button
-              onClick={() => handleRoute('gift')}
-              size="lg"
-              className="bg-primary text-primary-foreground hover:bg-primary/90 font-body text-sm tracking-wide rounded-full px-8 h-12 flex items-center gap-2"
-            >
-              <Sparkles className="w-4 h-4" />
-              Find The Perfect Gift
-            </Button>
-            <Button
-              onClick={() => handleRoute('self')}
-              size="lg"
-              className="bg-primary text-primary-foreground hover:bg-primary/90 font-body text-sm tracking-wide rounded-full px-8 h-12 flex items-center gap-2"
-            >
-              <Feather className="w-4 h-4" />
-              Discover Your Next Favourite
-            </Button>
+          {/* UPDATED ROUTE PILLS */}
+          <div className="flex flex-col sm:flex-row gap-3 mb-3">
+            <div className="flex flex-col items-start gap-1">
+              <span className="text-xs font-body font-medium tracking-[0.15em] uppercase text-primary px-2">
+                Most Popular
+              </span>
+              <Button
+                onClick={() => handleRoute('gift')}
+                size="lg"
+                className="bg-primary text-primary-foreground hover:bg-primary/90 font-body text-sm tracking-wide rounded-full px-8 h-12 flex items-center gap-2"
+              >
+                <Sparkles className="w-4 h-4" />
+                Find The Perfect Gift
+              </Button>
+            </div>
+            <div className="flex flex-col items-start gap-1">
+              <span className="text-xs font-body font-medium tracking-[0.15em] uppercase text-transparent px-2">
+                &nbsp;
+              </span>
+              <Button
+                onClick={() => handleRoute('self')}
+                size="lg"
+                variant="outline"
+                className="bg-transparent border-primary text-primary hover:bg-primary/10 font-body text-sm tracking-wide rounded-full px-8 h-12 flex items-center gap-2"
+              >
+                <Feather className="w-4 h-4" />
+                Discover Your Next Favourite
+              </Button>
+            </div>
           </div>
+
+          {/* ADDED TAGLINE */}
+          <p className="font-body text-sm text-foreground/50 italic tracking-wide mb-6">
+            Life's too short not to smell incredible.
+          </p>
 
           {/* Offer block */}
           {!expired && (
