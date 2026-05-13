@@ -46,7 +46,7 @@ export default function HeroSection({ heroImage }) {
             <span className="text-primary">Fragrance</span>
           </h1>
           <p className="font-body text-base md:text-lg text-foreground/75 leading-relaxed mb-8 max-w-lg font-light tracking-wide">
-            Because life's too short to not smell incredible. The perfect match for you - or the perfect gift for them.
+            Because life's too short not to smell incredible. Get 3 expert fragrance recommendations - perfectly matched to you, or the ideal gift for them.
           </p>
 
           {/* Badges */}
