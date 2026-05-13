@@ -38,7 +38,6 @@ export default function HeroSection({ heroImage }) {
 
   return (
     <section className="relative min-h-[75vh] flex items-center overflow-hidden">
-      {/* Background image */}
       <div className="absolute inset-0">
         <img
           src={heroImage}
@@ -87,33 +86,45 @@ export default function HeroSection({ heroImage }) {
             ))}
           </div>
 
+          {/* Route pills */}
+          <div className="flex flex-col sm:flex-row gap-3 mb-6">
+            <Button
+              onClick={() => handleRoute('gift')}
+              size="lg"
+              className="bg-primary text-primary-foreground hover:bg-primary/90 font-body text-sm tracking-wide rounded-full px-8 h-12 flex items-center gap-2"
+            >
+              <Sparkles className="w-4 h-4" />
+              Find The Perfect Gift
+            </Button>
+            <Button
+              onClick={() => handleRoute('self')}
+              size="lg"
+              className="bg-primary text-primary-foreground hover:bg-primary/90 font-body text-sm tracking-wide rounded-full px-8 h-12 flex items-center gap-2"
+            >
+              <Feather className="w-4 h-4" />
+              Discover Your Next Favourite
+            </Button>
+          </div>
+
           {/* Offer block */}
           {!expired && (
             <div
-              className="mb-6 rounded-xl px-4 py-4"
+              className="mt-2 rounded-xl px-4 py-4"
               style={{
                 background: 'linear-gradient(145deg, rgba(212,175,55,0.15), rgba(212,175,55,0.05))',
                 border: '1px solid rgba(212,175,55,0.5)',
                 boxShadow: '0 4px 20px rgba(212,175,55,0.15)',
               }}
             >
-              <div className="flex items-center gap-2 mb-2">
+              {/* Row 1 - Offer title */}
+              <div className="flex items-center gap-2 mb-3">
                 <Tag className="w-4 h-4 text-primary" />
                 <span className="text-xs font-body font-medium tracking-[0.15em] uppercase text-primary">
                   50% off your first match - this week only
                 </span>
               </div>
-              <div className="flex items-center gap-2 mb-3">
-                <span className="font-body text-sm text-foreground/75">Use code</span>
-                <span
-                  className="font-body text-sm font-bold tracking-widest text-primary px-2 py-0.5 rounded"
-                  style={{ background: 'rgba(212,175,55,0.15)' }}
-                >
-                  FIRSTMATCH50
-                </span>
-                <span className="font-body text-sm text-foreground/75">at checkout</span>
-              </div>
-              <div className="flex items-center gap-3">
+              {/* Row 2 - Countdown timer */}
+              <div className="flex items-center gap-3 mb-3">
                 <span className="text-xs font-body text-foreground/50">Offer ends in</span>
                 <div className="flex items-center gap-2">
                   {[
@@ -134,28 +145,19 @@ export default function HeroSection({ heroImage }) {
                   ))}
                 </div>
               </div>
+              {/* Row 3 - Discount code */}
+              <div className="flex items-center gap-2">
+                <span className="font-body text-sm text-foreground/75">Use code</span>
+                <span
+                  className="font-body text-sm font-bold tracking-widest text-primary px-2 py-0.5 rounded"
+                  style={{ background: 'rgba(212,175,55,0.15)' }}
+                >
+                  FIRSTMATCH50
+                </span>
+                <span className="font-body text-sm text-foreground/75">at checkout</span>
+              </div>
             </div>
           )}
-
-          {/* Route pills */}
-          <div className="flex flex-col sm:flex-row gap-3 mb-6">
-            <Button
-              onClick={() => handleRoute('gift')}
-              size="lg"
-              className="bg-primary text-primary-foreground hover:bg-primary/90 font-body text-sm tracking-wide rounded-full px-8 h-12 flex items-center gap-2"
-            >
-              <Sparkles className="w-4 h-4" />
-              Find The Perfect Gift
-            </Button>
-            <Button
-              onClick={() => handleRoute('self')}
-              size="lg"
-              className="bg-primary text-primary-foreground hover:bg-primary/90 font-body text-sm tracking-wide rounded-full px-8 h-12 flex items-center gap-2"
-            >
-              <Feather className="w-4 h-4" />
-              Discover Your Next Favourite
-            </Button>
-          </div>
         </motion.div>
       </div>
       {/* Scroll indicator */}
