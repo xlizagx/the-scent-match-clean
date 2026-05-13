@@ -72,6 +72,8 @@ For each fragrance provide:
 - why_this_works: detailed personality-connected reasoning
 - why_this_suits: concise sentence on fit
 
+Do not use long dashes (—) anywhere in any output field. Use a regular hyphen (-) instead.
+
 Also generate personality_profile:
 - summary: 2-3 sentences in warm editorial tone
 - traits: 4-6 short labels`;
