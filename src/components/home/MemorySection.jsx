@@ -21,7 +21,6 @@ export default function MemorySection({ memoryImage }) {
               <div className="absolute inset-0 bg-gradient-to-t from-background/40 to-transparent" />
             </div>
           </motion.div>
-
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -36,16 +35,16 @@ export default function MemorySection({ memoryImage }) {
             </h2>
             <div className="space-y-4 text-muted-foreground font-body leading-relaxed">
               <p>
-                A single note can transport someone back to their favourite moment- a summer evening, a first date, a feeling of pure joy.
+                A single note can transport someone back to their favourite moment - a summer evening, a first date, a feeling of pure joy.
               </p>
               <p>
                 Scent is the only sense directly linked to the brain's memory and emotion centres.
               </p>
               <p>
-                When you gift the right fragrance, you're not just giving a bottle. You're creating a memory they'll carry with them every time they wear it.
+                When you gift the right fragrance, you're not just giving a bottle. You're giving them something they'll reach for every single day - and think of you every time they do.
               </p>
               <p className="text-foreground font-medium italic font-heading text-lg">
-                "Find the fragrance they'll remember forever."
+                "You hesitated because fragrance felt like a risk. It isn't anymore. The only question is why you'd guess when you don't have to."
               </p>
             </div>
           </motion.div>
