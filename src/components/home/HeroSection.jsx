@@ -59,15 +59,16 @@ export default function HeroSection({ heroImage }) {
               Fragrance Expertise
             </span>
           </div>
+
+          {/* UPDATED HEADLINE */}
           <h1 className="font-heading text-4xl md:text-6xl lg:text-7xl leading-tight tracking-tight text-foreground mb-6">
             The Smarter Way<br />
-            to Buy<br />
-            <span className="text-primary">Fragrance</span>
+            <span className="text-primary">to Gift Fragrance.</span>
           </h1>
 
-          {/* UPDATED SUBTITLE */}
+          {/* UPDATED SUBHEADLINE */}
           <p className="font-body text-base md:text-lg text-foreground/75 leading-relaxed mb-8 max-w-lg font-light tracking-wide">
-            Take the guesswork out of gifting.<br />Expert fragrance recommendations perfectly matched to the person you're buying for - or find your own next favourite.
+            Just tell us about them... we'll do the rest.<br />Finding something for yourself? We've got that too.
           </p>
 
           {/* Badges */}
@@ -88,7 +89,7 @@ export default function HeroSection({ heroImage }) {
             ))}
           </div>
 
-          {/* UPDATED ROUTE PILLS */}
+          {/* Route pills */}
           <div className="flex flex-col sm:flex-row gap-3 mb-3">
             <div className="flex flex-col items-start gap-1">
               <span className="text-xs font-body font-medium tracking-[0.15em] uppercase text-primary px-2">
@@ -119,9 +120,9 @@ export default function HeroSection({ heroImage }) {
             </div>
           </div>
 
-          {/* ADDED TAGLINE */}
+          {/* UPDATED TAGLINE */}
           <p className="font-body text-sm text-foreground/50 italic tracking-wide mb-6">
-            Life's too short not to smell incredible.
+            Takes 2 minutes. Works even for the people you can never buy for.
           </p>
 
           {/* Offer block */}
@@ -134,14 +135,12 @@ export default function HeroSection({ heroImage }) {
                 boxShadow: '0 4px 20px rgba(212,175,55,0.15)',
               }}
             >
-              {/* Row 1 - Offer title */}
               <div className="flex items-center gap-2 mb-3">
                 <Tag className="w-4 h-4 text-primary" />
                 <span className="text-xs font-body font-medium tracking-[0.15em] uppercase text-primary">
                   50% off your first match - this week only
                 </span>
               </div>
-              {/* Row 2 - Countdown timer */}
               <div className="flex items-center gap-3 mb-3">
                 <span className="text-xs font-body text-foreground/50">Offer ends in</span>
                 <div className="flex items-center gap-2">
@@ -163,7 +162,6 @@ export default function HeroSection({ heroImage }) {
                   ))}
                 </div>
               </div>
-              {/* Row 3 - Discount code */}
               <div className="flex items-center gap-2">
                 <span className="font-body text-sm text-foreground/75">Use code</span>
                 <span
