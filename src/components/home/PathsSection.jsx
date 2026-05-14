@@ -22,7 +22,7 @@ const howItWorksSteps = [
   },
   {
     step: "02",
-    title: "We curate the match",
+    title: "We do the matching for you",
     description: "Your answers are carefully interpreted and matched against our verified fragrance catalogue- every result is a real, purchasable fragrance selected around their profile.",
   },
   {
@@ -33,7 +33,7 @@ const howItWorksSteps = [
   {
     step: "04",
     title: "Gift with complete confidence",
-    description: "Know exactly why each scent fits and why it will resonate emotionally. Turn your gift into a memory they'll never forget.",
+    description: "Know exactly why each scent fits - and gift it with complete confidence.",
   },
 ];
 
@@ -82,17 +82,15 @@ export default function PathsSection() {
           className="relative bg-card border border-primary/30 rounded-3xl p-8 overflow-hidden max-w-md mx-auto w-full scroll-mt-24"
         >
           <div className="absolute -top-12 -right-12 w-48 h-48 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
-
           <div className="flex items-center gap-3 mb-6">
             <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center">
               <Sparkles className="w-5 h-5 text-primary" />
             </div>
             <div>
               <span className="text-xs font-body font-medium tracking-[0.2em] uppercase text-primary block mb-0.5">⭐ Most popular</span>
-              <h3 className="font-heading text-xl text-foreground">Premium gift scent match</h3>
+              <h3 className="font-heading text-xl text-foreground">Your perfect match, done for you</h3>
             </div>
           </div>
-
           <ul className="space-y-2.5 mb-8">
             {premiumFeatures.map((f, i) => (
               <li key={i} className="flex items-center gap-3">
@@ -101,7 +99,6 @@ export default function PathsSection() {
               </li>
             ))}
           </ul>
-
           <Button asChild size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 font-body text-sm tracking-wide rounded-full h-12 w-full">
             <Link to="/quiz" state={{ route: 'gift' }}>
               <Sparkles className="w-4 h-4 mr-2" />
@@ -109,7 +106,6 @@ export default function PathsSection() {
               <ArrowRight className="w-4 h-4 ml-2" />
             </Link>
           </Button>
-
           <p className="text-center text-xs text-muted-foreground font-body mt-4">
             £4.99 One time payment • No subscription
           </p>
