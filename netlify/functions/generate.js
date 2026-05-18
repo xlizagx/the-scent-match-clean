@@ -14,14 +14,14 @@ function loadFragranceDatabase() {
     const cols = line.split(';');
     if (cols.length < 9) continue;
     fragrances.push({
-      name: cols[0],
-      brand: cols[1],
-      gender: cols[2],
-      tier: cols[3],
-      topNotes: cols[5],
-      middleNotes: cols[6],
-      baseNotes: cols[7],
-      accords: cols[8]
+      brand: cols[0],
+      name: cols[1],
+      tier: cols[2],
+      gender: cols[3],
+      topNotes: cols[4],
+      middleNotes: cols[5],
+      baseNotes: cols[6],
+      accords: cols[7]
     });
   }
   return fragrances;
