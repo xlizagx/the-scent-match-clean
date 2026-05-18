@@ -1,6 +1,69 @@
 const fs = require('fs');
 const path = require('path');
 
+// Brand categories for fragrance_world filtering
+const DESIGNER_BRANDS = new Set([
+  'Anna Sui', 'Ariana Grande', 'Azzaro', 'Balenciaga', 'Banana Republic', 'Bijan',
+  'Bottega Veneta', 'Boucheron', 'Britney Spears', 'Burberry', 'Bvlgari',
+  'Cacharel', 'Calgon', 'Calvin Klein', 'Carolina Herrera', 'Cartier', 'Chanel',
+  'Chantecaille', 'Chloã©', 'Chopard', 'Christina Aguilera', 'Cirque Du Soleil',
+  'Davidoff', 'Dior', 'Dolce&gabbana', 'Donna Karan', 'Dsquaredâ²', 'Elie Saab',
+  'Escada', 'Fendi', 'Furla', 'Giorgio Armani', 'Givenchy', 'Gucci', 'Guerlain',
+  'Guess', 'Hermã¨s', 'Hugo Boss', 'Issey Miyake', 'Jean Patou', 'Jean Paul Gaultier',
+  'Jennifer Lopez', 'Jimmy Choo', 'Jo Malone London', 'La Perla', 'Lalique', 'Lanvin',
+  'Laura Mercier', 'Loewe', 'Louis Vuitton', 'Marc Jacobs', 'Moschino', 'Montblanc',
+  'Mugler', 'Narciso Rodriguez', 'Nautica', 'Nina Ricci', 'Oscar De La Renta',
+  'Paco Rabanne', 'Pierre Balmain', 'Pierre Cardin', 'Prada', 'Ralph Lauren',
+  'Roberto Cavalli', 'Roberto Verino', 'Rochas', 'Salvatore Ferragamo',
+  'Sarah Jessica Parker', 'Selena Gomez', 'Shiseido', 'Sisley', 'Stella Mccartney',
+  'Tiffany', 'Tocca', 'Tom Ford', 'Tory Burch', 'Trussardi', 'Valentino',
+  'Vera Wang', 'Versace', 'Viktor&rolf', 'Yves Saint Laurent', 'Yohji Yamamoto'
+]);
+
+const LUXURY_NICHE_BRANDS = new Set([
+  'A Lab On Fire', 'Aaron Terence Hughes', 'Acqua DI Parma', 'Aesop', 'Aftelier',
+  'Akro', 'Amouage', 'Amouroud', 'Anna Zworykina Perfumes', 'Arabesque Perfumes',
+  'Argos', 'Arpels', 'Atelier Cologne', 'Atelier Des Ors', 'Atkinsons',
+  'Barrois', 'Bdk Parfums', 'Boadicea The Victorious', 'Bohoboco', 'Bois 1920',
+  'Bon Parfumeur', 'Bond No 9', 'By Kilian', 'Byredo', 'Byron Parfums',
+  'Cafe Parfums', 'Calaj', 'Christian Louboutin', 'Christian Provenzano Parfums',
+  'Ciel Parfum', 'Clive Christian', 'Comme Des Garcons', 'Commodity', 'Creed',
+  'Dedcool', 'Diptyque', 'Dossier', 'Dries Van Noten', 'Ds&durga',
+  'Eclectic Collections', 'Electimuss', 'Ella K Parfums', 'Ellis Brooklyn',
+  'Escentric Molecules', 'Essential Parfums', 'Ex Nihilo', 'Floral Street',
+  'Floraã¯ku', 'Fragrance Du Bois', 'Frederic Malle', 'Fugazzi',
+  'Giardini DI Toscana', 'Goutal', 'Gritti', 'Haught Parfums',
+  'Haute Fragrance Company Hfc', 'Hayari Parfums', 'Hermetica',
+  'Initio Parfums Prives', 'Jo Loves', 'Jousset Parfums', 'Jovoy Paris',
+  'Juliette Has A Gun', 'Kajal', 'Kayali Fragrances', 'Laboratorio Olfattivo',
+  'Latour', 'Le Labo', 'Les Liquides Imaginaires', 'Les Parfums Du Soleil',
+  'Les Senteurs Gourmandes', 'MCMC Fragrances', 'Maison Crivelli',
+  'Maison Francis Kurkdjian', 'Maison Martin Margiela', 'Maitre Parfumeur Et Gantier',
+  'Mancera', 'Memo Paris', 'Micallef', 'Miguel Matos', 'Miller Harris',
+  'Mind Games', 'Mine', 'Mizensir', 'Molinard', 'Moncler', 'Montale',
+  'Nasomatto', 'Navitus Parfums', 'Nishane', 'Oakcha', 'Ojar', 'Olfactives',
+  'Ormonde Jayne', 'Parfums De Marly', 'Parfums Et Senteurs Du Pays Basque',
+  'Penhaligon\'s', 'Perfumologist', 'Phaedon', 'Pierre Guillaume Paris',
+  'Purrfumery', 'Roja Dove', 'Rosendo Mateu Olfactive Expressions',
+  'Sabe Masson', 'Scents Of Wood', 'Serge Lutens', 'Sigilli',
+  'Sospiro Perfumes', 'Spirit Of Kings', 'Thameen', 'The 7 Virtues',
+  'The Dua Brand', 'The House Of Oud', 'The Master Perfumer',
+  'The Merchant Of Venice', 'The Spirit Of Dubai', 'The Woods Collection',
+  'Theodoros Kalotinis', 'Thomas Kosmala', 'Tita Rossi', 'Tiziana Terenzi',
+  'Tokyo Milk Parfumerie Curiosite', 'Tsvga Parfums', 'Vilhelm Parfumerie',
+  'Villain', 'Villatte', 'Voltaire', 'Wild Drops Parfums', 'Xerjoff',
+  'Yas Perfumes', 'Zoologist Perfumes'
+]);
+
+const MIDDLE_EASTERN_BRANDS = new Set([
+  'Afnan', 'Ahmed Al Maghribi', 'Ajmal', 'Al Ambra', 'Al Haramain Perfumes',
+  'Al-rehab', 'Arabian Oud', 'Arabiyat', 'Armaf', 'Junaid Jamshed',
+  'Junaid Perfumes', 'Lattafa Perfumes', 'Maison Alhambra', 'Montale',
+  'Musk', 'Nabeel', 'Naseem', 'Orientica', 'Orientica Premium',
+  'Oudh', 'Paris Corner', 'Rasasi', 'Swiss Arabian', 'The House Of Oud',
+  'The Spirit Of Dubai', 'Tsvga Parfums', 'Yas Perfumes', 'Zimaya'
+]);
+
 // Load and parse the fragrance database
 function loadFragranceDatabase() {
   const csvPath = path.join(__dirname, '../../fragrances_final.csv');
@@ -37,6 +100,29 @@ function filterByGender(fragrances, profileSummary) {
     return fragrances.filter(f => f.gender === 'women' || f.gender === 'unisex');
   }
   return fragrances;
+}
+
+// Filter by fragrance world (designer / luxury_niche / middle_eastern / surprise)
+function filterByFragranceWorld(fragrances, profileSummary) {
+  const lower = profileSummary.toLowerCase();
+
+  const wantsDesigner = lower.includes('fragrance_world:') && lower.includes('designer');
+  const wantsNiche = lower.includes('fragrance_world:') && lower.includes('luxury_niche');
+  const wantsMiddleEastern = lower.includes('fragrance_world:') && lower.includes('middle_eastern');
+  const wantsSurprise = lower.includes('fragrance_world:') && lower.includes('surprise');
+
+  // If surprise or no preference, return all
+  if (wantsSurprise || (!wantsDesigner && !wantsNiche && !wantsMiddleEastern)) {
+    return fragrances;
+  }
+
+  // Build combined allowed brands set
+  const allowedBrands = new Set();
+  if (wantsDesigner) DESIGNER_BRANDS.forEach(b => allowedBrands.add(b));
+  if (wantsNiche) LUXURY_NICHE_BRANDS.forEach(b => allowedBrands.add(b));
+  if (wantsMiddleEastern) MIDDLE_EASTERN_BRANDS.forEach(b => allowedBrands.add(b));
+
+  return fragrances.filter(f => allowedBrands.has(f.brand));
 }
 
 // Build a tier-filtered shortlist to pass to the AI
@@ -86,7 +172,8 @@ exports.handler = async function(event) {
 
     // Load and filter database
     const allFragrances = loadFragranceDatabase();
-    const filtered = filterByGender(allFragrances, prompt);
+    const genderFiltered = filterByGender(allFragrances, prompt);
+    const filtered = filterByFragranceWorld(genderFiltered, prompt);
 
     // CALL 1 - Safe Match + personality profile
     const safeList = buildFragranceList(filtered, 'Safe');
