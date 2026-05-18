@@ -17,6 +17,7 @@ function loadFragranceDatabase() {
       name: cols[0],
       brand: cols[1],
       gender: cols[2],
+      tier: cols[3],
       topNotes: cols[5],
       middleNotes: cols[6],
       baseNotes: cols[7],
@@ -38,12 +39,17 @@ function filterByGender(fragrances, profileSummary) {
   return fragrances;
 }
 
-// Build a randomised shortlist to pass to the AI
-function buildFragranceList(fragrances, limit = 500) {
-  const shuffled = [...fragrances].sort(() => Math.random() - 0.5).slice(0, limit);
-  return shuffled.map(f =>
-    `${f.name} by ${f.brand} | Notes: ${[f.topNotes, f.middleNotes, f.baseNotes].filter(Boolean).join(', ')} | Accords: ${f.accords}`
-  ).join('\n');
+// Build a tier-sorted shortlist to pass to the AI
+function buildFragranceList(fragrances) {
+  const shuffle = (arr) => [...arr].sort(() => Math.random() - 0.5);
+
+  const safe = shuffle(fragrances.filter(f => f.tier && f.tier.includes('Safe'))).slice(0, 170);
+  const statement = shuffle(fragrances.filter(f => f.tier && f.tier.includes('Statement'))).slice(0, 165);
+  const wildcard = shuffle(fragrances.filter(f => f.tier && f.tier.includes('Wildcard'))).slice(0, 165);
+
+  const format = (f) => `${f.name} by ${f.brand} | Notes: ${[f.topNotes, f.middleNotes, f.baseNotes].filter(Boolean).join(', ')} | Accords: ${f.accords}`;
+
+  return `SAFE FRAGRANCES:\n${safe.map(format).join('\n')}\n\nSTATEMENT FRAGRANCES:\n${statement.map(format).join('\n')}\n\nWILDCARD FRAGRANCES:\n${wildcard.map(format).join('\n')}`;
 }
 
 exports.handler = async function(event) {
@@ -73,7 +79,7 @@ exports.handler = async function(event) {
 FRAGRANCE LIST - SELECT FROM THIS LIST ONLY:
 ${fragranceList}
 
-Select one Safe Match, one Statement Match and one Wildcard Match from the list above only. Copy fragrance_name and brand exactly as they appear in the list.
+Select one Safe Match from the SAFE FRAGRANCES section, one Statement Match from the STATEMENT FRAGRANCES section, and one Wildcard Match from the WILDCARD FRAGRANCES section. Copy fragrance_name and brand exactly as they appear in the list.
 
 Return JSON in this exact format:
 {
