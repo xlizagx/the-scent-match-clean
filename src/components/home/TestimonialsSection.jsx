@@ -68,7 +68,7 @@ export default function TestimonialsSection({ testimonials }) {
   const items = (testimonials && testimonials.length > 0) ? testimonials : SEED_TESTIMONIALS;
 
   return (
-    <section id="reviews" className="py-20 px-6 scroll-mt-24">
+    <section id="reviews" className="pt-6 pb-20 px-6 scroll-mt-24">
       <div className="max-w-5xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
