@@ -8,49 +8,49 @@ const SEED_TESTIMONIALS = [
     id: 1,
     author_name: "Sophie R.",
     location: "London, UK",
-    quote: "I bought my husband the Layton recommendation and he wore it every single day for three months - the best fragrance gift I've ever given.",
+    quote: "Bought my husband the Layton recommendation. He's worn it almost every day since. First time I've ever nailed a fragrance gift.",
     star_rating: 5,
-    outcome_tag: "got-it-right",
+    outcome_tag: "got it right",
   },
   {
     id: 2,
     author_name: "Amelia T.",
     location: "Manchester, UK",
-    quote: "Neither of us had ever heard of BDK Parfums before, but now Gris Charnel is her favourite scent. The Scent Match introduced us both to something completely new.",
+    quote: "Had never heard of BDK Parfums. Now Gris Charnel is her signature scent. Genuinely wouldn't have found it without this.",
     star_rating: 5,
-    outcome_tag: "discovered-new-brand",
+    outcome_tag: "new favourite",
   },
   {
     id: 3,
     author_name: "Marcus L.",
     location: "Edinburgh, UK",
-    quote: "Saved me from wasting £120 on the wrong bottle. Got the perfect match for my girlfriend in under five minutes. She was genuinely shocked I got it so right.",
+    quote: "Saved me from another expensive mistake. Got a match for my girlfriend in minutes - she couldn't believe I'd got it so right.",
     star_rating: 5,
-    outcome_tag: "saved-money",
+    outcome_tag: "saved money",
   },
   {
     id: 4,
     author_name: "Priya K.",
     location: "Birmingham, UK",
-    quote: "The match was spot on. They recommended Narciso Rodriguez For Her and she hasn't stopped wearing it. I'll definitely be using this service again.",
+    quote: "They suggested Narciso Rodriguez For Her. She hasn't put anything else on since. Will 100% use again.",
     star_rating: 5,
-    outcome_tag: "gift-remembered",
+    outcome_tag: "got it right",
   },
   {
     id: 5,
     author_name: "Claire W.",
     location: "Dublin, IE",
-    quote: "The Middle Eastern recommendation was a revelation - I never would have found Afnan 9PM on my own and it turned into the surprise hit of the year.",
+    quote: "The Middle Eastern pick was completely new to me - Afnan 9PM ended up being the one she talks about most.",
     star_rating: 5,
-    outcome_tag: "surprised-recipient",
+    outcome_tag: "loved it",
   },
   {
     id: 6,
     author_name: "Daniel F.",
     location: "Leeds, UK",
-    quote: "I've tried buying perfumes as gifts before, but never felt confident in my choice. The Scent Match really helped me get it right and feel confident about what I picked. I bought her the safe match option Chanel Eau Tendre and she absolutely loved it.",
+    quote: "Always nervous buying perfume as a gift. Went with the Safe Match - Chanel Eau Tendre - and she loved it. Worth every penny.",
     star_rating: 5,
-    outcome_tag: "got-it-right",
+    outcome_tag: "got it right",
   },
 ];
 
@@ -115,7 +115,7 @@ export default function TestimonialsSection({ testimonials }) {
                 </div>
                 {t.outcome_tag && (
                   <span className="text-xs font-body text-primary/70 capitalize bg-primary/5 px-2 py-0.5 rounded-full">
-                    {t.outcome_tag.replace(/-/g, ' ')}
+                    {t.outcome_tag}
                   </span>
                 )}
               </div>
