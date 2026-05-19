@@ -16,10 +16,10 @@ export default function Home() {
     <div>
       <HeroSection heroImage={HERO_IMAGE} />
       <TrustSection />
+      <TestimonialsSection />
       <PathsSection />
       <ConsultationTeaser />
       <MemorySection memoryImage={MEMORY_IMAGE} />
-      <TestimonialsSection />
       <FooterCTA />
     </div>
   );
