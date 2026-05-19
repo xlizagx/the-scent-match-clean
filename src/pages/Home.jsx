@@ -15,8 +15,8 @@ export default function Home() {
   return (
     <div>
       <HeroSection heroImage={HERO_IMAGE} />
-      <TrustSection />
       <TestimonialsSection />
+      <TrustSection />
       <PathsSection />
       <ConsultationTeaser />
       <MemorySection memoryImage={MEMORY_IMAGE} />
