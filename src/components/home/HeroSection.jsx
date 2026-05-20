@@ -60,13 +60,11 @@ export default function HeroSection({ heroImage }) {
             </span>
           </div>
 
-          {/* UPDATED HEADLINE */}
           <h1 className="font-heading text-4xl md:text-6xl lg:text-7xl leading-tight tracking-tight text-foreground mb-6">
             The Smarter Way<br />
             <span className="text-primary">to Gift Fragrance.</span>
           </h1>
 
-          {/* UPDATED SUBHEADLINE */}
           <p className="font-body text-base md:text-lg text-foreground/75 leading-relaxed mb-8 max-w-lg font-light tracking-wide">
             Just tell us about them... we'll do the rest.<br />Finding something for yourself? We've got that too.
           </p>
@@ -91,20 +89,20 @@ export default function HeroSection({ heroImage }) {
 
           {/* Route pills */}
           <div className="flex flex-col sm:flex-row gap-3 mb-3">
-            <div className="flex flex-col items-start gap-1">
+            <div className="flex flex-col items-start gap-1 w-full sm:w-auto">
               <span className="text-xs font-body font-medium tracking-[0.15em] uppercase text-primary px-2">
                 Most Popular
               </span>
               <Button
                 onClick={() => handleRoute('gift')}
                 size="lg"
-                className="bg-primary text-primary-foreground hover:bg-primary/90 font-body text-sm tracking-wide rounded-full px-8 h-12 flex items-center gap-2"
+                className="w-72 bg-primary text-primary-foreground hover:bg-primary/90 font-body text-sm tracking-wide rounded-full px-8 h-12 flex items-center gap-2"
               >
                 <Sparkles className="w-4 h-4" />
                 Find The Perfect Gift
               </Button>
             </div>
-            <div className="flex flex-col items-start gap-1">
+            <div className="flex flex-col items-start gap-1 w-full sm:w-auto">
               <span className="text-xs font-body font-medium tracking-[0.15em] uppercase text-transparent px-2">
                 &nbsp;
               </span>
@@ -112,7 +110,7 @@ export default function HeroSection({ heroImage }) {
                 onClick={() => handleRoute('self')}
                 size="lg"
                 variant="outline"
-                className="bg-transparent border-primary text-primary hover:bg-primary/10 font-body text-sm tracking-wide rounded-full px-8 h-12 flex items-center gap-2"
+                className="w-72 bg-transparent border-primary text-primary hover:bg-primary/10 font-body text-sm tracking-wide rounded-full px-8 h-12 flex items-center gap-2"
               >
                 <Feather className="w-4 h-4" />
                 Discover Your Next Favourite
@@ -120,7 +118,6 @@ export default function HeroSection({ heroImage }) {
             </div>
           </div>
 
-          {/* UPDATED TAGLINE */}
           <p className="font-body text-sm text-foreground/50 italic tracking-wide mb-6">
             Takes 2 minutes. Works even for the people you can never buy for.
           </p>
