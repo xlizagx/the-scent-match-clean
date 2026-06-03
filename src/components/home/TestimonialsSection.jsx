@@ -68,13 +68,13 @@ export default function TestimonialsSection({ testimonials }) {
   const items = (testimonials && testimonials.length > 0) ? testimonials : SEED_TESTIMONIALS;
 
   return (
-    <section id="reviews" className="pt-6 pb-20 px-6 scroll-mt-24">
+    <section id="reviews" className="pt-6 pb-12 px-6 scroll-mt-24">
       <div className="max-w-5xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-14"
+          className="text-center mb-8"
         >
           <span className="text-xs font-body font-medium tracking-[0.25em] uppercase text-primary mb-4 block">
             Real Results
@@ -87,7 +87,7 @@ export default function TestimonialsSection({ testimonials }) {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {items.map((t, i) => (
             <motion.div
               key={t.id || i}
@@ -95,7 +95,7 @@ export default function TestimonialsSection({ testimonials }) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.07 }}
-              className="bg-card border border-primary/20 rounded-2xl p-6 flex flex-col gap-4 relative overflow-hidden"
+              className="bg-card border border-primary/20 rounded-2xl p-4 flex flex-col gap-3 relative overflow-hidden"
             >
               {/* Gold accent line */}
               <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
