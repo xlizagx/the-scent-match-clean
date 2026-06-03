@@ -57,7 +57,7 @@ function StarRow() {
   return (
     <div className="flex gap-0.5">
       {[1,2,3,4,5].map(i => (
-        <Star key={i} className="w-2.5 h-2.5 fill-primary text-primary" />
+        <Star key={i} className="w-3 h-3 fill-primary text-primary" />
       ))}
     </div>
   );
@@ -99,7 +99,7 @@ export default function TestimonialsSection({ testimonials }) {
               <div className="w-0.5 bg-primary/40 flex-shrink-0 rounded-full" />
               <div className="flex flex-col gap-1.5">
                 <StarRow />
-                <p className="text-xs text-foreground font-heading italic font-normal leading-relaxed">
+                <p className="text-foreground font-heading italic font-normal leading-relaxed" style={{ fontSize: "0.8125rem" }}>
                   "{t.quote}"
                 </p>
                 <p className="text-xs font-body text-muted-foreground">
