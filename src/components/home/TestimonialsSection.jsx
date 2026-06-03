@@ -2,7 +2,6 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Star } from 'lucide-react';
 
-// Seed testimonials — can later be replaced with DB-fetched entries
 const SEED_TESTIMONIALS = [
   {
     id: 1,
@@ -58,7 +57,7 @@ function StarRow() {
   return (
     <div className="flex gap-0.5">
       {[1,2,3,4,5].map(i => (
-        <Star key={i} className="w-3.5 h-3.5 fill-primary text-primary" />
+        <Star key={i} className="w-3 h-3 fill-primary text-primary" />
       ))}
     </div>
   );
@@ -74,7 +73,7 @@ export default function TestimonialsSection({ testimonials }) {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-8"
+          className="text-center mb-10"
         >
           <span className="text-xs font-body font-medium tracking-[0.25em] uppercase text-primary mb-4 block">
             Real Results
@@ -87,37 +86,25 @@ export default function TestimonialsSection({ testimonials }) {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-x-10 gap-y-6">
           {items.map((t, i) => (
             <motion.div
               key={t.id || i}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.07 }}
-              className="bg-card border border-primary/20 rounded-2xl p-4 flex flex-col gap-3 relative overflow-hidden"
+              className="flex gap-4"
             >
-              {/* Gold accent line */}
-              <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
-
-              <StarRow />
-
-              <p className="text-sm text-foreground font-heading italic font-normal leading-relaxed flex-1">
-                "{t.quote}"
-              </p>
-
-              <div className="flex items-center justify-between pt-2 border-t border-border/30">
-                <div>
-                  <p className="text-xs font-body font-medium text-foreground">{t.author_name}</p>
-                  {t.location && (
-                    <p className="text-xs text-muted-foreground font-body">{t.location}</p>
-                  )}
-                </div>
-                {t.outcome_tag && (
-                  <span className="text-xs font-body text-primary/70 capitalize bg-primary/5 px-2 py-0.5 rounded-full">
-                    {t.outcome_tag}
-                  </span>
-                )}
+              <div className="w-0.5 bg-primary/40 flex-shrink-0 rounded-full" />
+              <div className="flex flex-col gap-2">
+                <StarRow />
+                <p className="text-sm text-foreground font-heading italic font-normal leading-relaxed">
+                  "{t.quote}"
+                </p>
+                <p className="text-xs font-body font-medium text-foreground">
+                  {t.author_name}{t.location ? ` - ${t.location}` : ""}
+                </p>
               </div>
             </motion.div>
           ))}
