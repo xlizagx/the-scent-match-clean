@@ -57,7 +57,7 @@ function StarRow() {
   return (
     <div className="flex gap-0.5">
       {[1,2,3,4,5].map(i => (
-        <Star key={i} className="w-3 h-3 fill-primary text-primary" />
+        <Star key={i} className="w-2.5 h-2.5 fill-primary text-primary" />
       ))}
     </div>
   );
@@ -67,18 +67,18 @@ export default function TestimonialsSection({ testimonials }) {
   const items = (testimonials && testimonials.length > 0) ? testimonials : SEED_TESTIMONIALS;
 
   return (
-    <section id="reviews" className="pt-6 pb-12 px-6 scroll-mt-24">
-      <div className="max-w-5xl mx-auto">
+    <section id="reviews" className="pt-6 pb-12 px-4 scroll-mt-24">
+      <div className="max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-10"
+          className="text-center mb-8"
         >
-          <span className="text-xs font-body font-medium tracking-[0.25em] uppercase text-primary mb-4 block">
+          <span className="text-xs font-body font-medium tracking-[0.25em] uppercase text-primary mb-3 block">
             Real Results
           </span>
-          <h2 className="font-heading text-3xl md:text-4xl text-foreground mb-4 leading-tight">
+          <h2 className="font-heading text-3xl md:text-4xl text-foreground mb-3 leading-tight">
             A few of our favourite gifting success stories
           </h2>
           <p className="text-muted-foreground font-body text-sm max-w-md mx-auto">
@@ -86,7 +86,7 @@ export default function TestimonialsSection({ testimonials }) {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-x-10 gap-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-x-10 gap-y-5">
           {items.map((t, i) => (
             <motion.div
               key={t.id || i}
@@ -94,15 +94,15 @@ export default function TestimonialsSection({ testimonials }) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.07 }}
-              className="flex gap-4"
+              className="flex gap-3"
             >
               <div className="w-0.5 bg-primary/40 flex-shrink-0 rounded-full" />
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-1.5">
                 <StarRow />
-                <p className="text-sm text-foreground font-heading italic font-normal leading-relaxed">
+                <p className="text-xs text-foreground font-heading italic font-normal leading-relaxed">
                   "{t.quote}"
                 </p>
-                <p className="text-xs font-body font-medium text-foreground">
+                <p className="text-xs font-body text-muted-foreground">
                   {t.author_name}{t.location ? ` - ${t.location}` : ""}
                 </p>
               </div>
