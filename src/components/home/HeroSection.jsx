@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Gem, Sparkles, Feather, Star, Lightbulb, Clock, BookOpen, Tag } from 'lucide-react';
 import { Button } from "@/components/ui/button";
@@ -11,26 +11,8 @@ const badges = [
   { icon: Clock, label: 'Only £4.99 • Instant Results' },
 ];
 
-const OFFER_END = new Date('2026-05-17T23:59:00');
-
-function useCountdown(target) {
-  const [timeLeft, setTimeLeft] = useState(() => Math.max(0, target - Date.now()));
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTimeLeft(Math.max(0, target - Date.now()));
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [target]);
-  const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
-  const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-  const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-  const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-  return { days, hours, minutes, seconds, expired: timeLeft === 0 };
-}
-
 export default function HeroSection({ heroImage }) {
   const navigate = useNavigate();
-  const { days, hours, minutes, seconds, expired } = useCountdown(OFFER_END.getTime());
 
   const handleRoute = (route) => {
     navigate('/quiz', { state: { route } });
@@ -123,54 +105,32 @@ export default function HeroSection({ heroImage }) {
           </p>
 
           {/* Offer block */}
-          {!expired && (
-            <div
-              className="mt-2 rounded-xl px-4 py-4"
-              style={{
-                background: 'linear-gradient(145deg, rgba(212,175,55,0.15), rgba(212,175,55,0.05))',
-                border: '1px solid rgba(212,175,55,0.5)',
-                boxShadow: '0 4px 20px rgba(212,175,55,0.15)',
-              }}
-            >
-              <div className="flex items-center gap-2 mb-3">
-                <Tag className="w-4 h-4 text-primary" />
-                <span className="text-xs font-body font-medium tracking-[0.15em] uppercase text-primary">
-                  50% off your first match - this week only
-                </span>
-              </div>
-              <div className="flex items-center gap-3 mb-3">
-                <span className="text-xs font-body text-foreground/50">Offer ends in</span>
-                <div className="flex items-center gap-2">
-                  {[
-                    { value: days, label: 'd' },
-                    { value: hours, label: 'h' },
-                    { value: minutes, label: 'm' },
-                    { value: seconds, label: 's' },
-                  ].map(({ value, label }) => (
-                    <div key={label} className="flex items-center gap-0.5">
-                      <span
-                        className="font-heading text-lg text-primary tabular-nums"
-                        style={{ minWidth: '1.5rem', textAlign: 'center' }}
-                      >
-                        {String(value).padStart(2, '0')}
-                      </span>
-                      <span className="text-xs text-foreground/50 font-body">{label}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="font-body text-sm text-foreground/75">Use code</span>
-                <span
-                  className="font-body text-sm font-bold tracking-widest text-primary px-2 py-0.5 rounded"
-                  style={{ background: 'rgba(212,175,55,0.15)' }}
-                >
-                  FIRSTMATCH50
-                </span>
-                <span className="font-body text-sm text-foreground/75">at checkout</span>
-              </div>
+          <div
+            className="mt-2 rounded-xl px-4 py-4"
+            style={{
+              background: 'linear-gradient(145deg, rgba(212,175,55,0.15), rgba(212,175,55,0.05))',
+              border: '1px solid rgba(212,175,55,0.5)',
+              boxShadow: '0 4px 20px rgba(212,175,55,0.15)',
+            }}
+          >
+            <div className="flex items-center gap-2 mb-3">
+              <Tag className="w-4 h-4 text-primary" />
+              <span className="text-xs font-body font-medium tracking-[0.15em] uppercase text-primary">
+                New Customer Offer
+              </span>
             </div>
-          )}
+            <div className="flex items-center gap-2">
+              <span className="font-body text-sm text-foreground/75">First time here? Try it for half price. Use code</span>
+              <span
+                className="font-body text-sm font-bold tracking-widest text-primary px-2 py-0.5 rounded"
+                style={{ background: 'rgba(212,175,55,0.15)' }}
+              >
+                FIRSTMATCH50
+              </span>
+              <span className="font-body text-sm text-foreground/75">at checkout.</span>
+            </div>
+          </div>
+
         </motion.div>
       </div>
       {/* Scroll indicator */}
