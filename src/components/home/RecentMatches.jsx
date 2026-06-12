@@ -14,6 +14,7 @@ const MATCHES = [
     confidenceBorder: 'rgba(52,211,153,0.3)',
     cardBorder: 'border-emerald-400/20',
     image: '/safe.jpg',
+    objectPosition: 'center center',
     name: 'Aqua Celestia Forte',
     brand: 'Maison Francis Kurkdjian',
     confidence: 88,
@@ -31,6 +32,7 @@ const MATCHES = [
     confidenceBorder: 'rgba(251,191,36,0.3)',
     cardBorder: 'border-amber-400/20',
     image: '/statement.jpg',
+    objectPosition: 'center center',
     name: 'Rose Gold',
     brand: 'Ormonde Jayne',
     confidence: 91,
@@ -48,6 +50,7 @@ const MATCHES = [
     confidenceBorder: 'rgba(167,139,250,0.3)',
     cardBorder: 'border-violet-400/20',
     image: '/wildcard.jpg',
+    objectPosition: 'center 30%',
     name: 'Mystic Incense',
     brand: 'The Merchant of Venice',
     confidence: 82,
@@ -76,6 +79,9 @@ export default function RecentMatches() {
           <h2 className="font-heading text-3xl md:text-4xl text-foreground leading-tight">
             Real results. Real matches.
           </h2>
+          <p className="text-muted-foreground font-body text-sm max-w-md mx-auto mt-3">
+            A sneak peek into what a real match looks like.
+          </p>
         </motion.div>
 
         <div
@@ -131,7 +137,7 @@ export default function RecentMatches() {
                     src={match.image}
                     alt={match.name}
                     className="w-full h-full object-cover"
-                    style={{ objectPosition: 'center center' }}
+                    style={{ objectPosition: match.objectPosition }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-card/60 via-transparent to-transparent" />
                 </div>
