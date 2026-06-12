@@ -1,18 +1,18 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ShieldCheck, Zap, Star } from 'lucide-react';
+import { ShieldCheck, Zap, Star, ChevronRight } from 'lucide-react';
 
 const MATCHES = [
   {
     tier: 'safe',
     label: 'Safe Match',
     icon: ShieldCheck,
-    accent: 'text-emerald-400',
     badgeBg: 'rgba(52,211,153,0.15)',
     badgeBorder: 'rgba(52,211,153,0.3)',
     badgeColor: '#34d399',
     border: 'border-emerald-400/20',
     image: '/safe.jpg',
+    objectPosition: 'center 60%',
     name: 'Aqua Celestia Forte',
     brand: 'Maison Francis Kurkdjian',
     confidence: 88,
@@ -23,12 +23,12 @@ const MATCHES = [
     tier: 'statement',
     label: 'Statement Choice',
     icon: Zap,
-    accent: 'text-amber-400',
     badgeBg: 'rgba(251,191,36,0.15)',
     badgeBorder: 'rgba(251,191,36,0.3)',
     badgeColor: '#fbbf24',
     border: 'border-amber-400/20',
     image: '/statement.jpg',
+    objectPosition: 'center 30%',
     name: 'Rose Gold',
     brand: 'Ormonde Jayne',
     confidence: 91,
@@ -39,12 +39,12 @@ const MATCHES = [
     tier: 'wildcard',
     label: 'Wildcard Discovery',
     icon: Star,
-    accent: 'text-violet-400',
     badgeBg: 'rgba(167,139,250,0.15)',
     badgeBorder: 'rgba(167,139,250,0.3)',
     badgeColor: '#a78bfa',
     border: 'border-violet-400/20',
     image: '/wildcard.jpg',
+    objectPosition: 'center center',
     name: 'Mystic Incense',
     brand: 'The Merchant of Venice',
     confidence: 82,
@@ -55,7 +55,12 @@ const MATCHES = [
 
 export default function RecentMatches() {
   return (
-    <section className="py-10 px-6">
+    <section className="pt-12 pb-10 px-6">
+      {/* Gold divider */}
+      <div className="max-w-5xl mx-auto mb-10">
+        <div className="h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
+      </div>
+
       <div className="max-w-5xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -81,7 +86,7 @@ export default function RecentMatches() {
             WebkitOverflowScrolling: 'touch',
             scrollbarWidth: 'none',
             msOverflowStyle: 'none',
-            paddingRight: '24px',
+            paddingRight: '40px',
           }}
         >
           {MATCHES.map((match, i) => {
@@ -94,31 +99,42 @@ export default function RecentMatches() {
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
                 className={`bg-card border ${match.border} rounded-2xl overflow-hidden flex-shrink-0 snap-start flex flex-col`}
-                style={{ width: '300px', minWidth: '300px' }}
+                style={{ width: '300px', minWidth: '300px', maxWidth: '300px' }}
               >
-                {/* Bottle image - fixed height, centred */}
+                {/* Bottle image */}
                 <div className="relative overflow-hidden" style={{ height: '220px', flexShrink: 0 }}>
                   <img
                     src={match.image}
                     alt={match.name}
                     className="w-full h-full object-cover"
-                    style={{ objectPosition: 'center center' }}
+                    style={{ objectPosition: match.objectPosition }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-card/70 via-transparent to-transparent" />
+
                   {/* Tier badge */}
                   <div
-                    className="absolute top-3 left-3 flex items-center gap-1.5 rounded-full px-2 py-1"
-                    style={{ background: match.badgeBg, border: `1px solid ${match.badgeBorder}` }}
+                    className="absolute top-3 left-3 flex items-center gap-1.5 rounded-full px-2.5 py-1"
+                    style={{
+                      background: 'rgba(0,0,0,0.55)',
+                      border: `1px solid ${match.badgeBorder}`,
+                      backdropFilter: 'blur(4px)',
+                    }}
                   >
-                    <Icon className="w-3 h-3" style={{ color: match.badgeColor }} />
+                    <Icon className="w-3 h-3 flex-shrink-0" style={{ color: match.badgeColor }} />
                     <span className="text-xs font-body font-semibold tracking-wider uppercase" style={{ color: match.badgeColor }}>
                       {match.label}
                     </span>
                   </div>
+
                   {/* Confidence score */}
                   <div
-                    className="absolute top-3 right-3 text-xs font-body font-medium px-2 py-0.5 rounded-full"
-                    style={{ background: match.badgeBg, border: `1px solid ${match.badgeBorder}`, color: match.badgeColor }}
+                    className="absolute top-3 right-3 text-xs font-body font-semibold px-2.5 py-1 rounded-full"
+                    style={{
+                      background: 'rgba(0,0,0,0.65)',
+                      border: `1px solid ${match.badgeBorder}`,
+                      color: match.badgeColor,
+                      backdropFilter: 'blur(4px)',
+                    }}
                   >
                     {match.confidence}% match
                   </div>
@@ -131,8 +147,8 @@ export default function RecentMatches() {
                     <p className="text-xs text-muted-foreground font-body">{match.brand}</p>
                   </div>
 
-                  {/* Smells like - fixed height */}
-                  <div className="bg-secondary/50 rounded-xl p-3" style={{ minHeight: '90px' }}>
+                  {/* Smells like */}
+                  <div className="bg-secondary/50 rounded-xl p-3" style={{ minHeight: '95px' }}>
                     <span className="text-xs font-body font-medium tracking-wider uppercase text-muted-foreground block mb-1">
                       Smells Like
                     </span>
@@ -152,9 +168,13 @@ export default function RecentMatches() {
           })}
         </div>
 
-        <p className="text-center text-xs text-muted-foreground font-body mt-4 italic">
-          Swipe to see all three tiers - Safe, Statement and Wildcard.
-        </p>
+        {/* Swipe hint */}
+        <div className="flex items-center justify-center gap-1 mt-4">
+          <p className="text-xs text-muted-foreground font-body italic">
+            Swipe to see all three tiers - Safe, Statement and Wildcard
+          </p>
+          <ChevronRight className="w-3 h-3 text-muted-foreground" />
+        </div>
       </div>
     </section>
   );
