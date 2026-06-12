@@ -7,12 +7,13 @@ const MATCHES = [
     tier: 'safe',
     label: 'Safe Match',
     icon: ShieldCheck,
-    badgeBg: 'rgba(52,211,153,0.15)',
-    badgeBorder: 'rgba(52,211,153,0.3)',
+    badgeBg: 'rgba(52,211,153,0.08)',
+    badgeBorder: 'rgba(52,211,153,0.15)',
     badgeColor: '#34d399',
-    border: 'border-emerald-400/20',
+    confidenceBg: 'rgba(52,211,153,0.15)',
+    confidenceBorder: 'rgba(52,211,153,0.3)',
+    cardBorder: 'border-emerald-400/20',
     image: '/safe.jpg',
-    objectPosition: 'center center',
     name: 'Aqua Celestia Forte',
     brand: 'Maison Francis Kurkdjian',
     confidence: 88,
@@ -23,12 +24,13 @@ const MATCHES = [
     tier: 'statement',
     label: 'Statement Choice',
     icon: Zap,
-    badgeBg: 'rgba(251,191,36,0.15)',
-    badgeBorder: 'rgba(251,191,36,0.3)',
+    badgeBg: 'rgba(251,191,36,0.08)',
+    badgeBorder: 'rgba(251,191,36,0.15)',
     badgeColor: '#fbbf24',
-    border: 'border-amber-400/20',
+    confidenceBg: 'rgba(251,191,36,0.15)',
+    confidenceBorder: 'rgba(251,191,36,0.3)',
+    cardBorder: 'border-amber-400/20',
     image: '/statement.jpg',
-    objectPosition: 'center center',
     name: 'Rose Gold',
     brand: 'Ormonde Jayne',
     confidence: 91,
@@ -39,12 +41,13 @@ const MATCHES = [
     tier: 'wildcard',
     label: 'Wildcard Discovery',
     icon: Star,
-    badgeBg: 'rgba(167,139,250,0.15)',
-    badgeBorder: 'rgba(167,139,250,0.3)',
+    badgeBg: 'rgba(167,139,250,0.08)',
+    badgeBorder: 'rgba(167,139,250,0.15)',
     badgeColor: '#a78bfa',
-    border: 'border-violet-400/20',
+    confidenceBg: 'rgba(167,139,250,0.15)',
+    confidenceBorder: 'rgba(167,139,250,0.3)',
+    cardBorder: 'border-violet-400/20',
     image: '/wildcard.jpg',
-    objectPosition: 'center center',
     name: 'Mystic Incense',
     brand: 'The Merchant of Venice',
     confidence: 82,
@@ -70,12 +73,9 @@ export default function RecentMatches() {
           <span className="text-xs font-body font-medium tracking-[0.25em] uppercase text-primary mb-3 block">
             Recent Matches
           </span>
-          <h2 className="font-heading text-3xl md:text-4xl text-foreground mb-3 leading-tight">
+          <h2 className="font-heading text-3xl md:text-4xl text-foreground leading-tight">
             Real results. Real matches.
           </h2>
-          <p className="text-muted-foreground font-body text-sm max-w-md mx-auto">
-            A glimpse into what could be waiting on the other side.
-          </p>
         </motion.div>
 
         <div
@@ -96,41 +96,44 @@ export default function RecentMatches() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className={`bg-card border ${match.border} rounded-2xl overflow-hidden flex-shrink-0 snap-start flex flex-col`}
+                className={`bg-card border ${match.cardBorder} rounded-2xl overflow-hidden flex-shrink-0 snap-start flex flex-col`}
                 style={{ width: '300px', minWidth: '300px', maxWidth: '300px' }}
               >
-                <div className="relative overflow-hidden" style={{ height: '220px', flexShrink: 0 }}>
-                  <img
-                    src={match.image}
-                    alt={match.name}
-                    className="w-full h-full object-cover"
-                    style={{ objectPosition: match.objectPosition }}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-card/70 via-transparent to-transparent" />
-                  <div
-                    className="absolute top-3 left-3 flex items-center gap-1.5 rounded-full px-2.5 py-1"
-                    style={{
-                      background: 'rgba(0,0,0,0.55)',
-                      border: `1px solid ${match.badgeBorder}`,
-                      backdropFilter: 'blur(4px)',
-                    }}
-                  >
-                    <Icon className="w-3 h-3 flex-shrink-0" style={{ color: match.badgeColor }} />
+                {/* Header bar */}
+                <div
+                  className="flex items-center justify-between px-4 py-2.5"
+                  style={{
+                    background: match.badgeBg,
+                    borderBottom: `1px solid ${match.badgeBorder}`,
+                  }}
+                >
+                  <div className="flex items-center gap-2">
+                    <Icon className="w-3.5 h-3.5 flex-shrink-0" style={{ color: match.badgeColor }} />
                     <span className="text-xs font-body font-semibold tracking-wider uppercase" style={{ color: match.badgeColor }}>
                       {match.label}
                     </span>
                   </div>
                   <div
-                    className="absolute top-3 right-3 text-xs font-body font-semibold px-2.5 py-1 rounded-full"
+                    className="text-xs font-body font-semibold px-2 py-0.5 rounded-full"
                     style={{
-                      background: 'rgba(0,0,0,0.65)',
-                      border: `1px solid ${match.badgeBorder}`,
+                      background: match.confidenceBg,
+                      border: `1px solid ${match.confidenceBorder}`,
                       color: match.badgeColor,
-                      backdropFilter: 'blur(4px)',
                     }}
                   >
                     {match.confidence}% match
                   </div>
+                </div>
+
+                {/* Bottle image */}
+                <div className="relative overflow-hidden" style={{ height: '200px', flexShrink: 0 }}>
+                  <img
+                    src={match.image}
+                    alt={match.name}
+                    className="w-full h-full object-cover"
+                    style={{ objectPosition: 'center center' }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-card/60 via-transparent to-transparent" />
                 </div>
 
                 <div className="p-4 flex flex-col gap-3 flex-1">
