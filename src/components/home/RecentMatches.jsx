@@ -80,7 +80,7 @@ export default function RecentMatches() {
             Real results. Real matches.
           </h2>
           <p className="text-muted-foreground font-body text-sm max-w-md mx-auto mt-3">
-            A sneak peek into what a real match looks like.
+            A sneak peek into what personalised quiz results look like.
           </p>
         </motion.div>
 
