@@ -1,5 +1,5 @@
 import React from 'react';
-import HeroWithMatches from '../components/home/HeroWithMatches';
+import HeroSection from '../components/home/HeroSection';
 import TrustSection from '../components/home/TrustSection';
 import MemorySection from '../components/home/MemorySection';
 import PathsSection from '../components/home/PathsSection';
@@ -14,7 +14,7 @@ const MEMORY_IMAGE = 'https://media.base44.com/images/public/69cac3f60d3002bf060
 export default function Home() {
   return (
     <div>
-      <HeroWithMatches heroImage={HERO_IMAGE} />
+      <HeroSection heroImage={HERO_IMAGE} />
       <RecentMatches />
       <TestimonialsSection />
       <TrustSection />
