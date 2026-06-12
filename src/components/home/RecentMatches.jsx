@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ShieldCheck, Zap, Star, ChevronRight } from 'lucide-react';
+import { ShieldCheck, Zap, Star } from 'lucide-react';
 
 const MATCHES = [
   {
@@ -12,7 +12,7 @@ const MATCHES = [
     badgeColor: '#34d399',
     border: 'border-emerald-400/20',
     image: '/safe.jpg',
-    objectPosition: 'center 60%',
+    objectPosition: 'center center',
     name: 'Aqua Celestia Forte',
     brand: 'Maison Francis Kurkdjian',
     confidence: 88,
@@ -28,7 +28,7 @@ const MATCHES = [
     badgeColor: '#fbbf24',
     border: 'border-amber-400/20',
     image: '/statement.jpg',
-    objectPosition: 'center 30%',
+    objectPosition: 'center center',
     name: 'Rose Gold',
     brand: 'Ormonde Jayne',
     confidence: 91,
@@ -56,7 +56,6 @@ const MATCHES = [
 export default function RecentMatches() {
   return (
     <section className="pt-12 pb-10 px-6">
-      {/* Gold divider */}
       <div className="max-w-5xl mx-auto mb-10">
         <div className="h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
       </div>
@@ -75,11 +74,10 @@ export default function RecentMatches() {
             Real results. Real matches.
           </h2>
           <p className="text-muted-foreground font-body text-sm max-w-md mx-auto">
-            Real recommendations from real quizzes - three tiers, every time.
+            A glimpse into what could be waiting on the other side.
           </p>
         </motion.div>
 
-        {/* Scrollable strip */}
         <div
           className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory"
           style={{
@@ -101,7 +99,6 @@ export default function RecentMatches() {
                 className={`bg-card border ${match.border} rounded-2xl overflow-hidden flex-shrink-0 snap-start flex flex-col`}
                 style={{ width: '300px', minWidth: '300px', maxWidth: '300px' }}
               >
-                {/* Bottle image */}
                 <div className="relative overflow-hidden" style={{ height: '220px', flexShrink: 0 }}>
                   <img
                     src={match.image}
@@ -110,8 +107,6 @@ export default function RecentMatches() {
                     style={{ objectPosition: match.objectPosition }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-card/70 via-transparent to-transparent" />
-
-                  {/* Tier badge */}
                   <div
                     className="absolute top-3 left-3 flex items-center gap-1.5 rounded-full px-2.5 py-1"
                     style={{
@@ -125,8 +120,6 @@ export default function RecentMatches() {
                       {match.label}
                     </span>
                   </div>
-
-                  {/* Confidence score */}
                   <div
                     className="absolute top-3 right-3 text-xs font-body font-semibold px-2.5 py-1 rounded-full"
                     style={{
@@ -141,21 +134,16 @@ export default function RecentMatches() {
                 </div>
 
                 <div className="p-4 flex flex-col gap-3 flex-1">
-                  {/* Name */}
                   <div style={{ minHeight: '44px' }}>
                     <h3 className="font-heading text-lg text-foreground leading-tight">{match.name}</h3>
                     <p className="text-xs text-muted-foreground font-body">{match.brand}</p>
                   </div>
-
-                  {/* Smells like */}
                   <div className="bg-secondary/50 rounded-xl p-3" style={{ minHeight: '95px' }}>
                     <span className="text-xs font-body font-medium tracking-wider uppercase text-muted-foreground block mb-1">
                       Smells Like
                     </span>
                     <p className="text-xs text-foreground font-body leading-relaxed">{match.smells_like}</p>
                   </div>
-
-                  {/* Why this suits */}
                   <div className="bg-primary/5 border border-primary/10 rounded-xl p-3 flex-1">
                     <span className="text-xs font-body font-medium tracking-wider uppercase text-primary block mb-1">
                       Why this suits them
@@ -166,14 +154,6 @@ export default function RecentMatches() {
               </motion.div>
             );
           })}
-        </div>
-
-        {/* Swipe hint */}
-        <div className="flex items-center justify-center gap-1 mt-4">
-          <p className="text-xs text-muted-foreground font-body italic">
-            Swipe to see all three tiers - Safe, Statement and Wildcard
-          </p>
-          <ChevronRight className="w-3 h-3 text-muted-foreground" />
         </div>
       </div>
     </section>
