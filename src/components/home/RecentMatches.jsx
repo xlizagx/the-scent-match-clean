@@ -8,7 +8,9 @@ const MATCHES = [
     label: 'Safe Match',
     icon: ShieldCheck,
     accent: 'text-emerald-400',
-    bg: 'bg-emerald-400/10',
+    badgeBg: 'rgba(52,211,153,0.15)',
+    badgeBorder: 'rgba(52,211,153,0.3)',
+    badgeColor: '#34d399',
     border: 'border-emerald-400/20',
     image: '/safe.jpg',
     name: 'Aqua Celestia Forte',
@@ -22,7 +24,9 @@ const MATCHES = [
     label: 'Statement Choice',
     icon: Zap,
     accent: 'text-amber-400',
-    bg: 'bg-amber-400/10',
+    badgeBg: 'rgba(251,191,36,0.15)',
+    badgeBorder: 'rgba(251,191,36,0.3)',
+    badgeColor: '#fbbf24',
     border: 'border-amber-400/20',
     image: '/statement.jpg',
     name: 'Rose Gold',
@@ -36,7 +40,9 @@ const MATCHES = [
     label: 'Wildcard Discovery',
     icon: Star,
     accent: 'text-violet-400',
-    bg: 'bg-violet-400/10',
+    badgeBg: 'rgba(167,139,250,0.15)',
+    badgeBorder: 'rgba(167,139,250,0.3)',
+    badgeColor: '#a78bfa',
     border: 'border-violet-400/20',
     image: '/wildcard.jpg',
     name: 'Mystic Incense',
@@ -61,7 +67,7 @@ export default function RecentMatches() {
             Recent Matches
           </span>
           <h2 className="font-heading text-3xl md:text-4xl text-foreground mb-3 leading-tight">
-            This is what your match looks like
+            Real results. Real matches.
           </h2>
           <p className="text-muted-foreground font-body text-sm max-w-md mx-auto">
             Real recommendations from real quizzes - three tiers, every time.
@@ -88,40 +94,45 @@ export default function RecentMatches() {
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
                 className={`bg-card border ${match.border} rounded-2xl overflow-hidden flex-shrink-0 snap-start flex flex-col`}
-                style={{ width: '300px' }}
+                style={{ width: '300px', minWidth: '300px' }}
               >
-                {/* Bottle image - fixed height */}
-                <div className="relative overflow-hidden" style={{ height: '220px' }}>
+                {/* Bottle image - fixed height, centred */}
+                <div className="relative overflow-hidden" style={{ height: '220px', flexShrink: 0 }}>
                   <img
                     src={match.image}
                     alt={match.name}
-                    className="w-full h-full object-cover object-center"
+                    className="w-full h-full object-cover"
+                    style={{ objectPosition: 'center center' }}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-card/80 via-transparent to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-card/70 via-transparent to-transparent" />
                   {/* Tier badge */}
-                  <div className="absolute top-3 left-3 flex items-center gap-1.5">
-                    <div className={`w-6 h-6 rounded-md ${match.bg} flex items-center justify-center`}>
-                      <Icon className={`w-3.5 h-3.5 ${match.accent}`} />
-                    </div>
-                    <span className={`text-xs font-body font-semibold tracking-wider uppercase ${match.accent}`}>
+                  <div
+                    className="absolute top-3 left-3 flex items-center gap-1.5 rounded-full px-2 py-1"
+                    style={{ background: match.badgeBg, border: `1px solid ${match.badgeBorder}` }}
+                  >
+                    <Icon className="w-3 h-3" style={{ color: match.badgeColor }} />
+                    <span className="text-xs font-body font-semibold tracking-wider uppercase" style={{ color: match.badgeColor }}>
                       {match.label}
                     </span>
                   </div>
                   {/* Confidence score */}
-                  <div className={`absolute top-3 right-3 text-xs font-body font-medium px-2 py-0.5 rounded-full border ${match.border} ${match.accent} bg-card/80`}>
+                  <div
+                    className="absolute top-3 right-3 text-xs font-body font-medium px-2 py-0.5 rounded-full"
+                    style={{ background: match.badgeBg, border: `1px solid ${match.badgeBorder}`, color: match.badgeColor }}
+                  >
                     {match.confidence}% match
                   </div>
                 </div>
 
                 <div className="p-4 flex flex-col gap-3 flex-1">
-                  {/* Name - below image */}
-                  <div>
+                  {/* Name */}
+                  <div style={{ minHeight: '44px' }}>
                     <h3 className="font-heading text-lg text-foreground leading-tight">{match.name}</h3>
                     <p className="text-xs text-muted-foreground font-body">{match.brand}</p>
                   </div>
 
-                  {/* Smells like */}
-                  <div className="bg-secondary/50 rounded-xl p-3">
+                  {/* Smells like - fixed height */}
+                  <div className="bg-secondary/50 rounded-xl p-3" style={{ minHeight: '90px' }}>
                     <span className="text-xs font-body font-medium tracking-wider uppercase text-muted-foreground block mb-1">
                       Smells Like
                     </span>
