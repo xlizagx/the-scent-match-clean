@@ -13,9 +13,9 @@ const MATCHES = [
     image: '/safe.jpg',
     name: 'Aqua Celestia Forte',
     brand: 'Maison Francis Kurkdjian',
-    confidence: 94,
-    smells_like: 'fresh citrus, delicate white musk, soft woody notes',
-    why_this_suits: 'A universally loved, effortlessly elegant scent - clean, refined and impossible to get wrong.',
+    confidence: 88,
+    smells_like: 'cold lime zest, fresh mint, dewy black currant blossom, soft white jasmine, green mimosa',
+    why_this_suits: 'For someone quietly confident and fresh-leaning - this is clean, considered and effortless. The kind of scent that surprises gently rather than overwhelms.',
   },
   {
     tier: 'statement',
@@ -28,7 +28,7 @@ const MATCHES = [
     name: 'Rose Gold',
     brand: 'Ormonde Jayne',
     confidence: 91,
-    smells_like: 'bright bergamot and lime, rich Taif rose, woody oud, warm sandalwood',
+    smells_like: 'bright bergamot and lime, rich Taif rose, woody oud, soft carnation, warm sandalwood',
     why_this_suits: 'A sophisticated rose-oud floral with real character - designed to be noticed on their terms, not imposed on a room.',
   },
   {
@@ -43,7 +43,7 @@ const MATCHES = [
     brand: 'The Merchant of Venice',
     confidence: 82,
     smells_like: 'sticky caramel, dark cacao, smoky incense, dried fruits, warm white woods',
-    why_this_suits: 'Bridges gourmand sweetness with smoky sacred depth - the kind of fragrance that prompts questions rather than just compliments.',
+    why_this_suits: 'It gives their gourmand preference an unexpected smoky-sacred lift - bold enough for a confident personality without straying from the sweet warmth they gravitate toward.',
   },
 ];
 
@@ -69,7 +69,15 @@ export default function RecentMatches() {
         </motion.div>
 
         {/* Scrollable strip */}
-        <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide">
+        <div
+          className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory"
+          style={{
+            WebkitOverflowScrolling: 'touch',
+            scrollbarWidth: 'none',
+            msOverflowStyle: 'none',
+            paddingRight: '24px',
+          }}
+        >
           {MATCHES.map((match, i) => {
             const Icon = match.icon;
             return (
@@ -79,17 +87,18 @@ export default function RecentMatches() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className={`bg-card border ${match.border} rounded-2xl overflow-hidden flex-shrink-0 snap-start w-[300px] md:w-[340px]`}
+                className={`bg-card border ${match.border} rounded-2xl overflow-hidden flex-shrink-0 snap-start flex flex-col`}
+                style={{ width: '300px' }}
               >
-                {/* Bottle image */}
-                <div className="relative h-52 overflow-hidden">
+                {/* Bottle image - fixed height */}
+                <div className="relative overflow-hidden" style={{ height: '220px' }}>
                   <img
                     src={match.image}
                     alt={match.name}
                     className="w-full h-full object-cover object-center"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-card via-card/20 to-transparent" />
-                  {/* Tier badge over image */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-card/80 via-transparent to-transparent" />
+                  {/* Tier badge */}
                   <div className="absolute top-3 left-3 flex items-center gap-1.5">
                     <div className={`w-6 h-6 rounded-md ${match.bg} flex items-center justify-center`}>
                       <Icon className={`w-3.5 h-3.5 ${match.accent}`} />
@@ -104,8 +113,8 @@ export default function RecentMatches() {
                   </div>
                 </div>
 
-                <div className="p-4 flex flex-col gap-3">
-                  {/* Name */}
+                <div className="p-4 flex flex-col gap-3 flex-1">
+                  {/* Name - below image */}
                   <div>
                     <h3 className="font-heading text-lg text-foreground leading-tight">{match.name}</h3>
                     <p className="text-xs text-muted-foreground font-body">{match.brand}</p>
@@ -120,7 +129,7 @@ export default function RecentMatches() {
                   </div>
 
                   {/* Why this suits */}
-                  <div className="bg-primary/5 border border-primary/10 rounded-xl p-3">
+                  <div className="bg-primary/5 border border-primary/10 rounded-xl p-3 flex-1">
                     <span className="text-xs font-body font-medium tracking-wider uppercase text-primary block mb-1">
                       Why this suits them
                     </span>
