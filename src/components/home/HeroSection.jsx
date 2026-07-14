@@ -43,12 +43,12 @@ export default function HeroSection({ heroImage }) {
           </div>
 
           <h1 className="font-heading text-4xl md:text-6xl lg:text-7xl leading-tight tracking-tight text-foreground mb-6">
-            The Smarter Way<br />
-            <span className="text-primary">to Gift Fragrance.</span>
+            Never Get a Fragrance<br />
+            <span className="text-primary">Gift Wrong Again.</span>
           </h1>
 
           <p className="font-body text-base md:text-lg text-foreground/75 leading-relaxed mb-8 max-w-lg font-light tracking-wide">
-            Just tell us about them... we'll do the rest.<br />Finding something for yourself? We've got that too.
+            The smartest £4.99 you'll ever spend.
           </p>
 
           {/* Badges */}
