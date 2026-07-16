@@ -78,7 +78,7 @@ export default function TestimonialsSection({ testimonials }) {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-x-10 gap-y-5">
+        <div className="flex flex-wrap justify-center gap-x-10 gap-y-5">
           {items.map((t, i) => (
             <motion.div
               key={t.id || i}
@@ -86,7 +86,7 @@ export default function TestimonialsSection({ testimonials }) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.07 }}
-              className="flex gap-3"
+              className="flex gap-3 w-full md:w-80"
             >
               <div className="w-0.5 bg-primary/40 flex-shrink-0 rounded-full" />
               <div className="flex flex-col gap-1.5">
