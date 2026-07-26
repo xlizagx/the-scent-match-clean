@@ -6,6 +6,7 @@ import PageNotFound from './lib/PageNotFound';
 import AppLayout from './components/layout/AppLayout';
 import Home from './pages/Home';
 import PremiumQuiz from './pages/PremiumQuiz';
+import Shop from './pages/Shop';
 import Support from './pages/Support';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsAndConditions from './pages/TermsAndConditions';
@@ -20,6 +21,7 @@ function App() {
           <Route element={<AppLayout />}>
             <Route path="/" element={<Home />} />
             <Route path="/quiz" element={<PremiumQuiz />} />
+            <Route path="/shop" element={<Shop />} />
             <Route path="/support" element={<Support />} />
             <Route path="/contact" element={<Support />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
