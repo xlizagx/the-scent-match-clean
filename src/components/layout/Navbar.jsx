@@ -45,65 +45,69 @@ export default function Navbar() {
         </a>
 
         {/* Desktop nav */}
-        <div className="hidden md:flex items-center gap-6">
-          <a
-            href="/#how-it-works"
-            onClick={e => handleAnchorNav(e, '/', 'how-it-works')}
-            className="text-xs font-body text-foreground/80 hover:text-primary transition-colors tracking-wide"
-          >
-            How it works
-          </a>
+        <div className="hidden md:flex items-center">
+          {/* Main navigation */}
+          <div className="flex items-center gap-6">
+            <a
+              href="/#how-it-works"
+              onClick={e => handleAnchorNav(e, '/', 'how-it-works')}
+              className="text-xs font-body text-foreground/80 hover:text-primary transition-colors tracking-wide"
+            >
+              How it works
+            </a>
 
-          <a
-            href="/#reviews"
-            onClick={e => handleAnchorNav(e, '/', 'reviews')}
-            className="text-xs font-body text-foreground/80 hover:text-primary transition-colors tracking-wide"
-          >
-            Reviews
-          </a>
+            <a
+              href="/#reviews"
+              onClick={e => handleAnchorNav(e, '/', 'reviews')}
+              className="text-xs font-body text-foreground/80 hover:text-primary transition-colors tracking-wide"
+            >
+              Reviews
+            </a>
 
-          <a
-            href="/support#support-guidance"
-            onClick={e => handleAnchorNav(e, '/support', 'support-guidance')}
-            className="text-xs font-body text-foreground/80 hover:text-primary transition-colors tracking-wide"
-          >
-            FAQs
-          </a>
+            <a
+              href="/support#support-guidance"
+              onClick={e => handleAnchorNav(e, '/support', 'support-guidance')}
+              className="text-xs font-body text-foreground/80 hover:text-primary transition-colors tracking-wide"
+            >
+              FAQs
+            </a>
 
-          <a
-            href="/support#contact"
-            onClick={e => handleAnchorNav(e, '/support', 'contact')}
-            className="text-xs font-body text-foreground/80 hover:text-primary transition-colors tracking-wide"
-          >
-            Get in touch
-          </a>
+            <a
+              href="/support#contact"
+              onClick={e => handleAnchorNav(e, '/support', 'contact')}
+              className="text-xs font-body text-foreground/80 hover:text-primary transition-colors tracking-wide"
+            >
+              Get in touch
+            </a>
 
+            <a
+              href="/#consultation"
+              onClick={e => handleAnchorNav(e, '/', 'consultation')}
+              className="inline-flex items-center gap-1.5 text-xs font-body text-foreground/80 hover:text-primary transition-colors tracking-wide"
+            >
+              Personal Consultations
+              <span className="text-primary/70 text-[10px] font-medium">
+                (Coming Soon)
+              </span>
+            </a>
+
+            <a
+              href="/#premium-match"
+              onClick={e => handleAnchorNav(e, '/', 'premium-match')}
+              className="text-xs font-body font-medium text-primary border border-primary/40 rounded-full px-4 py-1.5 hover:bg-primary/10 transition-colors"
+            >
+              Get Started
+            </a>
+          </div>
+
+          {/* Separate Gift Shop destination */}
           <Link
             to="/shop"
-            className="inline-flex items-center gap-1.5 text-xs font-body text-foreground/80 hover:text-primary transition-colors tracking-wide"
+            className="ml-10 inline-flex items-center gap-1.5 text-xs font-body font-medium text-primary hover:text-primary/80 transition-colors tracking-wide whitespace-nowrap"
           >
             <Sparkles className="w-3 h-3 text-primary" />
             Gift Shop
           </Link>
-
-          <a
-            href="/#consultation"
-            onClick={e => handleAnchorNav(e, '/', 'consultation')}
-            className="inline-flex items-center gap-1.5 text-xs font-body text-foreground/80 hover:text-primary transition-colors tracking-wide"
-          >
-            Personal Consultations
-            <span className="text-primary/70 text-[10px] font-medium">
-              (Coming Soon)
-            </span>
-          </a>
-
-          <a
-            href="/#premium-match"
-            onClick={e => handleAnchorNav(e, '/', 'premium-match')}
-            className="text-xs font-body font-medium text-primary border border-primary/40 rounded-full px-4 py-1.5 hover:bg-primary/10 transition-colors"
-          >
-            Get Started
-          </a>
         </div>
 
         {/* Mobile menu toggle */}
@@ -154,15 +158,6 @@ export default function Navbar() {
             Get in touch
           </a>
 
-          <Link
-            to="/shop"
-            onClick={() => setMobileOpen(false)}
-            className="inline-flex items-center gap-1.5 text-sm font-body text-foreground/80 hover:text-primary transition-colors"
-          >
-            <Sparkles className="w-3 h-3 text-primary" />
-            Gift Shop
-          </Link>
-
           <a
             href="/#consultation"
             onClick={e => handleAnchorNav(e, '/', 'consultation')}
@@ -181,6 +176,15 @@ export default function Navbar() {
           >
             Get Started →
           </a>
+
+          <Link
+            to="/shop"
+            onClick={() => setMobileOpen(false)}
+            className="inline-flex items-center gap-1.5 text-sm font-body font-medium text-primary pt-2 border-t border-border/50"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-primary" />
+            Gift Shop
+          </Link>
         </div>
       )}
     </nav>
