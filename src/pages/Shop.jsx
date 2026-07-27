@@ -68,7 +68,7 @@ const PRODUCT_QUERY = `
       id
       title
       handle
-      description
+      descriptionHtml
       availableForSale
 
       featuredImage {
@@ -507,8 +507,7 @@ export default function Shop() {
         setSelectedImage(
           firstAvailableVariant?.image?.url ||
             loadedProduct.featuredImage?.url ||
-            loadedProduct.images?.nodes?.[0]
-              ?.url ||
+            loadedProduct.images?.nodes?.[0]?.url ||
             ''
         );
       } catch (error) {
@@ -1297,10 +1296,13 @@ export default function Shop() {
                     )}
               </p>
 
-              {product.description && (
-                <p className="mt-6 text-sm md:text-base leading-7 text-muted-foreground whitespace-pre-line">
-                  {product.description}
-                </p>
+              {product.descriptionHtml && (
+                <div
+                  className="mt-6 text-sm md:text-base leading-7 text-muted-foreground [&_p]:mb-4 [&_strong]:text-foreground [&_strong]:font-semibold [&_ul]:my-4 [&_ul]:pl-5 [&_ul]:list-disc [&_ol]:my-4 [&_ol]:pl-5 [&_ol]:list-decimal [&_li]:mb-1"
+                  dangerouslySetInnerHTML={{
+                    __html: product.descriptionHtml,
+                  }}
+                />
               )}
 
               <div className="mt-8 space-y-7">
@@ -1489,7 +1491,7 @@ export default function Shop() {
           </div>
 
           <div className="text-center mb-14 md:mb-16">
-            <h1 className="font-body text-4xl md:text-5xl lg:text-6xl font-light tracking-wide">
+            <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl font-light tracking-wide">
               Shop
             </h1>
 
@@ -1526,7 +1528,7 @@ export default function Shop() {
                   key={collection.id}
                   className="mb-16 md:mb-20"
                 >
-                  <h2 className="font-body text-2xl md:text-3xl font-light tracking-wide mb-7 md:mb-8">
+                  <h2 className="font-heading text-2xl md:text-3xl font-light tracking-wide mb-7 md:mb-8">
                     {
                       collection.displayTitle
                     }
