@@ -80,9 +80,10 @@ export default function Navbar() {
 
           <Link
             to="/shop"
-            className="text-xs font-body text-foreground/80 hover:text-primary transition-colors tracking-wide"
+            className="inline-flex items-center gap-1.5 text-xs font-body text-foreground/80 hover:text-primary transition-colors tracking-wide"
           >
-            Shop
+            <Sparkles className="w-3 h-3 text-primary" />
+            Gift Shop
           </Link>
 
           <a
@@ -90,7 +91,6 @@ export default function Navbar() {
             onClick={e => handleAnchorNav(e, '/', 'consultation')}
             className="inline-flex items-center gap-1.5 text-xs font-body text-foreground/80 hover:text-primary transition-colors tracking-wide"
           >
-            <Sparkles className="w-3 h-3 text-primary" />
             Personal Consultations
             <span className="text-primary/70 text-[10px] font-medium">
               (Coming Soon)
@@ -157,9 +157,10 @@ export default function Navbar() {
           <Link
             to="/shop"
             onClick={() => setMobileOpen(false)}
-            className="text-sm font-body text-foreground/80 hover:text-primary transition-colors"
+            className="inline-flex items-center gap-1.5 text-sm font-body text-foreground/80 hover:text-primary transition-colors"
           >
-            Shop
+            <Sparkles className="w-3 h-3 text-primary" />
+            Gift Shop
           </Link>
 
           <a
@@ -167,7 +168,6 @@ export default function Navbar() {
             onClick={e => handleAnchorNav(e, '/', 'consultation')}
             className="inline-flex items-center gap-1.5 text-sm font-body text-foreground/80 hover:text-primary transition-colors"
           >
-            <Sparkles className="w-3 h-3 text-primary" />
             Personal Consultations
             <span className="text-primary/70 text-xs font-medium">
               (Coming Soon)
