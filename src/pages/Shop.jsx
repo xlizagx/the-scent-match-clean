@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 
 export default function Shop() {
-  const [products, setProducts] = useState([]);
+  const [collections, setCollections] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
   useEffect(() => {
-    async function loadProducts() {
+    async function loadCollections() {
       try {
         const domain = import.meta.env.VITE_SHOPIFY_STORE_DOMAIN;
         const token = import.meta.env.VITE_SHOPIFY_STOREFRONT_ACCESS_TOKEN;
@@ -22,20 +22,26 @@ export default function Shop() {
             body: JSON.stringify({
               query: `
                 query {
-                  products(first: 20) {
+                  collections(first: 20) {
                     nodes {
                       id
                       title
                       handle
-                      description
-                      featuredImage {
-                        url
-                        altText
-                      }
-                      priceRange {
-                        minVariantPrice {
-                          amount
-                          currencyCode
+                      products(first: 50) {
+                        nodes {
+                          id
+                          title
+                          handle
+                          featuredImage {
+                            url
+                            altText
+                          }
+                          priceRange {
+                            minVariantPrice {
+                              amount
+                              currencyCode
+                            }
+                          }
                         }
                       }
                     }
@@ -53,10 +59,44 @@ export default function Shop() {
         const data = await response.json();
 
         if (data.errors) {
-          throw new Error(data.errors[0]?.message || 'Shopify returned an error.');
+          throw new Error(
+            data.errors[0]?.message || 'Shopify returned an error.'
+          );
         }
 
-        setProducts(data.data?.products?.nodes || []);
+        const allCollections = data.data?.collections?.nodes || [];
+
+        const wantedCollections = [
+          {
+            shopifyTitle: 'Fragrance Lovers Hoodies',
+            displayTitle: 'Hoodies',
+          },
+          {
+            shopifyTitle: 'Fragrance Lovers Tote Bags',
+            displayTitle: 'Tote Bags',
+          },
+          {
+            shopifyTitle: 'Fragrance Lovers Mugs',
+            displayTitle: 'Mugs',
+          },
+        ];
+
+        const organisedCollections = wantedCollections
+          .map((wanted) => {
+            const collection = allCollections.find(
+              (item) => item.title === wanted.shopifyTitle
+            );
+
+            if (!collection) return null;
+
+            return {
+              ...collection,
+              displayTitle: wanted.displayTitle,
+            };
+          })
+          .filter(Boolean);
+
+        setCollections(organisedCollections);
       } catch (err) {
         console.error(err);
         setError('We could not load the shop right now.');
@@ -65,13 +105,25 @@ export default function Shop() {
       }
     }
 
-    loadProducts();
+    loadCollections();
   }, []);
+
+  const formatPrice = (price) => {
+    if (!price) return '';
+
+    return new Intl.NumberFormat('en-GB', {
+      style: 'currency',
+      currency: price.currencyCode,
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(Number(price.amount));
+  };
 
   return (
     <main className="min-h-screen pt-32 pb-20 px-5">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-12">
+
+        <div className="text-center mb-16">
           <h1 className="text-4xl md:text-5xl font-semibold">
             Shop
           </h1>
@@ -93,47 +145,61 @@ export default function Shop() {
           </p>
         )}
 
-        {!loading && !error && products.length === 0 && (
+        {!loading && !error && collections.length === 0 && (
           <p className="text-center text-muted-foreground">
             Products coming soon.
           </p>
         )}
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {products.map((product) => {
-            const price = product.priceRange?.minVariantPrice;
+        {!loading &&
+          !error &&
+          collections.map((collection) => (
+            <section
+              key={collection.id}
+              className="mb-20"
+            >
+              <h2 className="text-2xl md:text-3xl font-semibold mb-8">
+                {collection.displayTitle}
+              </h2>
 
-            return (
-              <div
-                key={product.id}
-                className="border border-border/50 rounded-xl overflow-hidden"
-              >
-                {product.featuredImage && (
-                  <img
-                    src={product.featuredImage.url}
-                    alt={product.featuredImage.altText || product.title}
-                    className="w-full aspect-square object-cover"
-                  />
-                )}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                {collection.products.nodes.map((product) => {
+                  const price =
+                    product.priceRange?.minVariantPrice;
 
-                <div className="p-5">
-                  <h2 className="text-lg font-medium">
-                    {product.title}
-                  </h2>
+                  return (
+                    <div
+                      key={product.id}
+                      className="border border-border/50 rounded-xl overflow-hidden"
+                    >
+                      {product.featuredImage && (
+                        <img
+                          src={product.featuredImage.url}
+                          alt={
+                            product.featuredImage.altText ||
+                            product.title
+                          }
+                          className="w-full aspect-square object-cover"
+                        />
+                      )}
 
-                  {price && (
-                    <p className="mt-2 text-primary">
-                      {new Intl.NumberFormat('en-GB', {
-                        style: 'currency',
-                        currency: price.currencyCode,
-                      }).format(Number(price.amount))}
-                    </p>
-                  )}
-                </div>
+                      <div className="p-5">
+                        <h3 className="text-lg font-medium">
+                          {product.title}
+                        </h3>
+
+                        {price && (
+                          <p className="mt-2 text-primary">
+                            {formatPrice(price)}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
-            );
-          })}
-        </div>
+            </section>
+          ))}
       </div>
     </main>
   );
