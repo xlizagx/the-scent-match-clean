@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 
 const API_VERSION = '2026-07';
+const CART_STORAGE_KEY = 'scentMatchCartId';
 
 const WANTED_COLLECTIONS = [
   {
@@ -68,7 +69,6 @@ const PRODUCT_QUERY = `
       title
       handle
       description
-      descriptionHtml
       availableForSale
 
       featuredImage {
@@ -95,7 +95,6 @@ const PRODUCT_QUERY = `
           id
           title
           availableForSale
-          quantityAvailable
 
           price {
             amount
@@ -117,65 +116,71 @@ const PRODUCT_QUERY = `
   }
 `;
 
+const CART_FIELDS = `
+  id
+  checkoutUrl
+  totalQuantity
+
+  cost {
+    totalAmount {
+      amount
+      currencyCode
+    }
+  }
+
+  lines(first: 100) {
+    nodes {
+      id
+      quantity
+
+      merchandise {
+        ... on ProductVariant {
+          id
+          title
+
+          price {
+            amount
+            currencyCode
+          }
+
+          selectedOptions {
+            name
+            value
+          }
+
+          image {
+            url
+            altText
+          }
+
+          product {
+            title
+            handle
+
+            featuredImage {
+              url
+              altText
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+const CART_GET_QUERY = `
+  query CartGet($cartId: ID!) {
+    cart(id: $cartId) {
+      ${CART_FIELDS}
+    }
+  }
+`;
+
 const CART_CREATE_MUTATION = `
   mutation CartCreate($lines: [CartLineInput!]) {
     cartCreate(input: { lines: $lines }) {
       cart {
-        id
-        checkoutUrl
-        totalQuantity
-
-        cost {
-          totalAmount {
-            amount
-            currencyCode
-          }
-        }
-
-        lines(first: 100) {
-          nodes {
-            id
-            quantity
-
-            cost {
-              totalAmount {
-                amount
-                currencyCode
-              }
-            }
-
-            merchandise {
-              ... on ProductVariant {
-                id
-                title
-
-                price {
-                  amount
-                  currencyCode
-                }
-
-                selectedOptions {
-                  name
-                  value
-                }
-
-                image {
-                  url
-                  altText
-                }
-
-                product {
-                  title
-                  handle
-                  featuredImage {
-                    url
-                    altText
-                  }
-                }
-              }
-            }
-          }
-        }
+        ${CART_FIELDS}
       }
 
       userErrors {
@@ -190,61 +195,7 @@ const CART_ADD_MUTATION = `
   mutation CartLinesAdd($cartId: ID!, $lines: [CartLineInput!]!) {
     cartLinesAdd(cartId: $cartId, lines: $lines) {
       cart {
-        id
-        checkoutUrl
-        totalQuantity
-
-        cost {
-          totalAmount {
-            amount
-            currencyCode
-          }
-        }
-
-        lines(first: 100) {
-          nodes {
-            id
-            quantity
-
-            cost {
-              totalAmount {
-                amount
-                currencyCode
-              }
-            }
-
-            merchandise {
-              ... on ProductVariant {
-                id
-                title
-
-                price {
-                  amount
-                  currencyCode
-                }
-
-                selectedOptions {
-                  name
-                  value
-                }
-
-                image {
-                  url
-                  altText
-                }
-
-                product {
-                  title
-                  handle
-                  featuredImage {
-                    url
-                    altText
-                  }
-                }
-              }
-            }
-          }
-        }
+        ${CART_FIELDS}
       }
 
       userErrors {
@@ -255,127 +206,14 @@ const CART_ADD_MUTATION = `
   }
 `;
 
-const CART_GET_QUERY = `
-  query CartGet($cartId: ID!) {
-    cart(id: $cartId) {
-      id
-      checkoutUrl
-      totalQuantity
-
-      cost {
-        totalAmount {
-          amount
-          currencyCode
-        }
-      }
-
-      lines(first: 100) {
-        nodes {
-          id
-          quantity
-
-          cost {
-            totalAmount {
-              amount
-              currencyCode
-            }
-          }
-
-          merchandise {
-            ... on ProductVariant {
-              id
-              title
-
-              price {
-                amount
-                currencyCode
-              }
-
-              selectedOptions {
-                name
-                value
-              }
-
-              image {
-                url
-                altText
-              }
-
-              product {
-                title
-                handle
-                featuredImage {
-                  url
-                  altText
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-`;
-
 const CART_UPDATE_MUTATION = `
-  mutation CartLinesUpdate($cartId: ID!, $lines: [CartLineUpdateInput!]!) {
+  mutation CartLinesUpdate(
+    $cartId: ID!
+    $lines: [CartLineUpdateInput!]!
+  ) {
     cartLinesUpdate(cartId: $cartId, lines: $lines) {
       cart {
-        id
-        checkoutUrl
-        totalQuantity
-
-        cost {
-          totalAmount {
-            amount
-            currencyCode
-          }
-        }
-
-        lines(first: 100) {
-          nodes {
-            id
-            quantity
-
-            cost {
-              totalAmount {
-                amount
-                currencyCode
-              }
-            }
-
-            merchandise {
-              ... on ProductVariant {
-                id
-                title
-
-                price {
-                  amount
-                  currencyCode
-                }
-
-                selectedOptions {
-                  name
-                  value
-                }
-
-                image {
-                  url
-                  altText
-                }
-
-                product {
-                  title
-                  handle
-                  featuredImage {
-                    url
-                    altText
-                  }
-                }
-              }
-            }
-          }
-        }
+        ${CART_FIELDS}
       }
 
       userErrors {
@@ -387,64 +225,13 @@ const CART_UPDATE_MUTATION = `
 `;
 
 const CART_REMOVE_MUTATION = `
-  mutation CartLinesRemove($cartId: ID!, $lineIds: [ID!]!) {
+  mutation CartLinesRemove(
+    $cartId: ID!
+    $lineIds: [ID!]!
+  ) {
     cartLinesRemove(cartId: $cartId, lineIds: $lineIds) {
       cart {
-        id
-        checkoutUrl
-        totalQuantity
-
-        cost {
-          totalAmount {
-            amount
-            currencyCode
-          }
-        }
-
-        lines(first: 100) {
-          nodes {
-            id
-            quantity
-
-            cost {
-              totalAmount {
-                amount
-                currencyCode
-              }
-            }
-
-            merchandise {
-              ... on ProductVariant {
-                id
-                title
-
-                price {
-                  amount
-                  currencyCode
-                }
-
-                selectedOptions {
-                  name
-                  value
-                }
-
-                image {
-                  url
-                  altText
-                }
-
-                product {
-                  title
-                  handle
-                  featuredImage {
-                    url
-                    altText
-                  }
-                }
-              }
-            }
-          }
-        }
+        ${CART_FIELDS}
       }
 
       userErrors {
@@ -456,7 +243,9 @@ const CART_REMOVE_MUTATION = `
 `;
 
 function formatPrice(price) {
-  if (!price?.amount) return '';
+  if (price?.amount === undefined || price?.amount === null) {
+    return '';
+  }
 
   return new Intl.NumberFormat('en-GB', {
     style: 'currency',
@@ -471,18 +260,29 @@ function getProductHandleFromUrl() {
   return params.get('product');
 }
 
-function isColourOption(name = '') {
-  return ['colour', 'color'].includes(name.toLowerCase());
-}
-
 function isSizeOption(name = '') {
   return name.toLowerCase() === 'size';
+}
+
+function isColourOption(name = '') {
+  const normalised = name.toLowerCase();
+  return normalised === 'colour' || normalised === 'color';
 }
 
 function optionValueForVariant(variant, optionName) {
   return variant?.selectedOptions?.find(
     (option) => option.name === optionName
   )?.value;
+}
+
+function productBelongsToCollection(collections, handle, type) {
+  return collections.some(
+    (collection) =>
+      collection.type === type &&
+      collection.products.nodes.some(
+        (product) => product.handle === handle
+      )
+  );
 }
 
 export default function Shop() {
@@ -540,7 +340,8 @@ export default function Shop() {
 
     if (result.errors?.length) {
       throw new Error(
-        result.errors[0]?.message || 'Shopify returned an error.'
+        result.errors[0]?.message ||
+          'Shopify returned an error.'
       );
     }
 
@@ -554,15 +355,19 @@ export default function Shop() {
         setShopError('');
 
         const data = await shopifyRequest(COLLECTION_QUERY);
-        const allCollections = data?.collections?.nodes || [];
+        const allCollections =
+          data?.collections?.nodes || [];
 
-        const organisedCollections = WANTED_COLLECTIONS
+        const organised = WANTED_COLLECTIONS
           .map((wanted) => {
             const collection = allCollections.find(
-              (item) => item.title === wanted.shopifyTitle
+              (item) =>
+                item.title === wanted.shopifyTitle
             );
 
-            if (!collection) return null;
+            if (!collection) {
+              return null;
+            }
 
             return {
               ...collection,
@@ -572,10 +377,12 @@ export default function Shop() {
           })
           .filter(Boolean);
 
-        setCollections(organisedCollections);
+        setCollections(organised);
       } catch (error) {
         console.error(error);
-        setShopError('We could not load the shop right now.');
+        setShopError(
+          'We could not load the shop right now.'
+        );
       } finally {
         setLoadingCollections(false);
       }
@@ -588,34 +395,51 @@ export default function Shop() {
     function handlePopState() {
       setProductHandle(getProductHandleFromUrl());
       setSizeGuideOpen(false);
+      setCartOpen(false);
     }
 
-    window.addEventListener('popstate', handlePopState);
+    window.addEventListener(
+      'popstate',
+      handlePopState
+    );
 
     return () => {
-      window.removeEventListener('popstate', handlePopState);
+      window.removeEventListener(
+        'popstate',
+        handlePopState
+      );
     };
   }, []);
 
   useEffect(() => {
     async function loadCart() {
-      const savedCartId = localStorage.getItem('scentMatchCartId');
+      const savedCartId =
+        localStorage.getItem(CART_STORAGE_KEY);
 
-      if (!savedCartId) return;
+      if (!savedCartId) {
+        return;
+      }
 
       try {
-        const data = await shopifyRequest(CART_GET_QUERY, {
-          cartId: savedCartId,
-        });
+        const data = await shopifyRequest(
+          CART_GET_QUERY,
+          {
+            cartId: savedCartId,
+          }
+        );
 
         if (data?.cart) {
           setCart(data.cart);
         } else {
-          localStorage.removeItem('scentMatchCartId');
+          localStorage.removeItem(
+            CART_STORAGE_KEY
+          );
         }
       } catch (error) {
         console.error(error);
-        localStorage.removeItem('scentMatchCartId');
+        localStorage.removeItem(
+          CART_STORAGE_KEY
+        );
       }
     }
 
@@ -635,47 +459,63 @@ export default function Shop() {
         setProductError('');
         setProduct(null);
         setQuantity(1);
+        setSelectedOptions({});
+        setSelectedImage('');
 
-        const data = await shopifyRequest(PRODUCT_QUERY, {
-          handle: productHandle,
-        });
+        const data = await shopifyRequest(
+          PRODUCT_QUERY,
+          {
+            handle: productHandle,
+          }
+        );
 
         if (!data?.product) {
           throw new Error('Product not found.');
         }
 
         const loadedProduct = data.product;
+
         setProduct(loadedProduct);
+
+        const firstAvailableVariant =
+          loadedProduct.variants?.nodes?.find(
+            (variant) =>
+              variant.availableForSale
+          ) ||
+          loadedProduct.variants?.nodes?.[0];
 
         const initialOptions = {};
 
-        loadedProduct.options?.forEach((option) => {
-          const firstAvailableVariant =
-            loadedProduct.variants.nodes.find(
-              (variant) =>
-                variant.availableForSale &&
-                optionValueForVariant(variant, option.name)
-            );
+        firstAvailableVariant?.selectedOptions?.forEach(
+          (option) => {
+            initialOptions[option.name] =
+              option.value;
+          }
+        );
 
-          initialOptions[option.name] =
-            optionValueForVariant(
-              firstAvailableVariant,
-              option.name
-            ) ||
-            option.values?.[0] ||
-            '';
-        });
+        loadedProduct.options?.forEach(
+          (option) => {
+            if (!initialOptions[option.name]) {
+              initialOptions[option.name] =
+                option.values?.[0] || '';
+            }
+          }
+        );
 
         setSelectedOptions(initialOptions);
 
         setSelectedImage(
-          loadedProduct.featuredImage?.url ||
-          loadedProduct.images?.nodes?.[0]?.url ||
-          ''
+          firstAvailableVariant?.image?.url ||
+            loadedProduct.featuredImage?.url ||
+            loadedProduct.images?.nodes?.[0]
+              ?.url ||
+            ''
         );
       } catch (error) {
         console.error(error);
-        setProductError('We could not load this product.');
+        setProductError(
+          'We could not load this product.'
+        );
       } finally {
         setLoadingProduct(false);
       }
@@ -685,43 +525,51 @@ export default function Shop() {
   }, [productHandle]);
 
   const selectedVariant = useMemo(() => {
-    if (!product?.variants?.nodes?.length) return null;
+    if (!product?.variants?.nodes?.length) {
+      return null;
+    }
 
     return (
       product.variants.nodes.find((variant) =>
         variant.selectedOptions.every(
           (option) =>
-            selectedOptions[option.name] === option.value
+            selectedOptions[option.name] ===
+            option.value
         )
       ) || null
     );
   }, [product, selectedOptions]);
 
-  useEffect(() => {
-    if (selectedVariant?.image?.url) {
-      setSelectedImage(selectedVariant.image.url);
-    }
-  }, [selectedVariant]);
-
   const productIsHoodie = useMemo(() => {
-    if (!product) return false;
+    if (!product) {
+      return false;
+    }
 
-    return collections.some(
-      (collection) =>
-        collection.type === 'hoodie' &&
-        collection.products.nodes.some(
-          (item) => item.handle === product.handle
-        )
+    return productBelongsToCollection(
+      collections,
+      product.handle,
+      'hoodie'
     );
   }, [product, collections]);
 
+  useEffect(() => {
+    if (selectedVariant?.image?.url) {
+      setSelectedImage(
+        selectedVariant.image.url
+      );
+    }
+  }, [selectedVariant]);
+
   function openProduct(handle) {
     const url = new URL(window.location.href);
+
     url.searchParams.set('product', handle);
 
     window.history.pushState({}, '', url);
+
     setProductHandle(handle);
     setSizeGuideOpen(false);
+    setCartOpen(false);
 
     window.scrollTo({
       top: 0,
@@ -731,12 +579,15 @@ export default function Shop() {
 
   function backToShop() {
     const url = new URL(window.location.href);
+
     url.searchParams.delete('product');
 
     window.history.pushState({}, '', url);
+
     setProductHandle(null);
     setProduct(null);
     setSizeGuideOpen(false);
+    setCartOpen(false);
 
     window.scrollTo({
       top: 0,
@@ -751,32 +602,57 @@ export default function Shop() {
     }));
   }
 
-  function optionValueAvailable(optionName, value) {
-    if (!product) return false;
+  function optionValueAvailable(
+    optionName,
+    value
+  ) {
+    if (!product?.variants?.nodes) {
+      return false;
+    }
 
-    return product.variants.nodes.some((variant) => {
-      if (!variant.availableForSale) return false;
+    return product.variants.nodes.some(
+      (variant) => {
+        if (!variant.availableForSale) {
+          return false;
+        }
 
-      const hasRequestedValue =
-        optionValueForVariant(variant, optionName) === value;
+        const requestedOption =
+          optionValueForVariant(
+            variant,
+            optionName
+          );
 
-      if (!hasRequestedValue) return false;
+        if (requestedOption !== value) {
+          return false;
+        }
 
-      return variant.selectedOptions.every((option) => {
-        if (option.name === optionName) return true;
+        return variant.selectedOptions.every(
+          (option) => {
+            if (option.name === optionName) {
+              return true;
+            }
 
-        const currentlySelected = selectedOptions[option.name];
+            const currentValue =
+              selectedOptions[option.name];
 
-        if (!currentlySelected) return true;
+            if (!currentValue) {
+              return true;
+            }
 
-        return option.value === currentlySelected;
-      });
-    });
+            return (
+              option.value === currentValue
+            );
+          }
+        );
+      }
+    );
   }
 
   async function addToCart() {
     if (!selectedVariant?.availableForSale) {
-      setCartError('Please choose an available option.');
+      setCartError(
+        'Please choose an available option.'
+      );
       return;
     }
 
@@ -784,130 +660,204 @@ export default function Shop() {
       setCartBusy(true);
       setCartError('');
 
-      const savedCartId = localStorage.getItem('scentMatchCartId');
+      const savedCartId =
+        localStorage.getItem(CART_STORAGE_KEY);
 
       let nextCart;
 
       if (savedCartId) {
-        const data = await shopifyRequest(CART_ADD_MUTATION, {
-          cartId: savedCartId,
-          lines: [
-            {
-              merchandiseId: selectedVariant.id,
-              quantity,
-            },
-          ],
-        });
+        const data = await shopifyRequest(
+          CART_ADD_MUTATION,
+          {
+            cartId: savedCartId,
+            lines: [
+              {
+                merchandiseId:
+                  selectedVariant.id,
+                quantity,
+              },
+            ],
+          }
+        );
 
-        const errors = data?.cartLinesAdd?.userErrors || [];
+        const errors =
+          data?.cartLinesAdd?.userErrors || [];
 
         if (errors.length) {
-          throw new Error(errors[0].message);
+          throw new Error(
+            errors[0].message
+          );
         }
 
-        nextCart = data?.cartLinesAdd?.cart;
+        nextCart =
+          data?.cartLinesAdd?.cart;
       } else {
-        const data = await shopifyRequest(CART_CREATE_MUTATION, {
-          lines: [
-            {
-              merchandiseId: selectedVariant.id,
-              quantity,
-            },
-          ],
-        });
+        const data = await shopifyRequest(
+          CART_CREATE_MUTATION,
+          {
+            lines: [
+              {
+                merchandiseId:
+                  selectedVariant.id,
+                quantity,
+              },
+            ],
+          }
+        );
 
-        const errors = data?.cartCreate?.userErrors || [];
+        const errors =
+          data?.cartCreate?.userErrors || [];
 
         if (errors.length) {
-          throw new Error(errors[0].message);
+          throw new Error(
+            errors[0].message
+          );
         }
 
         nextCart = data?.cartCreate?.cart;
       }
 
       if (!nextCart) {
-        throw new Error('Cart could not be created.');
+        throw new Error(
+          'Cart could not be created.'
+        );
       }
 
-      localStorage.setItem('scentMatchCartId', nextCart.id);
+      localStorage.setItem(
+        CART_STORAGE_KEY,
+        nextCart.id
+      );
+
       setCart(nextCart);
       setCartOpen(true);
     } catch (error) {
       console.error(error);
+
       setCartError(
-        error.message || 'We could not add this item to your cart.'
+        error.message ||
+          'We could not add this item to your cart.'
       );
     } finally {
       setCartBusy(false);
     }
   }
 
-  async function updateCartLine(lineId, nextQuantity) {
-    if (!cart?.id || nextQuantity < 1) return;
+  async function updateCartLine(
+    lineId,
+    nextQuantity
+  ) {
+    if (!cart?.id) {
+      return;
+    }
+
+    if (nextQuantity < 1) {
+      await removeCartLine(lineId);
+      return;
+    }
 
     try {
       setCartBusy(true);
       setCartError('');
 
-      const data = await shopifyRequest(CART_UPDATE_MUTATION, {
-        cartId: cart.id,
-        lines: [
-          {
-            id: lineId,
-            quantity: nextQuantity,
-          },
-        ],
-      });
+      const data = await shopifyRequest(
+        CART_UPDATE_MUTATION,
+        {
+          cartId: cart.id,
+          lines: [
+            {
+              id: lineId,
+              quantity: nextQuantity,
+            },
+          ],
+        }
+      );
 
-      const errors = data?.cartLinesUpdate?.userErrors || [];
+      const errors =
+        data?.cartLinesUpdate?.userErrors || [];
 
       if (errors.length) {
-        throw new Error(errors[0].message);
+        throw new Error(
+          errors[0].message
+        );
       }
 
-      setCart(data?.cartLinesUpdate?.cart || null);
+      setCart(
+        data?.cartLinesUpdate?.cart || null
+      );
     } catch (error) {
       console.error(error);
-      setCartError('We could not update your cart.');
+      setCartError(
+        'We could not update your cart.'
+      );
     } finally {
       setCartBusy(false);
     }
   }
 
   async function removeCartLine(lineId) {
-    if (!cart?.id) return;
+    if (!cart?.id) {
+      return;
+    }
 
     try {
       setCartBusy(true);
       setCartError('');
 
-      const data = await shopifyRequest(CART_REMOVE_MUTATION, {
-        cartId: cart.id,
-        lineIds: [lineId],
-      });
+      const data = await shopifyRequest(
+        CART_REMOVE_MUTATION,
+        {
+          cartId: cart.id,
+          lineIds: [lineId],
+        }
+      );
 
-      const errors = data?.cartLinesRemove?.userErrors || [];
+      const errors =
+        data?.cartLinesRemove?.userErrors ||
+        [];
 
       if (errors.length) {
-        throw new Error(errors[0].message);
+        throw new Error(
+          errors[0].message
+        );
       }
 
-      setCart(data?.cartLinesRemove?.cart || null);
+      setCart(
+        data?.cartLinesRemove?.cart || null
+      );
     } catch (error) {
       console.error(error);
-      setCartError('We could not remove this item.');
+      setCartError(
+        'We could not remove this item.'
+      );
     } finally {
       setCartBusy(false);
     }
   }
 
   function goToCheckout() {
-    if (!cart?.checkoutUrl) return;
+    if (!cart?.checkoutUrl) {
+      return;
+    }
+
     window.location.href = cart.checkoutUrl;
   }
 
+  function CartButton() {
+    return (
+      <button
+        type="button"
+        onClick={() => setCartOpen(true)}
+        className="font-body text-sm border border-primary/40 rounded-full px-5 py-2 text-foreground hover:border-primary hover:text-primary transition-colors"
+      >
+        Cart ({cart?.totalQuantity || 0})
+      </button>
+    );
+  }
+
   function renderCart() {
-    if (!cartOpen) return null;
+    if (!cartOpen) {
+      return null;
+    }
 
     const lines = cart?.lines?.nodes || [];
 
@@ -917,18 +867,22 @@ export default function Shop() {
         onClick={() => setCartOpen(false)}
       >
         <aside
-          className="absolute right-0 top-0 h-full w-full max-w-md bg-background border-l border-border p-6 overflow-y-auto"
-          onClick={(event) => event.stopPropagation()}
+          className="absolute right-0 top-0 h-full w-full max-w-md bg-background border-l border-border p-5 sm:p-7 overflow-y-auto"
+          onClick={(event) =>
+            event.stopPropagation()
+          }
         >
           <div className="flex items-center justify-between gap-4 mb-8">
-            <h2 className="text-2xl font-semibold">
+            <h2 className="font-body text-2xl font-light tracking-wide">
               Your Cart
             </h2>
 
             <button
               type="button"
-              onClick={() => setCartOpen(false)}
-              className="text-2xl leading-none"
+              onClick={() =>
+                setCartOpen(false)
+              }
+              className="font-body text-3xl font-light leading-none hover:text-primary transition-colors"
               aria-label="Close cart"
             >
               ×
@@ -936,19 +890,23 @@ export default function Shop() {
           </div>
 
           {lines.length === 0 ? (
-            <p className="text-muted-foreground">
+            <p className="font-body text-muted-foreground">
               Your cart is empty.
             </p>
           ) : (
             <div className="space-y-6">
               {lines.map((line) => {
-                const merchandise = line.merchandise;
+                const merchandise =
+                  line.merchandise;
+
                 const image =
                   merchandise.image ||
-                  merchandise.product?.featuredImage;
+                  merchandise.product
+                    ?.featuredImage;
 
                 const options =
-                  merchandise.selectedOptions || [];
+                  merchandise.selectedOptions ||
+                  [];
 
                 return (
                   <div
@@ -960,20 +918,24 @@ export default function Shop() {
                         src={image.url}
                         alt={
                           image.altText ||
-                          merchandise.product?.title ||
+                          merchandise.product
+                            ?.title ||
                           'Product'
                         }
                         className="w-24 h-24 object-cover rounded-lg bg-white"
                       />
                     )}
 
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-medium">
-                        {merchandise.product?.title}
+                    <div className="flex-1 min-w-0 font-body">
+                      <h3 className="text-sm font-medium leading-snug">
+                        {
+                          merchandise.product
+                            ?.title
+                        }
                       </h3>
 
                       {options.length > 0 && (
-                        <p className="text-sm text-muted-foreground mt-1">
+                        <p className="text-xs text-muted-foreground mt-1">
                           {options
                             .map(
                               (option) =>
@@ -983,11 +945,13 @@ export default function Shop() {
                         </p>
                       )}
 
-                      <p className="mt-2">
-                        {formatPrice(merchandise.price)}
+                      <p className="mt-2 text-primary">
+                        {formatPrice(
+                          merchandise.price
+                        )}
                       </p>
 
-                      <div className="flex items-center gap-3 mt-3">
+                      <div className="flex items-center gap-3 mt-4">
                         <button
                           type="button"
                           disabled={cartBusy}
@@ -997,12 +961,14 @@ export default function Shop() {
                               line.quantity - 1
                             )
                           }
-                          className="w-8 h-8 border border-border rounded-md"
+                          className="w-8 h-8 border border-border rounded-md hover:border-primary transition-colors disabled:opacity-40"
                         >
                           −
                         </button>
 
-                        <span>{line.quantity}</span>
+                        <span className="text-sm">
+                          {line.quantity}
+                        </span>
 
                         <button
                           type="button"
@@ -1013,7 +979,7 @@ export default function Shop() {
                               line.quantity + 1
                             )
                           }
-                          className="w-8 h-8 border border-border rounded-md"
+                          className="w-8 h-8 border border-border rounded-md hover:border-primary transition-colors disabled:opacity-40"
                         >
                           +
                         </button>
@@ -1021,8 +987,12 @@ export default function Shop() {
                         <button
                           type="button"
                           disabled={cartBusy}
-                          onClick={() => removeCartLine(line.id)}
-                          className="ml-auto text-sm underline underline-offset-4"
+                          onClick={() =>
+                            removeCartLine(
+                              line.id
+                            )
+                          }
+                          className="ml-auto text-xs underline underline-offset-4 hover:text-primary transition-colors"
                         >
                           Remove
                         </button>
@@ -1032,19 +1002,25 @@ export default function Shop() {
                 );
               })}
 
-              <div className="pt-2">
-                <div className="flex justify-between text-lg font-semibold mb-5">
+              <div className="pt-2 font-body">
+                <div className="flex justify-between text-lg mb-5">
                   <span>Total</span>
-                  <span>
-                    {formatPrice(cart?.cost?.totalAmount)}
+
+                  <span className="text-primary">
+                    {formatPrice(
+                      cart?.cost?.totalAmount
+                    )}
                   </span>
                 </div>
 
                 <button
                   type="button"
                   onClick={goToCheckout}
-                  disabled={!cart?.checkoutUrl || cartBusy}
-                  className="w-full rounded-lg bg-primary text-primary-foreground px-6 py-4 font-medium disabled:opacity-50"
+                  disabled={
+                    !cart?.checkoutUrl ||
+                    cartBusy
+                  }
+                  className="w-full rounded-full bg-primary text-primary-foreground px-6 py-4 text-sm font-medium tracking-wide hover:opacity-90 transition-opacity disabled:opacity-50"
                 >
                   Checkout
                 </button>
@@ -1053,7 +1029,7 @@ export default function Shop() {
           )}
 
           {cartError && (
-            <p className="mt-4 text-sm text-red-500">
+            <p className="font-body mt-4 text-sm text-red-500">
               {cartError}
             </p>
           )}
@@ -1063,45 +1039,61 @@ export default function Shop() {
   }
 
   function renderSizeGuide() {
-    if (!sizeGuideOpen) return null;
+    if (!sizeGuideOpen) {
+      return null;
+    }
 
     return (
       <div
         className="fixed inset-0 z-[110] bg-black/75 flex items-center justify-center p-4"
-        onClick={() => setSizeGuideOpen(false)}
+        onClick={() =>
+          setSizeGuideOpen(false)
+        }
       >
         <div
-          className="bg-background border border-border rounded-xl w-full max-w-3xl max-h-[90vh] overflow-y-auto p-6 md:p-8"
-          onClick={(event) => event.stopPropagation()}
+          className="bg-background border border-border rounded-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto p-5 sm:p-8"
+          onClick={(event) =>
+            event.stopPropagation()
+          }
         >
           <div className="flex items-center justify-between gap-4 mb-6">
-            <h2 className="text-2xl font-semibold">
+            <h2 className="font-body text-2xl md:text-3xl font-light tracking-wide">
               Hoodie Size Guide
             </h2>
 
             <button
               type="button"
-              onClick={() => setSizeGuideOpen(false)}
-              className="text-2xl leading-none"
+              onClick={() =>
+                setSizeGuideOpen(false)
+              }
+              className="font-body text-3xl font-light leading-none hover:text-primary transition-colors"
               aria-label="Close size guide"
             >
               ×
             </button>
           </div>
 
-          <p className="text-muted-foreground mb-6">
-            Use the garment measurements below to help choose
-            your size.
+          <p className="font-body text-sm md:text-base text-muted-foreground mb-6">
+            Use the garment measurements
+            below to help choose your size.
           </p>
 
           <div className="overflow-x-auto">
-            <table className="w-full border-collapse text-left">
+            <table className="font-body w-full border-collapse text-left text-sm md:text-base">
               <thead>
                 <tr className="border-b border-border">
-                  <th className="py-3 pr-5">Size</th>
-                  <th className="py-3 pr-5">Length</th>
-                  <th className="py-3 pr-5">Width</th>
-                  <th className="py-3">Half Chest</th>
+                  <th className="py-3 pr-5 font-medium">
+                    Size
+                  </th>
+                  <th className="py-3 pr-5 font-medium">
+                    Length
+                  </th>
+                  <th className="py-3 pr-5 font-medium">
+                    Width
+                  </th>
+                  <th className="py-3 font-medium">
+                    Half Chest
+                  </th>
                 </tr>
               </thead>
 
@@ -1129,46 +1121,56 @@ export default function Shop() {
             </table>
           </div>
 
-          <div className="mt-8 space-y-5 text-sm md:text-base text-muted-foreground">
+          <div className="font-body mt-8 space-y-5 text-sm md:text-base text-muted-foreground">
             <div>
-              <h3 className="text-foreground font-semibold mb-1">
+              <h3 className="text-foreground font-medium mb-1">
                 Length
               </h3>
+
               <p>
-                Place the end of a measuring tape beside the
-                collar at the top of the hoodie, at the high
-                point of the shoulder. Pull the tape down to
-                the bottom of the hoodie.
+                Place the end of a measuring
+                tape beside the collar at the
+                top of the hoodie, at the high
+                point of the shoulder. Pull
+                the tape down to the bottom of
+                the hoodie.
               </p>
             </div>
 
             <div>
-              <h3 className="text-foreground font-semibold mb-1">
+              <h3 className="text-foreground font-medium mb-1">
                 Half Chest
               </h3>
+
               <p>
-                Lay the garment down on a flat surface and
-                measure from left to right across the chest,
+                Lay the garment on a flat
+                surface and measure from left
+                to right across the chest,
                 about 2 cm below the arms.
               </p>
             </div>
 
             <div>
-              <h3 className="text-foreground font-semibold mb-1">
+              <h3 className="text-foreground font-medium mb-1">
                 Sleeve Length
               </h3>
+
               <p>
-                Place the end of a measuring tape at the centre
-                back of the collar. Pull the tape along the top
-                seam of the sleeve, hold it in place at the
-                shoulder, then continue down the sleeve to the
-                hem.
+                Place the end of a measuring
+                tape at the centre back of the
+                collar. Pull the tape along
+                the top seam of the sleeve,
+                hold it in place at the
+                shoulder, then continue down
+                the sleeve to the hem.
               </p>
             </div>
 
             <p className="pt-2">
-              Measurements are provided by the supplier and
-              may vary by approximately +/- 2.5 cm (1 inch).
+              Measurements are provided by
+              the supplier and may vary by
+              approximately +/- 2.5 cm
+              (1 inch).
             </p>
           </div>
         </div>
@@ -1180,7 +1182,7 @@ export default function Shop() {
     if (loadingProduct) {
       return (
         <main className="min-h-screen pt-32 pb-20 px-5">
-          <p className="text-center text-muted-foreground">
+          <p className="font-body text-center text-muted-foreground">
             Loading product...
           </p>
         </main>
@@ -1194,46 +1196,44 @@ export default function Shop() {
             <button
               type="button"
               onClick={backToShop}
-              className="mb-8 underline underline-offset-4"
+              className="font-body mb-8 text-sm underline underline-offset-4 hover:text-primary transition-colors"
             >
               ← Back to Shop
             </button>
 
-            <p className="text-muted-foreground">
-              {productError || 'Product not found.'}
+            <p className="font-body text-muted-foreground">
+              {productError ||
+                'Product not found.'}
             </p>
           </div>
         </main>
       );
     }
 
-    const images = product.images?.nodes || [];
-    const options = product.options || [];
+    const images =
+      product.images?.nodes || [];
+
+    const options =
+      product.options || [];
 
     return (
-      <main className="min-h-screen pt-32 pb-20 px-5">
+      <main className="min-h-screen pt-28 md:pt-32 pb-20 px-4 sm:px-5">
         <div className="max-w-7xl mx-auto">
           <div className="flex justify-between items-center gap-4 mb-8">
             <button
               type="button"
               onClick={backToShop}
-              className="underline underline-offset-4"
+              className="font-body text-sm underline underline-offset-4 hover:text-primary transition-colors"
             >
               ← Back to Shop
             </button>
 
-            <button
-              type="button"
-              onClick={() => setCartOpen(true)}
-              className="border border-border rounded-full px-4 py-2"
-            >
-              Cart ({cart?.totalQuantity || 0})
-            </button>
+            <CartButton />
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-10 lg:gap-16">
             <div>
-              <div className="bg-white rounded-xl overflow-hidden">
+              <div className="bg-white rounded-2xl overflow-hidden">
                 {selectedImage ? (
                   <img
                     src={selectedImage}
@@ -1241,7 +1241,7 @@ export default function Shop() {
                     className="w-full aspect-square object-contain"
                   />
                 ) : (
-                  <div className="aspect-square flex items-center justify-center text-black">
+                  <div className="font-body aspect-square flex items-center justify-center text-black">
                     No image available
                   </div>
                 )}
@@ -1252,17 +1252,27 @@ export default function Shop() {
                   {images.map((image) => (
                     <button
                       type="button"
-                      key={image.id || image.url}
-                      onClick={() => setSelectedImage(image.url)}
-                      className={`bg-white rounded-lg overflow-hidden border ${
-                        selectedImage === image.url
+                      key={
+                        image.id || image.url
+                      }
+                      onClick={() =>
+                        setSelectedImage(
+                          image.url
+                        )
+                      }
+                      className={`bg-white rounded-lg overflow-hidden border transition-colors ${
+                        selectedImage ===
+                        image.url
                           ? 'border-primary'
-                          : 'border-border/50'
+                          : 'border-border/50 hover:border-primary/60'
                       }`}
                     >
                       <img
                         src={image.url}
-                        alt={image.altText || product.title}
+                        alt={
+                          image.altText ||
+                          product.title
+                        }
                         className="w-full aspect-square object-cover"
                       />
                     </button>
@@ -1271,119 +1281,158 @@ export default function Shop() {
               )}
             </div>
 
-            <div className="lg:pt-4">
-              <h1 className="text-3xl md:text-4xl font-semibold">
+            <div className="font-body lg:pt-4">
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-light tracking-wide leading-tight">
                 {product.title}
               </h1>
 
-              <p className="text-xl mt-4">
+              <p className="text-xl mt-4 text-primary">
                 {selectedVariant
-                  ? formatPrice(selectedVariant.price)
+                  ? formatPrice(
+                      selectedVariant.price
+                    )
                   : formatPrice(
-                      product.variants?.nodes?.[0]?.price
+                      product.variants
+                        ?.nodes?.[0]?.price
                     )}
               </p>
 
               {product.description && (
-                <p className="mt-6 text-muted-foreground whitespace-pre-line">
+                <p className="mt-6 text-sm md:text-base leading-7 text-muted-foreground whitespace-pre-line">
                   {product.description}
                 </p>
               )}
 
               <div className="mt-8 space-y-7">
                 {options.map((option) => {
-                  const isSize = isSizeOption(option.name);
+                  const isSize =
+                    isSizeOption(option.name);
+
+                  const isColour =
+                    isColourOption(
+                      option.name
+                    );
 
                   return (
-                    <div key={option.id || option.name}>
+                    <div
+                      key={
+                        option.id ||
+                        option.name
+                      }
+                    >
                       <div className="flex items-center justify-between gap-4 mb-3">
-                        <label className="font-medium">
+                        <label className="text-sm font-medium tracking-wide">
                           {option.name}
                         </label>
 
-                        {productIsHoodie && isSize && (
-                          <button
-                            type="button"
-                            onClick={() => setSizeGuideOpen(true)}
-                            className="text-sm underline underline-offset-4"
-                          >
-                            Size Guide
-                          </button>
-                        )}
+                        {productIsHoodie &&
+                          isSize && (
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setSizeGuideOpen(
+                                  true
+                                )
+                              }
+                              className="text-sm text-primary underline underline-offset-4"
+                            >
+                              Size Guide
+                            </button>
+                          )}
                       </div>
 
                       <div className="flex flex-wrap gap-2">
-                        {option.values.map((value) => {
-                          const selected =
-                            selectedOptions[option.name] === value;
+                        {option.values.map(
+                          (value) => {
+                            const selected =
+                              selectedOptions[
+                                option.name
+                              ] === value;
 
-                          const available =
-                            optionValueAvailable(
-                              option.name,
-                              value
+                            const available =
+                              optionValueAvailable(
+                                option.name,
+                                value
+                              );
+
+                            return (
+                              <button
+                                type="button"
+                                key={value}
+                                disabled={
+                                  !available
+                                }
+                                onClick={() =>
+                                  changeOption(
+                                    option.name,
+                                    value
+                                  )
+                                }
+                                title={
+                                  isColour
+                                    ? value
+                                    : undefined
+                                }
+                                aria-pressed={
+                                  selected
+                                }
+                                className={`min-w-12 rounded-full border px-4 py-2 text-sm transition-colors ${
+                                  selected
+                                    ? 'border-primary bg-primary text-primary-foreground'
+                                    : 'border-border hover:border-primary'
+                                } ${
+                                  !available
+                                    ? 'opacity-35 cursor-not-allowed'
+                                    : ''
+                                }`}
+                              >
+                                {value}
+                              </button>
                             );
-
-                          return (
-                            <button
-                              type="button"
-                              key={value}
-                              disabled={!available}
-                              onClick={() =>
-                                changeOption(option.name, value)
-                              }
-                              className={`min-w-12 rounded-lg border px-4 py-2 transition-colors ${
-                                selected
-                                  ? 'border-primary bg-primary text-primary-foreground'
-                                  : 'border-border'
-                              } ${
-                                !available
-                                  ? 'opacity-35 cursor-not-allowed'
-                                  : ''
-                              }`}
-                              aria-pressed={selected}
-                              title={
-                                isColourOption(option.name)
-                                  ? value
-                                  : undefined
-                              }
-                            >
-                              {value}
-                            </button>
-                          );
-                        })}
+                          }
+                        )}
                       </div>
                     </div>
                   );
                 })}
 
                 <div>
-                  <label className="font-medium block mb-3">
+                  <label className="text-sm font-medium tracking-wide block mb-3">
                     Quantity
                   </label>
 
-                  <div className="inline-flex items-center border border-border rounded-lg">
+                  <div className="inline-flex items-center border border-border rounded-full overflow-hidden">
                     <button
                       type="button"
                       onClick={() =>
-                        setQuantity((current) =>
-                          Math.max(1, current - 1)
+                        setQuantity(
+                          (current) =>
+                            Math.max(
+                              1,
+                              current - 1
+                            )
                         )
                       }
-                      className="w-11 h-11"
+                      className="w-11 h-11 hover:bg-primary/10 transition-colors"
+                      aria-label="Decrease quantity"
                     >
                       −
                     </button>
 
-                    <span className="min-w-10 text-center">
+                    <span className="min-w-10 text-center text-sm">
                       {quantity}
                     </span>
 
                     <button
                       type="button"
                       onClick={() =>
-                        setQuantity((current) => current + 1)
+                        setQuantity(
+                          (current) =>
+                            current + 1
+                        )
                       }
-                      className="w-11 h-11"
+                      className="w-11 h-11 hover:bg-primary/10 transition-colors"
+                      aria-label="Increase quantity"
                     >
                       +
                     </button>
@@ -1393,8 +1442,10 @@ export default function Shop() {
 
               {!selectedVariant?.availableForSale && (
                 <p className="mt-6 text-sm text-muted-foreground">
-                  This combination is currently unavailable.
-                  Please choose another option.
+                  This combination is
+                  currently unavailable.
+                  Please choose another
+                  option.
                 </p>
               )}
 
@@ -1405,7 +1456,7 @@ export default function Shop() {
                   !selectedVariant?.availableForSale ||
                   cartBusy
                 }
-                className="w-full mt-8 rounded-lg bg-primary text-primary-foreground px-6 py-4 font-medium disabled:opacity-50"
+                className="w-full mt-8 rounded-full bg-primary text-primary-foreground px-6 py-4 text-sm font-medium tracking-wide hover:opacity-90 transition-opacity disabled:opacity-50"
               >
                 {cartBusy
                   ? 'Adding...'
@@ -1431,36 +1482,30 @@ export default function Shop() {
 
   function renderShopPage() {
     return (
-      <main className="min-h-screen pt-32 pb-20 px-5">
+      <main className="min-h-screen pt-28 md:pt-32 pb-20 px-4 sm:px-5">
         <div className="max-w-7xl mx-auto">
           <div className="flex justify-end mb-4">
-            <button
-              type="button"
-              onClick={() => setCartOpen(true)}
-              className="border border-border rounded-full px-4 py-2"
-            >
-              Cart ({cart?.totalQuantity || 0})
-            </button>
+            <CartButton />
           </div>
 
-          <div className="text-center mb-16">
-            <h1 className="text-4xl md:text-5xl font-semibold">
+          <div className="text-center mb-14 md:mb-16">
+            <h1 className="font-body text-4xl md:text-5xl lg:text-6xl font-light tracking-wide">
               Shop
             </h1>
 
-            <p className="mt-4 text-muted-foreground">
+            <p className="font-body mt-4 text-sm md:text-base text-muted-foreground tracking-wide">
               Gifts for fragrance lovers.
             </p>
           </div>
 
           {loadingCollections && (
-            <p className="text-center text-muted-foreground">
+            <p className="font-body text-center text-muted-foreground">
               Loading products...
             </p>
           )}
 
           {shopError && (
-            <p className="text-center text-muted-foreground">
+            <p className="font-body text-center text-muted-foreground">
               {shopError}
             </p>
           )}
@@ -1468,74 +1513,94 @@ export default function Shop() {
           {!loadingCollections &&
             !shopError &&
             collections.length === 0 && (
-              <p className="text-center text-muted-foreground">
+              <p className="font-body text-center text-muted-foreground">
                 Products coming soon.
               </p>
             )}
 
           {!loadingCollections &&
             !shopError &&
-            collections.map((collection) => (
-              <section
-                key={collection.id}
-                className="mb-20"
-              >
-                <h2 className="text-2xl md:text-3xl font-semibold mb-8">
-                  {collection.displayTitle}
-                </h2>
+            collections.map(
+              (collection) => (
+                <section
+                  key={collection.id}
+                  className="mb-16 md:mb-20"
+                >
+                  <h2 className="font-body text-2xl md:text-3xl font-light tracking-wide mb-7 md:mb-8">
+                    {
+                      collection.displayTitle
+                    }
+                  </h2>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                  {collection.products.nodes.map((item) => {
-                    const price =
-                      item.priceRange?.minVariantPrice;
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+                    {collection.products.nodes.map(
+                      (item) => {
+                        const price =
+                          item.priceRange
+                            ?.minVariantPrice;
 
-                    return (
-                      <button
-                        type="button"
-                        key={item.id}
-                        onClick={() =>
-                          openProduct(item.handle)
-                        }
-                        className="text-left block w-full border border-border/50 rounded-xl overflow-hidden hover:border-primary/50 transition-colors"
-                      >
-                        {item.featuredImage ? (
-                          <img
-                            src={item.featuredImage.url}
-                            alt={
-                              item.featuredImage.altText ||
-                              item.title
+                        return (
+                          <button
+                            type="button"
+                            key={item.id}
+                            onClick={() =>
+                              openProduct(
+                                item.handle
+                              )
                             }
-                            className="w-full aspect-square object-cover"
-                          />
-                        ) : (
-                          <div className="w-full aspect-square flex items-center justify-center bg-muted">
-                            No image
-                          </div>
-                        )}
+                            className="group text-left block w-full border border-border/50 rounded-2xl overflow-hidden hover:border-primary/50 transition-all"
+                          >
+                            {item.featuredImage ? (
+                              <div className="overflow-hidden bg-white">
+                                <img
+                                  src={
+                                    item
+                                      .featuredImage
+                                      .url
+                                  }
+                                  alt={
+                                    item
+                                      .featuredImage
+                                      .altText ||
+                                    item.title
+                                  }
+                                  className="w-full aspect-square object-cover group-hover:scale-[1.015] transition-transform duration-300"
+                                />
+                              </div>
+                            ) : (
+                              <div className="font-body w-full aspect-square flex items-center justify-center bg-muted">
+                                No image
+                              </div>
+                            )}
 
-                        <div className="p-5">
-                          <h3 className="text-lg font-medium">
-                            {item.title}
-                          </h3>
+                            <div className="font-body p-5">
+                              <h3 className="text-base md:text-lg font-normal tracking-wide leading-snug">
+                                {item.title}
+                              </h3>
 
-                          {price && (
-                            <p className="mt-2 text-primary">
-                              {formatPrice(price)}
-                            </p>
-                          )}
+                              {price && (
+                                <p className="mt-2 text-sm md:text-base text-primary">
+                                  {formatPrice(
+                                    price
+                                  )}
+                                </p>
+                              )}
 
-                          {!item.availableForSale && (
-                            <p className="mt-2 text-sm text-muted-foreground">
-                              Currently unavailable
-                            </p>
-                          )}
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
-              </section>
-            ))}
+                              {!item.availableForSale && (
+                                <p className="mt-2 text-xs text-muted-foreground">
+                                  Currently
+                                  unavailable
+                                </p>
+                              )}
+                            </div>
+                          </button>
+                        );
+                      }
+                    )}
+                  </div>
+                </section>
+              )
+            )}
         </div>
 
         {renderCart()}
