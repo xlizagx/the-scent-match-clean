@@ -132,13 +132,13 @@ export default function Navbar() {
             </a>
           </div>
 
-          {/* Gift Shop - independently pushed to far right */}
+          {/* Gift Shop - featured CTA */}
           <Link
             to="/shop"
-            className="ml-auto pl-10 inline-flex items-center gap-1.5 text-xs font-body font-medium text-primary hover:text-primary/80 transition-colors tracking-wide whitespace-nowrap"
+            className="ml-auto inline-flex items-center justify-center gap-2 rounded-full bg-primary px-5 py-2.5 text-xs font-body font-semibold text-primary-foreground hover:bg-primary/90 transition-colors tracking-wide whitespace-nowrap"
           >
-            <Sparkles className="w-3 h-3 text-primary" />
-            Gift Shop
+            <Sparkles className="w-3.5 h-3.5" />
+            SHOP THE GIFT COLLECTION
           </Link>
         </div>
 
@@ -165,10 +165,10 @@ export default function Navbar() {
           <Link
             to="/shop"
             onClick={() => setMobileOpen(false)}
-            className="flex items-center justify-center gap-2 w-full border border-primary/50 rounded-full px-5 py-3 text-sm font-body font-medium text-primary hover:bg-primary/10 transition-colors"
+            className="flex items-center justify-center gap-2 w-full bg-primary rounded-full px-5 py-3 text-sm font-body font-semibold text-primary-foreground hover:bg-primary/90 transition-colors"
           >
-            <Sparkles className="w-3.5 h-3.5 text-primary" />
-            Gift Shop
+            <Sparkles className="w-3.5 h-3.5" />
+            SHOP THE GIFT COLLECTION
           </Link>
 
           {/* Regular mobile navigation */}
