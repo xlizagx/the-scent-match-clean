@@ -1553,7 +1553,7 @@ export default function Shop() {
                             className="group text-left block w-full border border-border/50 rounded-2xl overflow-hidden hover:border-primary/50 transition-all"
                           >
                             {item.featuredImage ? (
-                              <div className="overflow-hidden bg-white">
+                              <div className="overflow-hidden bg-[#F3EBDD] p-3 sm:p-4">
                                 <img
                                   src={
                                     item
