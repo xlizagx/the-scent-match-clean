@@ -904,8 +904,13 @@ export default function Shop() {
                     ?.featuredImage;
 
                 const options =
-                  merchandise.selectedOptions ||
-                  [];
+  (merchandise.selectedOptions || []).filter(
+    (option) =>
+      !(
+        option.name === 'Title' &&
+        option.value === 'Default Title'
+      )
+  );
 
                 return (
                   <div
