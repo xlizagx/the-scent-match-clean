@@ -1217,8 +1217,14 @@ export default function Shop() {
     const images =
       product.images?.nodes || [];
 
-    const options =
-      product.options || [];
+    const options = (product.options || []).filter(
+  (option) =>
+    !(
+      option.name === 'Title' &&
+      option.values?.length === 1 &&
+      option.values[0] === 'Default Title'
+    )
+);
 
     return (
       <main className="min-h-screen pt-28 md:pt-32 pb-20 px-4 sm:px-5">
