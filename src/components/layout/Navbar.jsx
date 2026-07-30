@@ -98,38 +98,6 @@ export default function Navbar() {
             >
               FAQs
             </a>
-
-            <a
-              href="/support#contact"
-              onClick={e =>
-                handleAnchorNav(
-                  e,
-                  '/support',
-                  'contact'
-                )
-              }
-              className="text-xs font-body text-foreground/80 hover:text-primary transition-colors tracking-wide whitespace-nowrap"
-            >
-              Get in touch
-            </a>
-
-            <a
-              href="/#consultation"
-              onClick={e =>
-                handleAnchorNav(
-                  e,
-                  '/',
-                  'consultation'
-                )
-              }
-              className="inline-flex items-center gap-1.5 text-xs font-body text-foreground/80 hover:text-primary transition-colors tracking-wide whitespace-nowrap"
-            >
-              Personal Consultations
-
-              <span className="text-primary/70 text-[10px] font-medium">
-                (Coming Soon)
-              </span>
-            </a>
           </div>
 
           {/* Gift Shop - featured CTA */}
@@ -205,38 +173,6 @@ export default function Navbar() {
               className="text-sm font-body text-foreground/80 hover:text-primary transition-colors"
             >
               FAQs
-            </a>
-
-            <a
-              href="/support#contact"
-              onClick={e =>
-                handleAnchorNav(
-                  e,
-                  '/support',
-                  'contact'
-                )
-              }
-              className="text-sm font-body text-foreground/80 hover:text-primary transition-colors"
-            >
-              Get in touch
-            </a>
-
-            <a
-              href="/#consultation"
-              onClick={e =>
-                handleAnchorNav(
-                  e,
-                  '/',
-                  'consultation'
-                )
-              }
-              className="inline-flex items-center gap-1.5 text-sm font-body text-foreground/80 hover:text-primary transition-colors"
-            >
-              Personal Consultations
-
-              <span className="text-primary/70 text-xs font-medium">
-                (Coming Soon)
-              </span>
             </a>
           </div>
         </div>
