@@ -3,28 +3,6 @@ import React, { useEffect, useMemo, useState } from 'react';
 const API_VERSION = '2026-07';
 const CART_STORAGE_KEY = 'scentMatchCartId';
 
-const WANTED_COLLECTIONS = [
-  {
-    shopifyTitle: 'Fragrance Lovers Hoodies',
-    displayTitle: 'Hoodies',
-    type: 'hoodie',
-  },
-  {
-    shopifyTitle: 'Fragrance Lovers Tote Bags',
-    displayTitle: 'Tote Bags',
-    type: 'tote',
-  },
-  {
-    shopifyTitle: 'Fragrance Lovers Mugs',
-    displayTitle: 'Mugs',
-    type: 'mug',
-  },
-];
-
-const COLLECTION_INTROS = {
-  hoodie: 'Designs created for fragrance lovers.',
-  tote: 'Designed for fragrance lovers on the go.',
-  mug: 'For coffee, tea and conversations about perfume.',
 };
 
 const SIZE_GUIDE = [
@@ -364,26 +342,11 @@ export default function Shop() {
         const allCollections =
           data?.collections?.nodes || [];
 
-        const organised = WANTED_COLLECTIONS
-          .map((wanted) => {
-            const collection = allCollections.find(
-              (item) =>
-                item.title === wanted.shopifyTitle
-            );
-
-            if (!collection) {
-              return null;
-            }
-
-            return {
-              ...collection,
-              displayTitle: wanted.displayTitle,
-              type: wanted.type,
-            };
-          })
-          .filter(Boolean);
-
-        setCollections(organised);
+        const organised = allCollections.map((collection) => ({
+  ...collection,
+  displayTitle: collection.title.replace(/^Fragrance Lovers\s*/i, ''),
+  type: collection.handle,
+}));
       } catch (error) {
         console.error(error);
         setShopError(
