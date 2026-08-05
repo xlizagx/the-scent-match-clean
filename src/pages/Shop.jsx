@@ -1517,15 +1517,7 @@ export default function Shop() {
 
           <div className="absolute inset-0 bg-black/45" />
 
-          <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-4">
-            <h2 className="font-heading text-white text-3xl md:text-4xl lg:text-5xl font-light tracking-wide">
-              Wear Your Obsession.
-            </h2>
-
-            <p className="font-body text-white/90 mt-3 text-sm md:text-base tracking-wide">
-              A collection designed for fragrance lovers.
-            </p>
-          </div>
+          
         </section>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-5">
