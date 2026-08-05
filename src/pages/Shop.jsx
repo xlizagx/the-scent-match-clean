@@ -21,6 +21,12 @@ const WANTED_COLLECTIONS = [
   },
 ];
 
+const COLLECTION_INTROS = {
+  hoodie: 'Designs created for fragrance lovers.',
+  tote: 'Designed for fragrance lovers on the go.',
+  mug: 'For coffee, tea and conversations about perfume.',
+};
+
 const SIZE_GUIDE = [
   { size: 'S', length: '68.6 cm', width: '101.6 cm', halfChest: '50.8 cm' },
   { size: 'M', length: '71.1 cm', width: '111.8 cm', halfChest: '55.9 cm' },
@@ -1501,18 +1507,38 @@ export default function Shop() {
 
   function renderShopPage() {
     return (
-      <main className="min-h-screen pt-28 md:pt-32 pb-20 px-4 sm:px-5">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex justify-end mb-4">
+      <main className="min-h-screen pt-16 md:pt-20 pb-20">
+        <section className="relative w-full h-[300px] overflow-hidden">
+          <img
+            src="/shop-hero.jpg"
+            alt="Shop collection"
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+
+          <div className="absolute inset-0 bg-black/45" />
+
+          <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-4">
+            <h2 className="font-heading text-white text-3xl md:text-4xl lg:text-5xl font-light tracking-wide">
+              Wear Your Obsession.
+            </h2>
+
+            <p className="font-body text-white/90 mt-3 text-sm md:text-base tracking-wide">
+              A collection designed for fragrance lovers.
+            </p>
+          </div>
+        </section>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-5">
+          <div className="flex justify-end mt-6 mb-3">
             <CartButton />
           </div>
 
-          <div className="text-center mb-14 md:mb-16">
+          <div className="text-center mb-6 md:mb-7">
             <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl font-light tracking-wide">
               Shop
             </h1>
 
-            <p className="font-body mt-4 text-sm md:text-base text-muted-foreground tracking-wide">
+            <p className="font-body mt-3 text-sm md:text-base text-foreground/80 tracking-wide">
               Gifts for fragrance lovers.
             </p>
           </div>
@@ -1543,13 +1569,17 @@ export default function Shop() {
               (collection) => (
                 <section
                   key={collection.id}
-                  className="mb-16 md:mb-20"
+                  className="mb-10 md:mb-12"
                 >
-                  <h2 className="font-heading text-2xl md:text-3xl font-light tracking-wide mb-7 md:mb-8">
+                  <h2 className="font-heading text-2xl md:text-3xl font-light tracking-wide mb-2">
                     {
                       collection.displayTitle
                     }
                   </h2>
+
+                  <p className="font-body text-sm md:text-base text-muted-foreground mb-5 md:mb-6">
+                    {COLLECTION_INTROS[collection.type]}
+                  </p>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
                     {collection.products.nodes.map(
