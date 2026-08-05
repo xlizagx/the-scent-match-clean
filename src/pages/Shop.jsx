@@ -1510,7 +1510,7 @@ export default function Shop() {
       <main className="min-h-screen pt-16 md:pt-20 pb-20">
         <section className="relative w-full h-[300px] overflow-hidden">
           <img
-            src="/shop-hero.jpg"
+            src="/shop-hero.png"
             alt="Shop collection"
             className="absolute inset-0 w-full h-full object-cover"
           />
