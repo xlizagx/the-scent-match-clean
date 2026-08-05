@@ -1519,8 +1519,7 @@ export default function Shop() {
 
           
         </section>
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-5">
+<div className="max-w-7xl mx-auto px-4 sm:px-5 -mt-10">
           <div className="flex justify-end mt-6 mb-3">
             <CartButton />
           </div>
