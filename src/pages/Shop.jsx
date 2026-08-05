@@ -1508,7 +1508,7 @@ export default function Shop() {
   function renderShopPage() {
     return (
       <main className="min-h-screen pt-16 md:pt-20 pb-20">
-        <section className="relative w-full h-[300px] overflow-hidden">
+        <section className="relative w-full h-[240px] overflow-hidden">
           <img
             src="/shop-hero.png"
             alt="Shop collection"
