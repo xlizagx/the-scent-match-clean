@@ -3,7 +3,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 const API_VERSION = '2026-07';
 const CART_STORAGE_KEY = 'scentMatchCartId';
 
-};
+
 
 const SIZE_GUIDE = [
   { size: 'S', length: '68.6 cm', width: '101.6 cm', halfChest: '50.8 cm' },
