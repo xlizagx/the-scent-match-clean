@@ -505,8 +505,7 @@ export default function Shop() {
         setSelectedOptions(initialOptions);
 
         setSelectedImage(
-          firstAvailableVariant?.image?.url ||
-            loadedProduct.featuredImage?.url ||
+          loadedProduct.featuredImage?.url ||
             loadedProduct.images?.nodes?.[0]?.url ||
             ''
         );
@@ -552,12 +551,19 @@ export default function Shop() {
   }, [product, collections]);
 
   useEffect(() => {
-    if (selectedVariant?.image?.url) {
-      setSelectedImage(
-        selectedVariant.image.url
-      );
+    if (!product || !selectedVariant?.image?.url) {
+      return;
     }
-  }, [selectedVariant]);
+
+    const variantOptions = selectedVariant.selectedOptions || [];
+    const hasColourOption = variantOptions.some((option) =>
+      isColourOption(option.name)
+    );
+
+    if (hasColourOption) {
+      setSelectedImage(selectedVariant.image.url);
+    }
+  }, [selectedVariant, product]);
 
   function openProduct(handle) {
     const url = new URL(window.location.href);
@@ -1217,8 +1223,14 @@ export default function Shop() {
     const images =
       product.images?.nodes || [];
 
-    const options =
-      product.options || [];
+    const options = (product.options || []).filter(
+  (option) =>
+    !(
+      option.name === 'Title' &&
+      option.values?.length === 1 &&
+      option.values[0] === 'Default Title'
+    )
+);
 
     return (
       <main className="min-h-screen pt-28 md:pt-32 pb-20 px-4 sm:px-5">
