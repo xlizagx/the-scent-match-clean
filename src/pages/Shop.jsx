@@ -3,8 +3,6 @@ import React, { useEffect, useMemo, useState } from 'react';
 const API_VERSION = '2026-07';
 const CART_STORAGE_KEY = 'scentMatchCartId';
 
-
-
 const SIZE_GUIDE = [
   { size: 'S', length: '68.6 cm', width: '101.6 cm', halfChest: '50.8 cm' },
   { size: 'M', length: '71.1 cm', width: '111.8 cm', halfChest: '55.9 cm' },
@@ -343,10 +341,12 @@ export default function Shop() {
           data?.collections?.nodes || [];
 
         const organised = allCollections.map((collection) => ({
-  ...collection,
-  displayTitle: collection.title.replace(/^Fragrance Lovers\s*/i, ''),
-  type: collection.handle,
-}));
+          ...collection,
+          displayTitle: collection.title.replace(/^Fragrance Lovers\s*/i, ''),
+          type: collection.handle,
+        }));
+
+        setCollections(organised);
       } catch (error) {
         console.error(error);
         setShopError(
@@ -1524,7 +1524,7 @@ export default function Shop() {
                   </h2>
 
                   <p className="font-body text-sm md:text-base text-muted-foreground mb-5 md:mb-6">
-                    {COLLECTION_INTROS[collection.type]}
+                    Designed for fragrance lovers.
                   </p>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
