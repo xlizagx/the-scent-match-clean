@@ -1524,15 +1524,7 @@ export default function Shop() {
             <CartButton />
           </div>
 
-          <div className="text-center mb-6 md:mb-7">
-            <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl font-light tracking-wide">
-              Shop
-            </h1>
-
-            <p className="font-body mt-3 text-sm md:text-base text-foreground/80 tracking-wide">
-              Gifts for fragrance lovers.
-            </p>
-          </div>
+          
 
           {loadingCollections && (
             <p className="font-body text-center text-muted-foreground">
