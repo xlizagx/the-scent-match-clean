@@ -175,9 +175,9 @@ exports.handler = async function(event) {
     const genderFiltered = filterByGender(allFragrances, prompt);
     const filtered = filterByFragranceWorld(genderFiltered, prompt);
 
-    // CALL 1 - Safe Match + personality profile
+    // Build all 3 prompts first
     const safeList = buildFragranceList(filtered, 'Safe');
-    const safeResult = await callClaude(`${prompt}
+    const safePrompt = `${prompt}
 
 FRAGRANCE LIST - SELECT FROM THIS LIST ONLY:
 ${safeList}
@@ -191,11 +191,10 @@ Select the single best SAFE MATCH from the list above. Use the exact fragrance_n
   "smells_like": "3-5 notes plain English",
   "why_this_works": "personality-connected reasoning",
   "why_this_suits": "concise sentence"
-}`);
+}`;
 
-    // CALL 2 - Statement Match
     const statementList = buildFragranceList(filtered, 'Statement');
-    const statementResult = await callClaude(`${prompt}
+    const statementPrompt = `${prompt}
 
 FRAGRANCE LIST - SELECT FROM THIS LIST ONLY:
 ${statementList}
@@ -208,11 +207,10 @@ Select the single best STATEMENT MATCH from the list above. Use the exact fragra
   "smells_like": "3-5 notes plain English",
   "why_this_works": "personality-connected reasoning",
   "why_this_suits": "concise sentence"
-}`);
+}`;
 
-    // CALL 3 - Wildcard Match
     const wildcardList = buildFragranceList(filtered, 'Wildcard');
-    const wildcardResult = await callClaude(`${prompt}
+    const wildcardPrompt = `${prompt}
 
 FRAGRANCE LIST - SELECT FROM THIS LIST ONLY:
 ${wildcardList}
@@ -225,7 +223,14 @@ Select the single best WILDCARD MATCH from the list above. Use the exact fragran
   "smells_like": "3-5 notes plain English",
   "why_this_works": "personality-connected reasoning",
   "why_this_suits": "concise sentence"
-}`);
+}`;
+
+    // Run all 3 AI calls at the same time instead of one after another
+    const [safeResult, statementResult, wildcardResult] = await Promise.all([
+      callClaude(safePrompt),
+      callClaude(statementPrompt),
+      callClaude(wildcardPrompt)
+    ]);
 
     // Assemble final response
     const finalResponse = {
