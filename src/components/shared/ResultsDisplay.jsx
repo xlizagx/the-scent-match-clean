@@ -46,6 +46,9 @@ export default function ResultsDisplay({ results, onReset, onAddonGift, onAddonS
         </p>
       </motion.div>
 
+      {/* Email Capture — shown before results so it isn't missed */}
+      <EmailCapture results={results} profile={profileData} quizContext={quizContext} variant="top" />
+
       {/* Personality Profile */}
       {profileData && (
         <PersonalityProfile profile={profileData} onUpdate={handleProfileUpdate} />
@@ -58,8 +61,8 @@ export default function ResultsDisplay({ results, onReset, onAddonGift, onAddonS
         ))}
       </div>
 
-      {/* Email Capture — shown after results */}
-      <EmailCapture results={results} profile={profileData} quizContext={quizContext} />
+      {/* Email Capture — shown again after results as a reminder */}
+      <EmailCapture results={results} profile={profileData} quizContext={quizContext} variant="bottom" />
 
       {/* Add-On Upsell — shown only before unlock */}
       {!addOnUnlocked && (
