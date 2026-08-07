@@ -4,7 +4,19 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Mail, CheckCircle, Loader2 } from 'lucide-react';
 
-export default function EmailCapture({ results, profile, quizContext }) {
+export default function EmailCapture({ results, profile, quizContext, variant = 'bottom' }) {
+  const heading = variant === 'top'
+    ? 'Get Your Results by Email'
+    : 'Keep your matches for later';
+
+  const subheading = variant === 'top'
+    ? 'Make sure you include your email to get your results sent to you'
+    : 'Optional — your results are already on screen above';
+
+  const bodyText = variant === 'top'
+    ? "Enter your email below so your personalised matches are sent straight to your inbox — don't miss out on your results."
+    : 'Did you remember to include your email address so your results are saved for later? Revisit them anytime, shop later, or keep them for future gifting moments.';
+
   const [email, setEmail] = useState('');
   const [optIn, setOptIn] = useState(false);
   const [sending, setSending] = useState(false);
@@ -68,13 +80,13 @@ export default function EmailCapture({ results, profile, quizContext }) {
           <Mail className="w-4 h-4 text-primary" />
         </div>
         <div>
-          <p className="font-heading text-base text-foreground">Keep your matches for later</p>
-          <p className="text-xs text-muted-foreground font-body">Optional — your results are already on screen above</p>
+          <p className="font-heading text-base text-foreground">{heading}</p>
+          <p className="text-xs text-muted-foreground font-body">{subheading}</p>
         </div>
       </div>
 
       <p className="text-sm text-muted-foreground font-body leading-relaxed mb-5">
-        Send this personalised gift match to your email so you can revisit it anytime, shop later, or keep it for future gifting moments.
+        {bodyText}
       </p>
 
       <form onSubmit={handleSend} className="space-y-4">
