@@ -1534,13 +1534,17 @@ export default function Shop() {
               (collection) => (
                 <section
                   key={collection.id}
-                  className="mb-16 md:mb-20"
+                  className="mb-10 md:mb-12"
                 >
-                  <h2 className="font-heading text-2xl md:text-3xl font-light tracking-wide mb-7 md:mb-8">
+                  <h2 className="font-heading text-2xl md:text-3xl font-light tracking-wide mb-2">
                     {
                       collection.displayTitle
                     }
                   </h2>
+
+                  <p className="font-body text-sm md:text-base text-muted-foreground mb-5 md:mb-6">
+                    Designed for fragrance lovers.
+                  </p>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
                     {collection.products.nodes.map(
