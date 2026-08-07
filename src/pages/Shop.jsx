@@ -355,7 +355,7 @@ export default function Shop() {
           .filter((collection) => collection.products.nodes.length > 0)
           .map((collection) => ({
             ...collection,
-            displayTitle: collection.title,
+            displayTitle: collection.title.replace(/^Fragrance Lovers\s*/i, ''),
             type: collection.title.toLowerCase().includes('hoodie')
               ? 'hoodie'
               : 'other',
@@ -1492,20 +1492,20 @@ export default function Shop() {
 
   function renderShopPage() {
     return (
-      <main className="min-h-screen pt-28 md:pt-32 pb-20 px-4 sm:px-5">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex justify-end mb-4">
+      <main className="min-h-screen pt-16 md:pt-20 pb-20">
+        <section className="relative w-full h-[240px] overflow-hidden">
+          <img
+            src="/shop-hero.png"
+            alt="Shop collection"
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+
+          <div className="absolute inset-0 bg-black/45" />
+        </section>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-5 -mt-10">
+          <div className="flex justify-end mt-10 mb-3">
             <CartButton />
-          </div>
-
-          <div className="text-center mb-14 md:mb-16">
-            <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl font-light tracking-wide">
-              Shop
-            </h1>
-
-            <p className="font-body mt-4 text-sm md:text-base text-muted-foreground tracking-wide">
-              Gifts for fragrance lovers.
-            </p>
           </div>
 
           {loadingCollections && (
