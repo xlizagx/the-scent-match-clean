@@ -1493,7 +1493,7 @@ export default function Shop() {
   function renderShopPage() {
     return (
       <main className="min-h-screen pt-16 md:pt-20 pb-20">
-        <section className="relative w-full h-[240px] overflow-hidden">
+        <section className="relative w-full h-[150px] md:h-[240px] overflow-hidden">
           <img
             src="/shop-hero.png"
             alt="Shop collection"
@@ -1504,7 +1504,7 @@ export default function Shop() {
         </section>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-5 -mt-10">
-          <div className="flex justify-end mt-10 mb-3">
+          <div className="flex justify-end mt-14 md:mt-10 mb-3">
             <CartButton />
           </div>
 
