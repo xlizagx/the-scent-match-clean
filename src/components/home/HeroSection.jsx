@@ -34,7 +34,7 @@ export default function HeroSection({ heroImage }) {
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 py-10 md:py-14 w-full">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
 
           {/* LEFT: QUIZ CONTENT */}
           <motion.div
@@ -50,7 +50,7 @@ export default function HeroSection({ heroImage }) {
               </span>
             </div>
 
-            <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl leading-tight tracking-tight text-foreground mb-6">
+            <h1 className="font-heading text-3xl md:text-4xl lg:text-5xl leading-tight tracking-tight text-foreground mb-6">
               Never Get a Fragrance<br />
               <span className="text-primary">Gift Wrong Again.</span>
             </h1>
@@ -142,16 +142,16 @@ export default function HeroSection({ heroImage }) {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: 'easeOut', delay: 0.15 }}
-            className="max-w-xl lg:justify-self-end lg:text-right flex flex-col lg:items-end"
+            className="max-w-xl"
           >
-            <div className="flex items-center gap-2 mb-6 lg:flex-row-reverse">
+            <div className="flex items-center gap-2 mb-6">
               <ShoppingBag className="w-4 h-4 text-primary" />
               <span className="text-xs font-body font-medium tracking-[0.25em] uppercase text-primary">
                 The Shop
               </span>
             </div>
 
-            <h2 className="font-heading text-4xl md:text-5xl lg:text-6xl leading-tight tracking-tight text-foreground mb-6">
+            <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl leading-tight tracking-tight text-foreground mb-6">
               Wearable Scent-Inspired<br />
               <span className="text-primary">Gifts, Ready To Ship.</span>
             </h2>
@@ -168,10 +168,6 @@ export default function HeroSection({ heroImage }) {
               <ShoppingBag className="w-4 h-4" />
               Shop The Collection
             </Button>
-
-            <p className="font-body text-sm text-foreground/50 italic tracking-wide mt-6">
-              Free UK shipping on orders over £40.
-            </p>
           </motion.div>
 
         </div>
