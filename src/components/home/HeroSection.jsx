@@ -108,12 +108,11 @@ export default function HeroSection({ heroImage }) {
               </div>
             </div>
 
-            {/* TRUST LINE */}
+            {/* AGREED EXPERTISE LINE */}
             <p className="font-body text-sm text-foreground/70 leading-relaxed tracking-wide mb-5 max-w-md">
               <span className="text-primary font-medium">
-                Fragrance expertise.
-              </span>{' '}
-              Personalised recommendations. No more guesswork.
+                Built from fragrance expertise. Refined through extensive testing. Designed around you.
+              </span>
             </p>
 
             <p className="font-body text-sm text-foreground/50 italic tracking-wide mb-5">
