@@ -55,8 +55,11 @@ export default function HeroSection({ heroImage }) {
               <span className="text-primary">Gift Wrong Again.</span>
             </h1>
 
-            <p className="font-body text-base md:text-lg text-foreground/75 leading-relaxed mb-7 max-w-lg font-light tracking-wide">
-              The smartest £4.99 you'll ever spend.
+            {/* AGREED EXPERTISE LINE */}
+            <p className="font-body text-sm md:text-base text-foreground/75 leading-relaxed tracking-wide mb-7 max-w-md">
+              <span className="text-primary font-medium">
+                Built from fragrance expertise. Refined through extensive testing. Designed around you.
+              </span>
             </p>
 
             {/* SMALLER FEATURE BOXES */}
@@ -107,13 +110,6 @@ export default function HeroSection({ heroImage }) {
                 </Button>
               </div>
             </div>
-
-            {/* AGREED EXPERTISE LINE */}
-            <p className="font-body text-sm text-foreground/70 leading-relaxed tracking-wide mb-5 max-w-md">
-              <span className="text-primary font-medium">
-                Built from fragrance expertise. Refined through extensive testing. Designed around you.
-              </span>
-            </p>
 
             <p className="font-body text-sm text-foreground/50 italic tracking-wide mb-5">
               Takes 2 minutes. Works even for the people you can never buy for.
