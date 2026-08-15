@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Menu, X, Sparkles } from 'lucide-react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { Menu, X } from 'lucide-react';
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -48,7 +48,7 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-5 py-2 flex items-center">
 
         {/* Logo */}
-        
+        <a
           href="/"
           onClick={handleLogoClick}
           className="flex items-center shrink-0"
@@ -63,9 +63,10 @@ export default function Navbar() {
         {/* Desktop navigation */}
         <div className="hidden md:flex items-center flex-1">
 
-          {/* Regular navigation - positioned towards the left */}
+          {/* Regular navigation */}
           <div className="flex items-center gap-6 ml-8">
-            
+
+            <a
               href="/#how-it-works"
               onClick={e =>
                 handleAnchorNav(e, '/', 'how-it-works')
@@ -75,7 +76,7 @@ export default function Navbar() {
               How it works
             </a>
 
-            
+            <a
               href="/#reviews"
               onClick={e =>
                 handleAnchorNav(e, '/', 'reviews')
@@ -85,7 +86,7 @@ export default function Navbar() {
               Reviews
             </a>
 
-            
+            <a
               href="/support#support-guidance"
               onClick={e =>
                 handleAnchorNav(
@@ -98,6 +99,7 @@ export default function Navbar() {
             >
               FAQs
             </a>
+
           </div>
         </div>
 
@@ -122,7 +124,8 @@ export default function Navbar() {
 
           {/* Regular mobile navigation */}
           <div className="flex flex-col gap-4">
-            
+
+            <a
               href="/#how-it-works"
               onClick={e =>
                 handleAnchorNav(e, '/', 'how-it-works')
@@ -132,7 +135,7 @@ export default function Navbar() {
               How it works
             </a>
 
-            
+            <a
               href="/#reviews"
               onClick={e =>
                 handleAnchorNav(e, '/', 'reviews')
@@ -142,7 +145,7 @@ export default function Navbar() {
               Reviews
             </a>
 
-            
+            <a
               href="/support#support-guidance"
               onClick={e =>
                 handleAnchorNav(
@@ -155,6 +158,7 @@ export default function Navbar() {
             >
               FAQs
             </a>
+
           </div>
         </div>
       )}
