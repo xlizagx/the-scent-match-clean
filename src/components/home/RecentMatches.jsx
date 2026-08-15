@@ -66,7 +66,7 @@ export default function RecentMatches() {
         <div className="h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
       </div>
 
-      {/* FRAGRANCE EXPERTISE */}
+      {/* EXPERTISE EXPLANATION */}
       <div className="max-w-4xl mx-auto mb-14">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -74,28 +74,13 @@ export default function RecentMatches() {
           viewport={{ once: true }}
           className="text-center"
         >
-          <span className="text-xs font-body font-medium tracking-[0.25em] uppercase text-primary mb-3 block">
-            The Scent Match
-          </span>
-
-          <h2 className="font-heading text-3xl md:text-4xl text-foreground leading-tight mb-7">
-            Built from fragrance expertise.<br />
-            <span className="text-primary">
-              Refined through extensive testing. Designed around you.
-            </span>
-          </h2>
-
           <div className="max-w-3xl mx-auto space-y-5">
             <p className="text-foreground/75 font-body text-sm md:text-base leading-relaxed">
               We combined years of fragrance knowledge with carefully developed prompts, rules and recommendations to build a fragrance recommendation system that thinks about scent the way a fragrance expert does.
             </p>
 
             <p className="text-foreground/75 font-body text-sm md:text-base leading-relaxed">
-              We spent extensive time refining and testing how the system interprets the information you provide - from fragrance preferences and scent styles to the occasion and the person you're choosing for. We carefully developed the prompts and recommendations so the experience is considered and personal, whether you're looking for a new fragrance for yourself or trying to find the right gift for someone else.
-            </p>
-
-            <p className="text-foreground/75 font-body text-sm md:text-base leading-relaxed">
-              The result is our expertise, built into a personalised fragrance experience that's available whenever you need it.
+              We spent extensive time refining and testing how it interprets the information you provide - from your fragrance preferences and scent styles to the occasion and who you're choosing for. The result is a considered, personal experience designed to feel much closer to a one-to-one fragrance consultation.
             </p>
 
             <p className="text-foreground font-body text-sm md:text-base leading-relaxed pt-1">
