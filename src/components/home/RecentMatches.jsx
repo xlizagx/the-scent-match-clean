@@ -66,6 +66,49 @@ export default function RecentMatches() {
         <div className="h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
       </div>
 
+      {/* FRAGRANCE EXPERTISE */}
+      <div className="max-w-4xl mx-auto mb-14">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center"
+        >
+          <span className="text-xs font-body font-medium tracking-[0.25em] uppercase text-primary mb-3 block">
+            The Scent Match
+          </span>
+
+          <h2 className="font-heading text-3xl md:text-4xl text-foreground leading-tight mb-7">
+            Built from fragrance expertise.<br />
+            <span className="text-primary">
+              Refined through extensive testing. Designed around you.
+            </span>
+          </h2>
+
+          <div className="max-w-3xl mx-auto space-y-5">
+            <p className="text-foreground/75 font-body text-sm md:text-base leading-relaxed">
+              We combined years of fragrance knowledge with carefully developed prompts, rules and recommendations to build a fragrance recommendation system that thinks about scent the way a fragrance expert does.
+            </p>
+
+            <p className="text-foreground/75 font-body text-sm md:text-base leading-relaxed">
+              We spent extensive time refining and testing how the system interprets the information you provide - from fragrance preferences and scent styles to the occasion and the person you're choosing for. We carefully developed the prompts and recommendations so the experience is considered and personal, whether you're looking for a new fragrance for yourself or trying to find the right gift for someone else.
+            </p>
+
+            <p className="text-foreground/75 font-body text-sm md:text-base leading-relaxed">
+              The result is our expertise, built into a personalised fragrance experience that's available whenever you need it.
+            </p>
+
+            <p className="text-foreground font-body text-sm md:text-base leading-relaxed pt-1">
+              <span className="text-primary font-medium">
+                You'll receive three personalised options
+              </span>{' '}
+              - skip the overwhelm and choose your Safe Match, or throw caution to the wind with your Statement or Wild Card option. The only choice you'll need to make.
+            </p>
+          </div>
+        </motion.div>
+      </div>
+
+      {/* REAL RESULTS */}
       <div className="max-w-5xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -76,9 +119,11 @@ export default function RecentMatches() {
           <span className="text-xs font-body font-medium tracking-[0.25em] uppercase text-primary mb-3 block">
             Recent Matches
           </span>
+
           <h2 className="font-heading text-3xl md:text-4xl text-foreground leading-tight">
             Real results. Real matches.
           </h2>
+
           <p className="text-muted-foreground font-body text-sm max-w-md mx-auto mt-3">
             A sneak peek into what personalised quiz results look like.
           </p>
@@ -95,6 +140,7 @@ export default function RecentMatches() {
         >
           {MATCHES.map((match, i) => {
             const Icon = match.icon;
+
             return (
               <motion.div
                 key={match.tier}
@@ -103,7 +149,11 @@ export default function RecentMatches() {
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
                 className={`bg-card border ${match.cardBorder} rounded-2xl overflow-hidden flex-shrink-0 snap-start flex flex-col`}
-                style={{ width: '300px', minWidth: '300px', maxWidth: '300px' }}
+                style={{
+                  width: '300px',
+                  minWidth: '300px',
+                  maxWidth: '300px',
+                }}
               >
                 {/* Header bar */}
                 <div
@@ -114,11 +164,19 @@ export default function RecentMatches() {
                   }}
                 >
                   <div className="flex items-center gap-2">
-                    <Icon className="w-3.5 h-3.5 flex-shrink-0" style={{ color: match.badgeColor }} />
-                    <span className="text-xs font-body font-semibold tracking-wider uppercase" style={{ color: match.badgeColor }}>
+                    <Icon
+                      className="w-3.5 h-3.5 flex-shrink-0"
+                      style={{ color: match.badgeColor }}
+                    />
+
+                    <span
+                      className="text-xs font-body font-semibold tracking-wider uppercase"
+                      style={{ color: match.badgeColor }}
+                    >
                       {match.label}
                     </span>
                   </div>
+
                   <div
                     className="text-xs font-body font-semibold px-2 py-0.5 rounded-full"
                     style={{
@@ -132,32 +190,55 @@ export default function RecentMatches() {
                 </div>
 
                 {/* Bottle image */}
-                <div className="relative overflow-hidden" style={{ height: '200px', flexShrink: 0 }}>
+                <div
+                  className="relative overflow-hidden"
+                  style={{
+                    height: '200px',
+                    flexShrink: 0,
+                  }}
+                >
                   <img
                     src={match.image}
                     alt={match.name}
                     className="w-full h-full object-cover"
                     style={{ objectPosition: match.objectPosition }}
                   />
+
                   <div className="absolute inset-0 bg-gradient-to-t from-card/60 via-transparent to-transparent" />
                 </div>
 
                 <div className="p-4 flex flex-col gap-3 flex-1">
                   <div style={{ minHeight: '44px' }}>
-                    <h3 className="font-heading text-lg text-foreground leading-tight">{match.name}</h3>
-                    <p className="text-xs text-muted-foreground font-body">{match.brand}</p>
+                    <h3 className="font-heading text-lg text-foreground leading-tight">
+                      {match.name}
+                    </h3>
+
+                    <p className="text-xs text-muted-foreground font-body">
+                      {match.brand}
+                    </p>
                   </div>
-                  <div className="bg-secondary/50 rounded-xl p-3" style={{ minHeight: '95px' }}>
+
+                  <div
+                    className="bg-secondary/50 rounded-xl p-3"
+                    style={{ minHeight: '95px' }}
+                  >
                     <span className="text-xs font-body font-medium tracking-wider uppercase text-muted-foreground block mb-1">
                       Smells Like
                     </span>
-                    <p className="text-xs text-foreground font-body leading-relaxed">{match.smells_like}</p>
+
+                    <p className="text-xs text-foreground font-body leading-relaxed">
+                      {match.smells_like}
+                    </p>
                   </div>
+
                   <div className="bg-primary/5 border border-primary/10 rounded-xl p-3 flex-1">
                     <span className="text-xs font-body font-medium tracking-wider uppercase text-primary block mb-1">
                       Why this suits them
                     </span>
-                    <p className="text-xs text-foreground font-body leading-relaxed">{match.why_this_suits}</p>
+
+                    <p className="text-xs text-foreground font-body leading-relaxed">
+                      {match.why_this_suits}
+                    </p>
                   </div>
                 </div>
               </motion.div>
