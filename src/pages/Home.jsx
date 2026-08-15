@@ -8,7 +8,7 @@ import ConsultationTeaser from '../components/home/ConsultationTeaser';
 import FooterCTA from '../components/home/FooterCTA';
 import RecentMatches from '../components/home/RecentMatches';
 
-const HERO_IMAGE = 'https://media.base44.com/images/public/69cac3f60d3002bf060b0af7/6f6a5c1f7_generated_image.png';
+const HERO_IMAGE = '/combined-hero.png';
 const MEMORY_IMAGE = 'https://media.base44.com/images/public/69cac3f60d3002bf060b0af7/e7784ae5d_generated_5faabd6f.png';
 
 export default function Home() {
