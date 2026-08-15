@@ -48,7 +48,7 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-5 py-2 flex items-center">
 
         {/* Logo */}
-        <a
+        
           href="/"
           onClick={handleLogoClick}
           className="flex items-center shrink-0"
@@ -65,7 +65,7 @@ export default function Navbar() {
 
           {/* Regular navigation - positioned towards the left */}
           <div className="flex items-center gap-6 ml-8">
-            <a
+            
               href="/#how-it-works"
               onClick={e =>
                 handleAnchorNav(e, '/', 'how-it-works')
@@ -75,7 +75,7 @@ export default function Navbar() {
               How it works
             </a>
 
-            <a
+            
               href="/#reviews"
               onClick={e =>
                 handleAnchorNav(e, '/', 'reviews')
@@ -85,7 +85,7 @@ export default function Navbar() {
               Reviews
             </a>
 
-            <a
+            
               href="/support#support-guidance"
               onClick={e =>
                 handleAnchorNav(
@@ -99,15 +99,6 @@ export default function Navbar() {
               FAQs
             </a>
           </div>
-
-          {/* Gift Shop - featured CTA */}
-          <Link
-            to="/shop"
-            className="ml-auto inline-flex items-center justify-center gap-2 rounded-full bg-primary px-5 py-2.5 text-xs font-body font-semibold text-primary-foreground hover:bg-primary/90 transition-colors tracking-wide whitespace-nowrap"
-          >
-            <Sparkles className="w-3.5 h-3.5" />
-            SHOP THE GIFT COLLECTION
-          </Link>
         </div>
 
         {/* Mobile menu toggle */}
@@ -129,19 +120,9 @@ export default function Navbar() {
       {mobileOpen && (
         <div className="md:hidden bg-background border-t border-border/50 px-5 py-5">
 
-          {/* Featured Gift Shop */}
-          <Link
-            to="/shop"
-            onClick={() => setMobileOpen(false)}
-            className="flex items-center justify-center gap-2 w-full bg-primary rounded-full px-5 py-3 text-sm font-body font-semibold text-primary-foreground hover:bg-primary/90 transition-colors"
-          >
-            <Sparkles className="w-3.5 h-3.5" />
-            SHOP THE GIFT COLLECTION
-          </Link>
-
           {/* Regular mobile navigation */}
-          <div className="flex flex-col gap-4 mt-6 pt-5 border-t border-border/50">
-            <a
+          <div className="flex flex-col gap-4">
+            
               href="/#how-it-works"
               onClick={e =>
                 handleAnchorNav(e, '/', 'how-it-works')
@@ -151,7 +132,7 @@ export default function Navbar() {
               How it works
             </a>
 
-            <a
+            
               href="/#reviews"
               onClick={e =>
                 handleAnchorNav(e, '/', 'reviews')
@@ -161,7 +142,7 @@ export default function Navbar() {
               Reviews
             </a>
 
-            <a
+            
               href="/support#support-guidance"
               onClick={e =>
                 handleAnchorNav(
