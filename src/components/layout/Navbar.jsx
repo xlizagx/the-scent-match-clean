@@ -43,6 +43,15 @@ export default function Navbar() {
     }
   };
 
+  const isShopPage = location.pathname === '/shop';
+
+  const shopLinks = [
+    { label: 'Hoodies', hash: 'hoodies' },
+    { label: 'T-Shirts', hash: 't-shirts' },
+    { label: 'Totes', hash: 'tote-bags' },
+    { label: 'Other', hash: 'other' },
+  ];
+
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-xl border-b border-border/50">
       <div className="max-w-7xl mx-auto px-5 py-2 flex items-center">
@@ -63,44 +72,77 @@ export default function Navbar() {
         {/* Desktop navigation */}
         <div className="hidden md:flex items-center flex-1">
 
-          {/* Regular navigation */}
-          <div className="flex items-center gap-6 ml-8">
+          {isShopPage ? (
+            <div className="flex items-center gap-6 ml-8">
+              {shopLinks.map((link) => (
+                <a
+                  key={link.hash}
+                  href={`/shop#${link.hash}`}
+                  onClick={e =>
+                    handleAnchorNav(e, '/shop', link.hash)
+                  }
+                  className="text-xs font-body text-foreground/80 hover:text-primary transition-colors tracking-wide whitespace-nowrap"
+                >
+                  {link.label}
+                </a>
+              ))}
 
-            <a
-              href="/#how-it-works"
-              onClick={e =>
-                handleAnchorNav(e, '/', 'how-it-works')
-              }
-              className="text-xs font-body text-foreground/80 hover:text-primary transition-colors tracking-wide whitespace-nowrap"
-            >
-              How it works
-            </a>
+              <a
+                href="/shop"
+                onClick={e => {
+                  e.preventDefault();
+                  setMobileOpen(false);
 
-            <a
-              href="/#reviews"
-              onClick={e =>
-                handleAnchorNav(e, '/', 'reviews')
-              }
-              className="text-xs font-body text-foreground/80 hover:text-primary transition-colors tracking-wide whitespace-nowrap"
-            >
-              Reviews
-            </a>
+                  if (location.pathname === '/shop') {
+                    window.scrollTo({ top: 0, behavior: 'instant' });
+                  } else {
+                    navigate('/shop');
+                  }
+                }}
+                className="text-xs font-body text-foreground/80 hover:text-primary transition-colors tracking-wide whitespace-nowrap"
+              >
+                All
+              </a>
+            </div>
+          ) : (
+            <div className="flex items-center gap-6 ml-8">
 
-            <a
-              href="/support#support-guidance"
-              onClick={e =>
-                handleAnchorNav(
-                  e,
-                  '/support',
-                  'support-guidance'
-                )
-              }
-              className="text-xs font-body text-foreground/80 hover:text-primary transition-colors tracking-wide whitespace-nowrap"
-            >
-              FAQs
-            </a>
+              <a
+                href="/#how-it-works"
+                onClick={e =>
+                  handleAnchorNav(e, '/', 'how-it-works')
+                }
+                className="text-xs font-body text-foreground/80 hover:text-primary transition-colors tracking-wide whitespace-nowrap"
+              >
+                How it works
+              </a>
 
-          </div>
+              <a
+                href="/#reviews"
+                onClick={e =>
+                  handleAnchorNav(e, '/', 'reviews')
+                }
+                className="text-xs font-body text-foreground/80 hover:text-primary transition-colors tracking-wide whitespace-nowrap"
+              >
+                Reviews
+              </a>
+
+              <a
+                href="/support#support-guidance"
+                onClick={e =>
+                  handleAnchorNav(
+                    e,
+                    '/support',
+                    'support-guidance'
+                  )
+                }
+                className="text-xs font-body text-foreground/80 hover:text-primary transition-colors tracking-wide whitespace-nowrap"
+              >
+                FAQs
+              </a>
+
+            </div>
+          )}
         </div>
 
         {/* Mobile menu toggle */}
@@ -122,44 +164,77 @@ export default function Navbar() {
       {mobileOpen && (
         <div className="md:hidden bg-background border-t border-border/50 px-5 py-5">
 
-          {/* Regular mobile navigation */}
-          <div className="flex flex-col gap-4">
+          {isShopPage ? (
+            <div className="flex flex-col gap-4">
+              {shopLinks.map((link) => (
+                <a
+                  key={link.hash}
+                  href={`/shop#${link.hash}`}
+                  onClick={e =>
+                    handleAnchorNav(e, '/shop', link.hash)
+                  }
+                  className="text-sm font-body text-foreground/80 hover:text-primary transition-colors"
+                >
+                  {link.label}
+                </a>
+              ))}
 
-            <a
-              href="/#how-it-works"
-              onClick={e =>
-                handleAnchorNav(e, '/', 'how-it-works')
-              }
-              className="text-sm font-body text-foreground/80 hover:text-primary transition-colors"
-            >
-              How it works
-            </a>
+              <a
+                href="/shop"
+                onClick={e => {
+                  e.preventDefault();
+                  setMobileOpen(false);
 
-            <a
-              href="/#reviews"
-              onClick={e =>
-                handleAnchorNav(e, '/', 'reviews')
-              }
-              className="text-sm font-body text-foreground/80 hover:text-primary transition-colors"
-            >
-              Reviews
-            </a>
+                  if (location.pathname === '/shop') {
+                    window.scrollTo({ top: 0, behavior: 'instant' });
+                  } else {
+                    navigate('/shop');
+                  }
+                }}
+                className="text-sm font-body text-foreground/80 hover:text-primary transition-colors"
+              >
+                All
+              </a>
+            </div>
+          ) : (
+            <div className="flex flex-col gap-4">
 
-            <a
-              href="/support#support-guidance"
-              onClick={e =>
-                handleAnchorNav(
-                  e,
-                  '/support',
-                  'support-guidance'
-                )
-              }
-              className="text-sm font-body text-foreground/80 hover:text-primary transition-colors"
-            >
-              FAQs
-            </a>
+              <a
+                href="/#how-it-works"
+                onClick={e =>
+                  handleAnchorNav(e, '/', 'how-it-works')
+                }
+                className="text-sm font-body text-foreground/80 hover:text-primary transition-colors"
+              >
+                How it works
+              </a>
 
-          </div>
+              <a
+                href="/#reviews"
+                onClick={e =>
+                  handleAnchorNav(e, '/', 'reviews')
+                }
+                className="text-sm font-body text-foreground/80 hover:text-primary transition-colors"
+              >
+                Reviews
+              </a>
+
+              <a
+                href="/support#support-guidance"
+                onClick={e =>
+                  handleAnchorNav(
+                    e,
+                    '/support',
+                    'support-guidance'
+                  )
+                }
+                className="text-sm font-body text-foreground/80 hover:text-primary transition-colors"
+              >
+                FAQs
+              </a>
+
+            </div>
+          )}
         </div>
       )}
     </nav>
