@@ -358,11 +358,6 @@ export default function Shop() {
             displayTitle: collection.title.replace(/^Fragrance Lovers\s*/i, ''),
             type: collection.title.toLowerCase().includes('hoodie')
               ? 'hoodie'
-              : collection.title.toLowerCase().includes('t-shirt') ||
-                collection.title.toLowerCase().includes('tshirt')
-              ? 'tshirt'
-              : collection.title.toLowerCase().includes('tote')
-              ? 'tote'
               : 'other',
           }))
           .sort((a, b) => {
@@ -1495,23 +1490,6 @@ export default function Shop() {
     );
   }
 
-  function scrollToCollection(type) {
-    if (type === 'all') {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      return;
-    }
-
-    const target = document.querySelector(
-      `[data-shop-category="${type}"]`
-    );
-
-    if (target) {
-      const offset = 120;
-      const top = target.getBoundingClientRect().top + window.scrollY - offset;
-      window.scrollTo({ top, behavior: 'smooth' });
-    }
-  }
-
   function renderShopPage() {
     return (
       <main className="min-h-screen pt-16 md:pt-20 pb-20">
@@ -1529,28 +1507,6 @@ export default function Shop() {
           <div className="flex justify-end mt-14 md:mt-10 mb-3">
             <CartButton />
           </div>
-
-          <nav
-            aria-label="Shop categories"
-            className="font-body flex flex-wrap items-center justify-center gap-x-7 gap-y-3 border-y border-border/50 py-4 mb-10"
-          >
-            {[
-              ['Hoodies', 'hoodies'],
-              ['T-Shirts', 'tshirts'],
-              ['Totes', 'totes'],
-              ['Other', 'other'],
-              ['All', 'all'],
-            ].map(([label, type]) => (
-              <button
-                key={type}
-                type="button"
-                onClick={() => scrollToCollection(type)}
-                className="text-sm tracking-wide hover:text-primary transition-colors"
-              >
-                {label}
-              </button>
-            ))}
-          </nav>
 
           {loadingCollections && (
             <p className="font-body text-center text-muted-foreground">
@@ -1578,16 +1534,14 @@ export default function Shop() {
               (collection) => (
                 <section
                   key={collection.id}
-                  data-shop-category={
-                    collection.type === 'hoodie'
-                      ? 'hoodies'
-                      : collection.type === 'tshirt'
-                      ? 'tshirts'
-                      : collection.type === 'tote'
-                      ? 'totes'
-                      : 'other'
+                  id={
+                    collection.displayTitle
+                      .toLowerCase()
+                      .replace(/&/g, 'and')
+                      .replace(/[^a-z0-9]+/g, '-')
+                      .replace(/^-|-$/g, '')
                   }
-                  className="mb-10 md:mb-12 scroll-mt-28"
+                  className="mb-10 md:mb-12 scroll-mt-24"
                 >
                   <h2 className="font-heading text-2xl md:text-3xl font-light tracking-wide mb-2">
                     {
