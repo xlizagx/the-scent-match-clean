@@ -41,7 +41,7 @@ export default function HeroSection({ heroImage }) {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: 'easeOut' }}
-            className="max-w-xl"
+            className="max-w-xl order-2 lg:order-1"
           >
             <div className="flex items-center gap-2 mb-5">
               <Gem className="w-4 h-4 text-primary" />
@@ -158,7 +158,7 @@ export default function HeroSection({ heroImage }) {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: 'easeOut', delay: 0.15 }}
-            className="max-w-xl"
+            className="max-w-xl order-1 lg:order-2"
           >
             <div className="flex items-center gap-2 mb-6">
               <ShoppingBag className="w-4 h-4 text-primary" />
