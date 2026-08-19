@@ -89,24 +89,40 @@ export default function HeroSection({ heroImage }) {
                 </span>
 
                 <Button
-                  onClick={() => handleRoute('gift')}
+                  asChild
                   size="lg"
                   className="w-full sm:w-72 bg-primary text-primary-foreground hover:bg-primary/90 font-body text-sm tracking-wide rounded-full px-8 h-12 flex items-center gap-2"
                 >
-                  <Sparkles className="w-4 h-4" />
-                  Find The Perfect Scent Match
+                  <a
+                    href="/quiz"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleRoute('gift');
+                    }}
+                  >
+                    <Sparkles className="w-4 h-4" />
+                    Find The Perfect Scent Match
+                  </a>
                 </Button>
               </div>
 
               <div className="flex flex-col items-start gap-1 w-full">
                 <Button
-                  onClick={() => handleRoute('self')}
+                  asChild
                   size="lg"
                   variant="outline"
                   className="w-full sm:w-72 bg-transparent border-primary text-primary hover:bg-primary/10 font-body text-sm tracking-wide rounded-full px-8 h-12 flex items-center gap-2"
                 >
-                  <Feather className="w-4 h-4" />
-                  Discover Your Next Favourite
+                  <a
+                    href="/quiz"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleRoute('self');
+                    }}
+                  >
+                    <Feather className="w-4 h-4" />
+                    Discover Your Next Favourite
+                  </a>
                 </Button>
               </div>
             </div>
@@ -177,12 +193,20 @@ export default function HeroSection({ heroImage }) {
             </p>
 
             <Button
-              onClick={handleShop}
+              asChild
               size="lg"
               className="w-full sm:w-72 bg-primary text-primary-foreground hover:bg-primary/90 font-body text-sm tracking-wide rounded-full px-8 h-12 flex items-center gap-2"
             >
-              <ShoppingBag className="w-4 h-4" />
-              Shop The Collection
+              <a
+                href="/shop"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleShop();
+                }}
+              >
+                <ShoppingBag className="w-4 h-4" />
+                Shop The Collection
+              </a>
             </Button>
           </motion.div>
 
