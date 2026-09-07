@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { ArrowLeft, ArrowRight, Loader2, Sparkles, CheckCircle } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Loader2, Sparkles } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 import QuizQuestion from '../components/quiz/QuizQuestion';
 import ResultsDisplay from '../components/shared/ResultsDisplay';
@@ -118,9 +118,11 @@ export default function PremiumQuiz() {
 
   const urlParams = new URLSearchParams(window.location.search);
   const urlRoute = urlParams.get('type');
-  const initialRoute = urlRoute === 'gift' || urlRoute === 'self'
-    ? urlRoute
-    : location.state?.route || null;
+
+  const initialRoute =
+    urlRoute === 'gift' || urlRoute === 'self'
+      ? urlRoute
+      : location.state?.route || null;
 
   const [route, setRoute] = useState(initialRoute);
   const [step, setStep] = useState(0);
@@ -146,8 +148,6 @@ export default function PremiumQuiz() {
     const payment = params.get('payment');
 
     if (payment === 'success') {
-      window.history.replaceState({}, '', '/quiz');
-
       const savedAnswers = sessionStorage.getItem('quizAnswers');
       const savedRoute = sessionStorage.getItem('quizRoute');
       const savedPrevious = sessionStorage.getItem('previousRecommendations');
@@ -228,7 +228,10 @@ export default function PremiumQuiz() {
           .replace(/\bthem\b/gi, 'you')
           .replace(/\bthey\b/gi, 'you'),
         subtitle: q.subtitle
-          ? q.subtitle.replace(/their/gi, 'your').replace(/\bthem\b/gi, 'you').replace(/\bthey\b/gi, 'you')
+          ? q.subtitle
+              .replace(/their/gi, 'your')
+              .replace(/\bthem\b/gi, 'you')
+              .replace(/\bthey\b/gi, 'you')
           : q.subtitle,
         options: q.options?.map(o => ({
           ...o,
@@ -274,6 +277,7 @@ export default function PremiumQuiz() {
 
   const handleConfirmAndPay = async () => {
     setCheckoutLoading(true);
+
     sessionStorage.setItem('quizAnswers', JSON.stringify(answers));
     sessionStorage.setItem('quizRoute', route);
     sessionStorage.setItem('previousRecommendations', JSON.stringify(previousRecommendations));
