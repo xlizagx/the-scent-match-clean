@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { Gem, Sparkles, Feather, Star, Lightbulb, Clock, BookOpen, Tag, ShoppingBag } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { motion } from 'framer-motion';
@@ -16,10 +16,6 @@ export default function HeroSection({ heroImage }) {
 
   const handleRoute = (route) => {
     navigate('/quiz', { state: { route } });
-  };
-
-  const handleShop = () => {
-    navigate('/shop');
   };
 
   return (
@@ -177,12 +173,14 @@ export default function HeroSection({ heroImage }) {
             </p>
 
             <Button
-              onClick={handleShop}
+              asChild
               size="lg"
               className="w-full sm:w-72 bg-primary text-primary-foreground hover:bg-primary/90 font-body text-sm tracking-wide rounded-full px-8 h-12 flex items-center gap-2"
             >
-              <ShoppingBag className="w-4 h-4" />
-              Shop The Collection
+              <Link to="/shop">
+                <ShoppingBag className="w-4 h-4" />
+                Shop The Collection
+              </Link>
             </Button>
           </motion.div>
 
