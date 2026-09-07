@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { ArrowLeft, ArrowRight, Loader2, Sparkles } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Loader2, Sparkles, CheckCircle } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 import QuizQuestion from '../components/quiz/QuizQuestion';
 import ResultsDisplay from '../components/shared/ResultsDisplay';
@@ -13,7 +13,6 @@ import { quizQuestions } from '../lib/quizQuestions';
 const buildPrompt = (profileSummary, isSelf = false, previousRecommendations = []) => {
   const budgetLine = profileSummary.split('\n').find(l => l.startsWith('budget:'));
   const budgetValue = budgetLine ? budgetLine.replace('budget:', '').trim() : 'open';
-
   const budgetBlock = budgetValue === 'under_100'
     ? `BUDGET WEIGHTING - CRITICAL: The customer has indicated a budget of under £100. Across ALL tiers (Safe, Statement, Wildcard) and any add-on rounds, you MUST prioritise fragrances that are typically priced under £100 at retail. Do not recommend fragrances that typically retail above £100 unless there is absolutely no suitable alternative within budget.`
     : budgetValue === '100_200'
@@ -115,16 +114,7 @@ const LOADING_PHRASES = [
 
 export default function PremiumQuiz() {
   const location = useLocation();
-
-  const urlParams = new URLSearchParams(window.location.search);
-  const urlRoute = urlParams.get('type');
-
-  const initialRoute =
-    urlRoute === 'gift' || urlRoute === 'self'
-      ? urlRoute
-      : location.state?.route || null;
-
-  const [route, setRoute] = useState(initialRoute);
+  const [route, setRoute] = useState(location.state?.route || null);
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState({});
   const [loading, setLoading] = useState(false);
@@ -139,15 +129,15 @@ export default function PremiumQuiz() {
 
   const isSelf = route === 'self';
 
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'instant' });
-  }, []);
+  useEffect(() => { window.scrollTo({ top: 0, behavior: 'instant' }); }, []);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const payment = params.get('payment');
 
     if (payment === 'success') {
+      window.history.replaceState({}, '', '/quiz');
+
       const savedAnswers = sessionStorage.getItem('quizAnswers');
       const savedRoute = sessionStorage.getItem('quizRoute');
       const savedPrevious = sessionStorage.getItem('previousRecommendations');
@@ -168,15 +158,10 @@ export default function PremiumQuiz() {
   }, []);
 
   useEffect(() => {
-    if (!loading) {
-      setPhraseIndex(0);
-      return;
-    }
-
+    if (!loading) { setPhraseIndex(0); return; }
     const interval = setInterval(() => {
       setPhraseIndex(prev => (prev + 1) % LOADING_PHRASES.length);
     }, 3000);
-
     return () => clearInterval(interval);
   }, [loading]);
 
@@ -228,10 +213,7 @@ export default function PremiumQuiz() {
           .replace(/\bthem\b/gi, 'you')
           .replace(/\bthey\b/gi, 'you'),
         subtitle: q.subtitle
-          ? q.subtitle
-              .replace(/their/gi, 'your')
-              .replace(/\bthem\b/gi, 'you')
-              .replace(/\bthey\b/gi, 'you')
+          ? q.subtitle.replace(/their/gi, 'your').replace(/\bthem\b/gi, 'you').replace(/\bthey\b/gi, 'you')
           : q.subtitle,
         options: q.options?.map(o => ({
           ...o,
@@ -245,12 +227,10 @@ export default function PremiumQuiz() {
   const runGenerationWithData = async (answersData, isSelfMode, prevRecs = []) => {
     scrollTop();
     setLoading(true);
-
     const profileSummary = Object.entries(answersData)
       .filter(([, v]) => v && v !== 'skip')
       .map(([k, v]) => `${k}: ${v}`)
       .join('\n');
-
     setQuizContext(profileSummary);
     setRoute(isSelfMode ? 'self' : 'gift');
 
@@ -277,7 +257,6 @@ export default function PremiumQuiz() {
 
   const handleConfirmAndPay = async () => {
     setCheckoutLoading(true);
-
     sessionStorage.setItem('quizAnswers', JSON.stringify(answers));
     sessionStorage.setItem('quizRoute', route);
     sessionStorage.setItem('previousRecommendations', JSON.stringify(previousRecommendations));
@@ -288,9 +267,7 @@ export default function PremiumQuiz() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ isAddon: isAddon })
       });
-
       const data = await res.json();
-
       if (data.url) {
         window.location.href = data.url;
       }
@@ -323,7 +300,6 @@ export default function PremiumQuiz() {
           className="text-center"
         >
           <Loader2 className="w-8 h-8 text-primary animate-spin mx-auto mb-8" />
-
           <AnimatePresence mode="wait">
             <motion.p
               key={phraseIndex}
@@ -336,7 +312,6 @@ export default function PremiumQuiz() {
               {LOADING_PHRASES[phraseIndex]}
             </motion.p>
           </AnimatePresence>
-
           <p className="font-body text-sm text-muted-foreground mt-4">
             This may take a few moments
           </p>
@@ -353,11 +328,7 @@ export default function PremiumQuiz() {
         onAnswerUpdate={(questionId, value) => {
           setAnswers(prev => ({ ...prev, [questionId]: value }));
         }}
-        onBack={() => {
-          scrollTop();
-          setStep(adaptedQuestions.length - 1);
-          setReviewing(false);
-        }}
+        onBack={() => { scrollTop(); setStep(adaptedQuestions.length - 1); setReviewing(false); }}
         onConfirm={handleConfirmAndPay}
         isAddon={isAddon}
       />
@@ -368,16 +339,7 @@ export default function PremiumQuiz() {
     return (
       <ResultsDisplay
         results={results}
-        onReset={() => {
-          scrollTop();
-          setResults(null);
-          setAnswers({});
-          setStep(0);
-          setProfile(null);
-          setRoute(null);
-          setIsAddon(false);
-          setPreviousRecommendations([]);
-        }}
+        onReset={() => { scrollTop(); setResults(null); setAnswers({}); setStep(0); setProfile(null); setRoute(null); setIsAddon(false); setPreviousRecommendations([]); }}
         onAddonGift={() => startAddonQuiz('gift')}
         onAddonSelf={() => startAddonQuiz('self')}
         title={isSelf ? "Your Perfect Matches" : "Their Perfect Matches"}
@@ -392,13 +354,11 @@ export default function PremiumQuiz() {
 
   const question = adaptedQuestions[step];
   const progress = ((step + 1) / adaptedQuestions.length) * 100;
-
   const canProceed =
     question.type === 'text' ||
     (question.type === 'multiselect'
       ? Array.isArray(answers[question.id]) && answers[question.id].length > 0
       : !!answers[question.id]);
-
   const isLast = step === adaptedQuestions.length - 1;
 
   const handleAnswer = (value) => {
@@ -407,7 +367,6 @@ export default function PremiumQuiz() {
 
   const handleNext = () => {
     scrollTop();
-
     if (!isLast) {
       setStep(step + 1);
     } else {
@@ -427,7 +386,6 @@ export default function PremiumQuiz() {
               {Math.round(progress)}%
             </span>
           </div>
-
           <Progress value={progress} className="h-1" />
         </div>
 
@@ -443,10 +401,7 @@ export default function PremiumQuiz() {
         <div className="flex items-center justify-between mt-10">
           <Button
             variant="ghost"
-            onClick={() => {
-              scrollTop();
-              step === 0 ? setRoute(null) : setStep(step - 1);
-            }}
+            onClick={() => { scrollTop(); step === 0 ? setRoute(null) : setStep(step - 1); }}
             className="font-body text-sm text-muted-foreground"
           >
             <ArrowLeft className="w-4 h-4 mr-1" />
