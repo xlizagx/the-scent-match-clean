@@ -1,11 +1,109 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 
+const API_VERSION = '2026-07';
+
+// Controls the ORDER collections appear in on the nav bar.
+// This does NOT limit which collections show - any collection not listed
+// here will still appear automatically, just after these ones.
+const COLLECTION_ORDER = [
+  'Fragrance Lovers Hoodies',
+  'Fragrance Lovers T-Shirts',
+  'Fragrance Lovers Tote Bags',
+  'Fragrance Lovers Mugs',
+];
+
+const NAV_COLLECTIONS_QUERY = `
+  query NavCollections {
+    collections(first: 20) {
+      nodes {
+        id
+        title
+        products(first: 1) {
+          nodes {
+            id
+          }
+        }
+      }
+    }
+  }
+`;
+
+function slugify(title) {
+  return title
+    .toLowerCase()
+    .replace(/&/g, 'and')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+}
+
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [shopCollections, setShopCollections] = useState([]);
   const navigate = useNavigate();
   const location = useLocation();
+
+  useEffect(() => {
+    const domain = import.meta.env.VITE_SHOPIFY_STORE_DOMAIN;
+    const token = import.meta.env.VITE_SHOPIFY_STOREFRONT_ACCESS_TOKEN;
+
+    if (!domain || !token) {
+      return;
+    }
+
+    async function loadNavCollections() {
+      try {
+        const response = await fetch(
+          `https://${domain}/api/${API_VERSION}/graphql.json`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-Shopify-Storefront-Access-Token': token,
+            },
+            body: JSON.stringify({ query: NAV_COLLECTIONS_QUERY }),
+          }
+        );
+
+        const result = await response.json();
+        const nodes = result?.data?.collections?.nodes || [];
+
+        const withProducts = nodes.filter(
+          (collection) => collection.products.nodes.length > 0
+        );
+
+        setShopCollections(withProducts);
+      } catch (error) {
+        console.error('Nav collections failed to load:', error);
+      }
+    }
+
+    loadNavCollections();
+  }, []);
+
+  const shopLinks = useMemo(() => {
+    return shopCollections
+      .map((collection) => {
+        const displayTitle = collection.title.replace(
+          /^Fragrance Lovers\s*/i,
+          ''
+        );
+
+        return {
+          label: displayTitle,
+          hash: slugify(displayTitle),
+          sortKey: collection.title,
+        };
+      })
+      .sort((a, b) => {
+        const aIndex = COLLECTION_ORDER.indexOf(a.sortKey);
+        const bIndex = COLLECTION_ORDER.indexOf(b.sortKey);
+        const aRank = aIndex === -1 ? COLLECTION_ORDER.length : aIndex;
+        const bRank = bIndex === -1 ? COLLECTION_ORDER.length : bIndex;
+        return aRank - bRank;
+      });
+  }, [shopCollections]);
 
   const handleLogoClick = (e) => {
     e.preventDefault();
@@ -44,13 +142,6 @@ export default function Navbar() {
   };
 
   const isShopPage = location.pathname === '/shop';
-
-  const shopLinks = [
-    { label: 'Hoodies', hash: 'hoodies' },
-    { label: 'T-Shirts', hash: 't-shirts' },
-    { label: 'Totes', hash: 'tote-bags' },
-    { label: 'Other', hash: 'other' },
-  ];
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-xl border-b border-border/50">
