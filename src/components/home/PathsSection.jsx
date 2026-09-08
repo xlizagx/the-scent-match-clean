@@ -100,7 +100,7 @@ export default function PathsSection() {
             ))}
           </ul>
           <Button asChild size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 font-body text-sm tracking-wide rounded-full h-12 w-full">
-            <Link to="/quiz" state={{ route: 'gift' }}>
+            <Link to="/quiz?type=gift">
               <Sparkles className="w-4 h-4 mr-2" />
               Unlock the Perfect Match
               <ArrowRight className="w-4 h-4 ml-2" />
@@ -111,8 +111,7 @@ export default function PathsSection() {
           </p>
           <div className="text-center mt-4 pt-4 border-t border-border/30">
             <Link
-              to="/quiz"
-              state={{ route: 'self' }}
+              to="/quiz?type=self"
               className="inline-flex items-center gap-2 text-sm font-body text-foreground/70 hover:text-primary transition-colors group"
             >
               <span className="text-muted-foreground text-xs uppercase tracking-wider font-medium">Also available:</span>
