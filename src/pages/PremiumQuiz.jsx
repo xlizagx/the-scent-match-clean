@@ -114,7 +114,14 @@ const LOADING_PHRASES = [
 
 export default function PremiumQuiz() {
   const location = useLocation();
-  const [route, setRoute] = useState(location.state?.route || null);
+
+  // Works out gift vs self from the web address (?type=gift or ?type=self).
+  // Falls back to the old hidden-state method so nothing else breaks.
+  const searchParams = new URLSearchParams(location.search);
+  const routeFromUrl = searchParams.get('type');
+  const initialRoute = routeFromUrl || location.state?.route || null;
+
+  const [route, setRoute] = useState(initialRoute);
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState({});
   const [loading, setLoading] = useState(false);
