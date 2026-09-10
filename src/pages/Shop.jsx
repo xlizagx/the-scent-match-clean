@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 const API_VERSION = '2026-07';
 const CART_STORAGE_KEY = 'scentMatchCartId';
@@ -253,6 +253,10 @@ function getProductHandleFromUrl() {
   return params.get('product');
 }
 
+function isCartUrl() {
+  return window.location.pathname === '/cart';
+}
+
 function isSizeOption(name = '') {
   return name.toLowerCase() === 'size';
 }
@@ -301,9 +305,10 @@ export default function Shop() {
   const [sizeGuideOpen, setSizeGuideOpen] = useState(false);
 
   const [cart, setCart] = useState(null);
-  const [cartOpen, setCartOpen] = useState(false);
+  const [cartOpen, setCartOpen] = useState(isCartUrl());
   const [cartBusy, setCartBusy] = useState(false);
   const [cartError, setCartError] = useState('');
+  const cartOpenedFromWithinSite = useRef(false);
 
   async function shopifyRequest(query, variables = {}) {
     if (!domain || !token) {
@@ -386,7 +391,7 @@ export default function Shop() {
     function handlePopState() {
       setProductHandle(getProductHandleFromUrl());
       setSizeGuideOpen(false);
-      setCartOpen(false);
+      setCartOpen(isCartUrl());
     }
 
     window.addEventListener(
@@ -559,6 +564,7 @@ export default function Shop() {
   function openProduct(handle) {
     const url = new URL(window.location.href);
 
+    url.pathname = '/shop';
     url.searchParams.set('product', handle);
 
     window.history.pushState({}, '', url);
@@ -576,6 +582,7 @@ export default function Shop() {
   function backToShop() {
     const url = new URL(window.location.href);
 
+    url.pathname = '/shop';
     url.searchParams.delete('product');
 
     window.history.pushState({}, '', url);
@@ -589,6 +596,28 @@ export default function Shop() {
       top: 0,
       behavior: 'smooth',
     });
+  }
+
+  function openCart() {
+    if (!isCartUrl()) {
+      window.history.pushState({}, '', '/cart');
+      cartOpenedFromWithinSite.current = true;
+    }
+
+    setCartOpen(true);
+  }
+
+  function closeCart() {
+    if (isCartUrl()) {
+      if (cartOpenedFromWithinSite.current) {
+        window.history.back();
+      } else {
+        window.history.pushState({}, '', '/shop');
+      }
+    }
+
+    cartOpenedFromWithinSite.current = false;
+    setCartOpen(false);
   }
 
   function changeOption(optionName, value) {
@@ -725,7 +754,7 @@ export default function Shop() {
       );
 
       setCart(nextCart);
-      setCartOpen(true);
+      openCart();
     } catch (error) {
       console.error(error);
 
@@ -842,7 +871,7 @@ export default function Shop() {
     return (
       <button
         type="button"
-        onClick={() => setCartOpen(true)}
+        onClick={openCart}
         className="font-body text-sm border border-primary/40 rounded-full px-5 py-2 text-foreground hover:border-primary hover:text-primary transition-colors"
       >
         Cart ({cart?.totalQuantity || 0})
@@ -860,7 +889,7 @@ export default function Shop() {
     return (
       <div
         className="fixed inset-0 z-[100] bg-black/70"
-        onClick={() => setCartOpen(false)}
+        onClick={closeCart}
       >
         <aside
           className="absolute right-0 top-0 h-full w-full max-w-md bg-background border-l border-border p-5 sm:p-7 overflow-y-auto"
@@ -875,9 +904,7 @@ export default function Shop() {
 
             <button
               type="button"
-              onClick={() =>
-                setCartOpen(false)
-              }
+              onClick={closeCart}
               className="font-body text-3xl font-light leading-none hover:text-primary transition-colors"
               aria-label="Close cart"
             >
