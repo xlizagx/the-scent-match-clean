@@ -12,7 +12,6 @@ import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsAndConditions from './pages/TermsAndConditions';
 import CookiePolicy from './pages/CookiePolicy';
 import RefundPolicy from './pages/RefundPolicy';
-
 function App() {
   return (
     <QueryClientProvider client={queryClientInstance}>
@@ -22,6 +21,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/quiz" element={<PremiumQuiz />} />
             <Route path="/shop" element={<Shop />} />
+            <Route path="/cart" element={<Shop />} />
             <Route path="/support" element={<Support />} />
             <Route path="/contact" element={<Support />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
@@ -36,5 +36,4 @@ function App() {
     </QueryClientProvider>
   );
 }
-
 export default App;
