@@ -199,37 +199,15 @@ export default function Navbar() {
             <div className="flex items-center gap-6 ml-8">
 
               <a
-                href="/#how-it-works"
-                onClick={e =>
-                  handleAnchorNav(e, '/', 'how-it-works')
-                }
+                href="/find-a-scent-match"
+                onClick={e => {
+                  e.preventDefault();
+                  setMobileOpen(false);
+                  navigate('/find-a-scent-match');
+                }}
                 className="text-xs font-body text-foreground/80 hover:text-primary transition-colors tracking-wide whitespace-nowrap"
               >
-                How it works
-              </a>
-
-              <a
-                href="/#reviews"
-                onClick={e =>
-                  handleAnchorNav(e, '/', 'reviews')
-                }
-                className="text-xs font-body text-foreground/80 hover:text-primary transition-colors tracking-wide whitespace-nowrap"
-              >
-                Reviews
-              </a>
-
-              <a
-                href="/support#support-guidance"
-                onClick={e =>
-                  handleAnchorNav(
-                    e,
-                    '/support',
-                    'support-guidance'
-                  )
-                }
-                className="text-xs font-body text-foreground/80 hover:text-primary transition-colors tracking-wide whitespace-nowrap"
-              >
-                FAQs
+                Take The Quiz
               </a>
 
             </div>
@@ -291,37 +269,15 @@ export default function Navbar() {
             <div className="flex flex-col gap-4">
 
               <a
-                href="/#how-it-works"
-                onClick={e =>
-                  handleAnchorNav(e, '/', 'how-it-works')
-                }
+                href="/find-a-scent-match"
+                onClick={e => {
+                  e.preventDefault();
+                  setMobileOpen(false);
+                  navigate('/find-a-scent-match');
+                }}
                 className="text-sm font-body text-foreground/80 hover:text-primary transition-colors"
               >
-                How it works
-              </a>
-
-              <a
-                href="/#reviews"
-                onClick={e =>
-                  handleAnchorNav(e, '/', 'reviews')
-                }
-                className="text-sm font-body text-foreground/80 hover:text-primary transition-colors"
-              >
-                Reviews
-              </a>
-
-              <a
-                href="/support#support-guidance"
-                onClick={e =>
-                  handleAnchorNav(
-                    e,
-                    '/support',
-                    'support-guidance'
-                  )
-                }
-                className="text-sm font-body text-foreground/80 hover:text-primary transition-colors"
-              >
-                FAQs
+                Take The Quiz
               </a>
 
             </div>
