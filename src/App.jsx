@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
 import AppLayout from './components/layout/AppLayout';
 import Home from './pages/Home';
+import FindAScentMatch from './pages/FindAScentMatch';
 import PremiumQuiz from './pages/PremiumQuiz';
 import Shop from './pages/Shop';
 import Support from './pages/Support';
@@ -19,6 +20,7 @@ function App() {
         <Routes>
           <Route element={<AppLayout />}>
             <Route path="/" element={<Home />} />
+            <Route path="/find-a-scent-match" element={<FindAScentMatch />} />
             <Route path="/quiz" element={<PremiumQuiz />} />
             <Route path="/shop" element={<Shop />} />
             <Route path="/cart" element={<Shop />} />
