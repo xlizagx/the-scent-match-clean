@@ -3,6 +3,15 @@ import { Link } from 'react-router-dom';
 import { Gem, Sparkles, Feather, Star, Lightbulb, Clock, BookOpen, Tag } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { motion } from 'framer-motion';
+import RecentMatches from '../components/home/RecentMatches';
+import TestimonialsSection from '../components/home/TestimonialsSection';
+import TrustSection from '../components/home/TrustSection';
+import PathsSection from '../components/home/PathsSection';
+import ConsultationTeaser from '../components/home/ConsultationTeaser';
+import MemorySection from '../components/home/MemorySection';
+import ReviewCTA from '../components/home/ReviewCTA';
+
+const MEMORY_IMAGE = 'https://media.base44.com/images/public/69cac3f60d3002bf060b0af7/e7784ae5d_generated_5faabd6f.png';
 
 const badges = [
   { icon: BookOpen, label: 'Just a Few Quick Questions' },
@@ -13,6 +22,7 @@ const badges = [
 
 export default function FindAScentMatch() {
   return (
+    <>
     <section className="relative min-h-[85vh] flex items-center overflow-hidden">
       <div className="absolute inset-0">
         <img
@@ -142,5 +152,14 @@ export default function FindAScentMatch() {
         </motion.div>
       </div>
     </section>
+
+    <RecentMatches />
+    <TestimonialsSection />
+    <TrustSection />
+    <PathsSection />
+    <ConsultationTeaser />
+    <MemorySection memoryImage={MEMORY_IMAGE} />
+    <ReviewCTA />
+    </>
   );
 }
