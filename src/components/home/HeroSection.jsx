@@ -41,6 +41,13 @@ export default function HeroSection({ heroImage }) {
               Shop The Collection
             </Link>
           </Button>
+
+          <p className="font-body text-sm text-foreground/60 mt-5">
+            Prefer a personalised match instead?{' '}
+            <Link to="/find-a-scent-match" className="text-primary underline underline-offset-4 hover:text-primary/80">
+              Take our fragrance quiz
+            </Link>
+          </p>
         </motion.div>
       </div>
 
