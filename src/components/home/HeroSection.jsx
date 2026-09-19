@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ShoppingBag } from 'lucide-react';
+import { ShoppingBag, Sparkles } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { motion } from 'framer-motion';
 
@@ -42,12 +42,22 @@ export default function HeroSection({ heroImage }) {
             </Link>
           </Button>
 
-          <p className="font-body text-sm text-foreground/60 mt-5">
-            Prefer a personalised match instead?{' '}
-            <Link to="/find-a-scent-match" className="text-primary underline underline-offset-4 hover:text-primary/80">
-              Take our fragrance quiz
-            </Link>
-          </p>
+          <Link
+            to="/find-a-scent-match"
+            className="block mt-6 rounded-xl px-6 py-5 text-center max-w-md mx-auto md:mx-0"
+            style={{
+              background: 'linear-gradient(145deg, rgba(212,175,55,0.15), rgba(212,175,55,0.05))',
+              border: '1px solid rgba(212,175,55,0.5)',
+            }}
+          >
+            <Sparkles className="w-5 h-5 text-primary mx-auto mb-2" />
+            <span className="block font-body text-sm font-semibold text-primary mb-1">
+              Considering a fragrance instead?
+            </span>
+            <span className="block font-body text-xs text-foreground/60">
+              Take our short quiz to find the perfect fragrance - for you or as a gift.
+            </span>
+          </Link>
         </motion.div>
       </div>
 
