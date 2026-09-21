@@ -14,17 +14,6 @@ const COLLECTION_ORDER = [
   'Fragrance Lovers Mugs',
 ];
 
-const SIZE_GUIDE = [
-  { size: 'S', length: '68.6 cm', width: '101.6 cm', halfChest: '50.8 cm' },
-  { size: 'M', length: '71.1 cm', width: '111.8 cm', halfChest: '55.9 cm' },
-  { size: 'L', length: '73.7 cm', width: '122 cm', halfChest: '61 cm' },
-  { size: 'XL', length: '76.2 cm', width: '132 cm', halfChest: '66 cm' },
-  { size: '2XL', length: '78.7 cm', width: '142.2 cm', halfChest: '71.1 cm' },
-  { size: '3XL', length: '81.3 cm', width: '152.4 cm', halfChest: '76.2 cm' },
-  { size: '4XL', length: '84 cm', width: '162 cm', halfChest: '81 cm' },
-  { size: '5XL', length: '86 cm', width: '172 cm', halfChest: '86 cm' },
-];
-
 const COLLECTION_QUERY = `
   query ShopCollections {
     collections(first: 20) {
@@ -363,6 +352,9 @@ export default function Shop() {
             displayTitle: collection.title.replace(/^Fragrance Lovers\s*/i, ''),
             type: collection.title.toLowerCase().includes('hoodie')
               ? 'hoodie'
+              : collection.title.toLowerCase().includes('t-shirt') ||
+                collection.title.toLowerCase().includes('tshirt')
+              ? 'tshirt'
               : 'other',
           }))
           .sort((a, b) => {
@@ -543,6 +535,18 @@ export default function Shop() {
       collections,
       product.handle,
       'hoodie'
+    );
+  }, [product, collections]);
+
+  const productIsTshirt = useMemo(() => {
+    if (!product) {
+      return false;
+    }
+
+    return productBelongsToCollection(
+      collections,
+      product.handle,
+      'tshirt'
     );
   }, [product, collections]);
 
@@ -1071,136 +1075,44 @@ export default function Shop() {
       return null;
     }
 
+    const isHoodie = productIsHoodie;
+    const title = isHoodie ? 'Hoodie Size Guide' : 'T-Shirt Size Guide';
+    const image = isHoodie
+      ? '/size-guide-hoodie.png'
+      : '/size-guide-tshirt.png';
+
     return (
       <div
-        className="fixed inset-0 z-[110] bg-black/75 flex items-center justify-center p-4"
+        className="fixed inset-0 z-[110] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4"
+        role="dialog"
+        aria-modal="true"
+        aria-label={title}
         onClick={() =>
           setSizeGuideOpen(false)
         }
       >
         <div
-          className="bg-background border border-border rounded-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto p-5 sm:p-8"
+          className="relative max-w-5xl w-full max-h-[95vh] flex items-center justify-center"
           onClick={(event) =>
             event.stopPropagation()
           }
         >
-          <div className="flex items-center justify-between gap-4 mb-6">
-            <h2 className="font-body text-2xl md:text-3xl font-light tracking-wide">
-              Hoodie Size Guide
-            </h2>
+          <button
+            type="button"
+            onClick={() =>
+              setSizeGuideOpen(false)
+            }
+            aria-label="Close size guide"
+            className="absolute -top-2 -right-2 md:top-2 md:right-2 z-10 w-10 h-10 rounded-full bg-background/95 border border-border/60 flex items-center justify-center text-foreground hover:bg-secondary transition-colors shadow-lg"
+          >
+            ×
+          </button>
 
-            <button
-              type="button"
-              onClick={() =>
-                setSizeGuideOpen(false)
-              }
-              className="font-body text-3xl font-light leading-none hover:text-primary transition-colors"
-              aria-label="Close size guide"
-            >
-              ×
-            </button>
-          </div>
-
-          <p className="font-body text-sm md:text-base text-muted-foreground mb-6">
-            Use the garment measurements
-            below to help choose your size.
-          </p>
-
-          <div className="overflow-x-auto">
-            <table className="font-body w-full border-collapse text-left text-sm md:text-base">
-              <thead>
-                <tr className="border-b border-border">
-                  <th className="py-3 pr-5 font-medium">
-                    Size
-                  </th>
-                  <th className="py-3 pr-5 font-medium">
-                    Length
-                  </th>
-                  <th className="py-3 pr-5 font-medium">
-                    Width
-                  </th>
-                  <th className="py-3 font-medium">
-                    Half Chest
-                  </th>
-                </tr>
-              </thead>
-
-              <tbody>
-                {SIZE_GUIDE.map((row) => (
-                  <tr
-                    key={row.size}
-                    className="border-b border-border/50"
-                  >
-                    <td className="py-3 pr-5 font-medium">
-                      {row.size}
-                    </td>
-                    <td className="py-3 pr-5">
-                      {row.length}
-                    </td>
-                    <td className="py-3 pr-5">
-                      {row.width}
-                    </td>
-                    <td className="py-3">
-                      {row.halfChest}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          <div className="font-body mt-8 space-y-5 text-sm md:text-base text-muted-foreground">
-            <div>
-              <h3 className="text-foreground font-medium mb-1">
-                Length
-              </h3>
-
-              <p>
-                Place the end of a measuring
-                tape beside the collar at the
-                top of the hoodie, at the high
-                point of the shoulder. Pull
-                the tape down to the bottom of
-                the hoodie.
-              </p>
-            </div>
-
-            <div>
-              <h3 className="text-foreground font-medium mb-1">
-                Half Chest
-              </h3>
-
-              <p>
-                Lay the garment on a flat
-                surface and measure from left
-                to right across the chest,
-                about 2 cm below the arms.
-              </p>
-            </div>
-
-            <div>
-              <h3 className="text-foreground font-medium mb-1">
-                Sleeve Length
-              </h3>
-
-              <p>
-                Place the end of a measuring
-                tape at the centre back of the
-                collar. Pull the tape along
-                the top seam of the sleeve,
-                hold it in place at the
-                shoulder, then continue down
-                the sleeve to the hem.
-              </p>
-            </div>
-
-            <p className="pt-2">
-              Measurements are provided by
-              the supplier and may vary by
-              approximately +/- 2.5 cm
-              (1 inch).
-            </p>
-          </div>
+          <img
+            src={image}
+            alt={title}
+            className="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl"
+          />
         </div>
       </div>
     );
@@ -1362,7 +1274,7 @@ export default function Shop() {
                           {option.name}
                         </label>
 
-                        {productIsHoodie &&
+                        {(productIsHoodie || productIsTshirt) &&
                           isSize && (
                             <button
                               type="button"
