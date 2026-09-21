@@ -193,13 +193,9 @@ export default function Support() {
   const clothingFAQs = [
     {
       q: "How do I choose my size?",
-      a: "Please check the measurements carefully before ordering. We recommend measuring a similar item of clothing that fits you well and comparing it with our size guide."
-    },
-    {
-      q: "What size guide should I use?",
       a: (
         <>
-          For hoodies, please use our{' '}
+          Please check the measurements carefully before ordering. We recommend measuring a similar item of clothing that fits you well and comparing it with our size guide. For hoodies, please use our{' '}
           <SizeGuideButton onClick={() => setSizeGuide('hoodie')}>
             Hoodie Size Guide
           </SizeGuideButton>
@@ -207,13 +203,9 @@ export default function Support() {
           <SizeGuideButton onClick={() => setSizeGuide('tshirt')}>
             T-Shirt Size Guide
           </SizeGuideButton>
-          .
+          . Our guides show the garment's length, width and half chest measurements in inches, so you can compare them directly with a garment you already own.
         </>
       )
-    },
-    {
-      q: "What measurements are included?",
-      a: "Our guides show the garment's length, width and half chest measurements in inches, so you can compare them with a garment you already own."
     },
     {
       q: "What if I am between sizes?",
