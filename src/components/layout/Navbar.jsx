@@ -195,6 +195,16 @@ export default function Navbar() {
               >
                 All
               </a>
+
+              <a
+                href="/support#clothing-faqs"
+                onClick={e =>
+                  handleAnchorNav(e, '/support', 'clothing-faqs')
+                }
+                className="text-xs font-body text-foreground/80 hover:text-primary transition-colors tracking-wide whitespace-nowrap"
+              >
+                FAQs
+              </a>
             </div>
           ) : isQuizPage ? (
             <div className="flex items-center gap-6 ml-8">
@@ -322,6 +332,16 @@ export default function Navbar() {
                 className="text-sm font-body text-foreground/80 hover:text-primary transition-colors"
               >
                 All
+              </a>
+
+              <a
+                href="/support#clothing-faqs"
+                onClick={e =>
+                  handleAnchorNav(e, '/support', 'clothing-faqs')
+                }
+                className="text-sm font-body text-foreground/80 hover:text-primary transition-colors"
+              >
+                FAQs
               </a>
             </div>
           ) : isQuizPage ? (
