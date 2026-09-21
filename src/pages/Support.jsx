@@ -13,6 +13,7 @@ const CLOTHING_FAQS = [
         <p className="text-sm text-muted-foreground font-body leading-relaxed mb-4">
           Please check the measurements carefully before ordering. We recommend measuring a similar item of clothing that fits you well and comparing it with our size guide. Our guides show the garment's length, width and half chest measurements in inches.
         </p>
+
         <div className="flex flex-wrap gap-4">
           <button
             type="button"
@@ -21,6 +22,7 @@ const CLOTHING_FAQS = [
           >
             Hoodie Size Guide
           </button>
+
           <button
             type="button"
             onClick={() => window.dispatchEvent(new CustomEvent('open-size-guide', { detail: 'tshirt' }))}
@@ -172,17 +174,14 @@ function SizeGuideModal({ type, onClose }) {
 
 export default function Support() {
   const location = useLocation();
-  const isConsultation =
-    location.state?.issueType === 'Personal Scent Session - Early Access';
+  const isConsultation = location.state?.issueType === 'Personal Scent Session - Early Access';
 
   const [sizeGuide, setSizeGuide] = useState(null);
 
   const [form, setForm] = useState({
     name: '',
     email: '',
-    issue_type: isConsultation
-      ? 'personal-scent-session'
-      : 'general-enquiry',
+    issue_type: isConsultation ? 'personal-scent-session' : 'general-enquiry',
     message: ''
   });
 
@@ -204,11 +203,7 @@ export default function Support() {
 
   useEffect(() => {
     if (isConsultation) {
-      setForm(f => ({
-        ...f,
-        issue_type: 'personal-scent-session'
-      }));
-
+      setForm(f => ({ ...f, issue_type: 'personal-scent-session' }));
       setTimeout(() => {
         const el = document.getElementById('contact');
         if (el) el.scrollIntoView({ behavior: 'smooth' });
@@ -332,8 +327,7 @@ export default function Support() {
 
           {isConsultation && (
             <p className="text-sm text-muted-foreground font-body text-center mb-6 leading-relaxed">
-              Leave your details below and we'll be in touch to confirm your
-              space and introductory rate.
+              Leave your details below and we'll be in touch to confirm your space and introductory rate.
             </p>
           )}
 
@@ -344,16 +338,11 @@ export default function Support() {
                 {isConsultation ? 'Interest registered' : 'Message received'}
               </p>
               <p className="text-sm text-muted-foreground font-body">
-                {isConsultation
-                  ? "We'll be in touch shortly to confirm your space."
-                  : "We'll be in touch shortly."}
+                {isConsultation ? "We'll be in touch shortly to confirm your space." : "We'll be in touch shortly."}
               </p>
             </div>
           ) : (
-            <form
-              onSubmit={handleSubmit}
-              className="bg-card border border-border/40 rounded-2xl p-8 space-y-5"
-            >
+            <form onSubmit={handleSubmit} className="bg-card border border-border/40 rounded-2xl p-8 space-y-5">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div className="space-y-2">
                   <label className="text-xs font-body font-medium text-muted-foreground uppercase tracking-wider">
@@ -389,9 +378,7 @@ export default function Support() {
                 </label>
                 <select
                   value={form.issue_type}
-                  onChange={e =>
-                    setForm({ ...form, issue_type: e.target.value })
-                  }
+                  onChange={e => setForm({ ...form, issue_type: e.target.value })}
                   className="w-full bg-secondary border border-border/50 rounded-xl h-11 font-body text-sm text-foreground px-3 focus:outline-none focus:ring-1 focus:ring-ring"
                 >
                   {ISSUE_TYPES.map(t => (
@@ -408,14 +395,8 @@ export default function Support() {
                 </label>
                 <textarea
                   value={form.message}
-                  onChange={e =>
-                    setForm({ ...form, message: e.target.value })
-                  }
-                  placeholder={
-                    isConsultation
-                      ? "Tell us a little about yourself and what you're looking for..."
-                      : "Tell us what happened or what you need help with..."
-                  }
+                  onChange={e => setForm({ ...form, message: e.target.value })}
+                  placeholder={isConsultation ? "Tell us a little about yourself and what you're looking for..." : "Tell us what happened or what you need help with..."}
                   required
                   rows={5}
                   className="w-full bg-secondary border border-border/50 rounded-xl font-body text-sm text-foreground px-4 py-3 focus:outline-none focus:ring-1 focus:ring-ring resize-none"
@@ -432,11 +413,7 @@ export default function Support() {
                 size="lg"
                 className="bg-primary text-primary-foreground hover:bg-primary/90 font-body text-sm tracking-wide rounded-full h-12 w-full"
               >
-                {submitting
-                  ? 'Sending...'
-                  : isConsultation
-                    ? 'Register My Interest'
-                    : 'Send Message'}
+                {submitting ? 'Sending...' : isConsultation ? 'Register My Interest' : 'Send Message'}
               </Button>
             </form>
           )}
@@ -506,8 +483,7 @@ function ReviewSection() {
       </div>
 
       <p className="text-sm text-muted-foreground font-body mb-8 leading-relaxed">
-        Did The Scent Match help you find a fragrance gift they truly loved?
-        We'd be delighted to hear your story.
+        Did The Scent Match help you find a fragrance gift they truly loved? We'd be delighted to hear your story.
       </p>
 
       {submitted ? (
@@ -521,10 +497,7 @@ function ReviewSection() {
           </p>
         </div>
       ) : (
-        <form
-          onSubmit={handleSubmit}
-          className="bg-card border border-border/40 rounded-2xl p-8 space-y-5"
-        >
+        <form onSubmit={handleSubmit} className="bg-card border border-border/40 rounded-2xl p-8 space-y-5">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <div className="space-y-2">
               <label className="text-xs font-body font-medium text-muted-foreground uppercase tracking-wider">
@@ -532,9 +505,7 @@ function ReviewSection() {
               </label>
               <Input
                 value={form.name}
-                onChange={e =>
-                  setForm({ ...form, name: e.target.value })
-                }
+                onChange={e => setForm({ ...form, name: e.target.value })}
                 placeholder="e.g. Sophie R."
                 required
                 className="bg-secondary border-border/50 rounded-xl h-11 font-body text-sm"
@@ -548,9 +519,7 @@ function ReviewSection() {
               <Input
                 type="email"
                 value={form.email}
-                onChange={e =>
-                  setForm({ ...form, email: e.target.value })
-                }
+                onChange={e => setForm({ ...form, email: e.target.value })}
                 placeholder="you@example.com"
                 required
                 className="bg-secondary border-border/50 rounded-xl h-11 font-body text-sm"
@@ -563,9 +532,7 @@ function ReviewSection() {
               </label>
               <Input
                 value={form.location}
-                onChange={e =>
-                  setForm({ ...form, location: e.target.value })
-                }
+                onChange={e => setForm({ ...form, location: e.target.value })}
                 placeholder="e.g. London, UK"
                 className="bg-secondary border-border/50 rounded-xl h-11 font-body text-sm"
               />
@@ -578,9 +545,7 @@ function ReviewSection() {
             </label>
             <textarea
               value={form.quote}
-              onChange={e =>
-                setForm({ ...form, quote: e.target.value })
-              }
+              onChange={e => setForm({ ...form, quote: e.target.value })}
               placeholder="Tell us how the gift was received, or what made the match so right..."
               required
               rows={4}
