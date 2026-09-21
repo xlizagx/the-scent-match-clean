@@ -122,7 +122,30 @@ export default function Navbar() {
     e.preventDefault();
     setMobileOpen(false);
 
-    if (location.pathname === path) {
+    const isLeavingShopProduct =
+      path === '/shop' &&
+      location.pathname === '/shop' &&
+      new URLSearchParams(window.location.search).has('product');
+
+    if (isLeavingShopProduct) {
+      // A single product is currently open on the Shop page, which hides
+      // the collection sections. Clear the product from the URL first
+      // (the same way the Shop page's own "Back to Shop" button does)
+      // so the collection section exists again before we scroll to it.
+      const url = new URL(window.location.href);
+      url.searchParams.delete('product');
+      url.hash = '';
+      window.history.pushState({}, '', url);
+      window.dispatchEvent(new PopStateEvent('popstate'));
+
+      setTimeout(() => {
+        const el = document.getElementById(hash);
+
+        if (el) {
+          el.scrollIntoView({ behavior: 'instant' });
+        }
+      }, 100);
+    } else if (location.pathname === path) {
       const el = document.getElementById(hash);
 
       if (el) {
