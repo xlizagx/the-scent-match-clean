@@ -220,9 +220,9 @@ export default function Navbar() {
               </a>
 
               <a
-                href="/support#support-guidance"
+                href="/support#fragrance-quiz-faqs"
                 onClick={e =>
-                  handleAnchorNav(e, '/support', 'support-guidance')
+                  handleAnchorNav(e, '/support', 'fragrance-quiz-faqs')
                 }
                 className="text-xs font-body text-foreground/80 hover:text-primary transition-colors tracking-wide whitespace-nowrap"
               >
@@ -244,6 +244,18 @@ export default function Navbar() {
             </div>
           ) : (
             <div className="flex items-center gap-6 ml-8">
+
+              <a
+                href="/support"
+                onClick={e => {
+                  e.preventDefault();
+                  setMobileOpen(false);
+                  navigate('/support');
+                }}
+                className="text-xs font-body text-foreground/80 hover:text-primary transition-colors tracking-wide whitespace-nowrap"
+              >
+                FAQs
+              </a>
 
               <a
                 href="/find-a-scent-match"
@@ -336,9 +348,9 @@ export default function Navbar() {
               </a>
 
               <a
-                href="/support#support-guidance"
+                href="/support#fragrance-quiz-faqs"
                 onClick={e =>
-                  handleAnchorNav(e, '/support', 'support-guidance')
+                  handleAnchorNav(e, '/support', 'fragrance-quiz-faqs')
                 }
                 className="text-sm font-body text-foreground/80 hover:text-primary transition-colors"
               >
@@ -360,6 +372,18 @@ export default function Navbar() {
             </div>
           ) : (
             <div className="flex flex-col gap-4">
+
+              <a
+                href="/support"
+                onClick={e => {
+                  e.preventDefault();
+                  setMobileOpen(false);
+                  navigate('/support');
+                }}
+                className="text-sm font-body text-foreground/80 hover:text-primary transition-colors"
+              >
+                FAQs
+              </a>
 
               <a
                 href="/find-a-scent-match"
