@@ -5,6 +5,59 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { CheckCircle, ChevronDown, ChevronUp, Sparkles, MessageSquare, HelpCircle, Star, X } from 'lucide-react';
 
+const CLOTHING_FAQS = [
+  {
+    q: "How do I choose the right size?",
+    a: (
+      <>
+        <p className="text-sm text-muted-foreground font-body leading-relaxed mb-4">
+          Please check the measurements carefully before ordering. We recommend measuring a similar item of clothing that fits you well and comparing it with our size guide. Our guides show the garment's length, width and half chest measurements in inches.
+        </p>
+        <div className="flex flex-wrap gap-4">
+          <button
+            type="button"
+            onClick={() => window.dispatchEvent(new CustomEvent('open-size-guide', { detail: 'hoodie' }))}
+            className="text-sm font-body text-primary underline underline-offset-4 hover:text-foreground transition-colors"
+          >
+            Hoodie Size Guide
+          </button>
+          <button
+            type="button"
+            onClick={() => window.dispatchEvent(new CustomEvent('open-size-guide', { detail: 'tshirt' }))}
+            className="text-sm font-body text-primary underline underline-offset-4 hover:text-foreground transition-colors"
+          >
+            T-Shirt Size Guide
+          </button>
+        </div>
+      </>
+    )
+  },
+  {
+    q: "What if I am between sizes?",
+    a: "If you are between sizes, we recommend choosing the larger size for a more relaxed fit."
+  },
+  {
+    q: "Are the measurements the same for all clothing?",
+    a: "No. Hoodies and T-shirts have different measurements, so please use the correct guide for the item you are ordering."
+  },
+  {
+    q: "Can I return or exchange an item if I order the wrong size?",
+    a: "Our clothing is made to order, so we cannot accept returns or exchanges because the wrong size was selected. Please check the relevant Size Guide carefully before placing your order."
+  },
+  {
+    q: "What if my item arrives damaged or defective?",
+    a: "If your item arrives damaged or defective, please contact us as soon as possible with photographs. We will look into the issue and arrange an appropriate resolution."
+  },
+  {
+    q: "Can I cancel my order?",
+    a: "Because clothing is made to order, orders can move into production quickly. We cannot cancel items once production has started."
+  },
+  {
+    q: "How should I care for my clothing?",
+    a: "Please follow the washing and care instructions on the garment label to help keep your clothing and print looking its best."
+  },
+];
+
 const FAQS = [
   {
     q: "How quickly will I receive my fragrance recommendations?",
@@ -36,17 +89,13 @@ const FAQS = [
   },
 ];
 
-function SizeGuideButton({ children, onClick }) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className="text-primary underline underline-offset-2 hover:text-primary/80 transition-colors"
-    >
-      {children}
-    </button>
-  );
-}
+const ISSUE_TYPES = [
+  { value: 'general-enquiry', label: 'General enquiry' },
+  { value: 'personal-scent-session', label: 'Personal Scent Session - Early Access' },
+  { value: 'duplicate-result', label: 'Duplicate result received' },
+  { value: 'technical-issue', label: 'Technical issue' },
+  { value: 'other', label: 'Other' },
+];
 
 function FAQItem({ faq }) {
   const [open, setOpen] = useState(false);
@@ -54,7 +103,6 @@ function FAQItem({ faq }) {
   return (
     <div className="border border-border/50 rounded-xl overflow-hidden">
       <button
-        type="button"
         className="w-full text-left p-5 flex items-center justify-between gap-4 font-body text-sm font-medium text-foreground hover:bg-secondary/30 transition-colors"
         onClick={() => setOpen(!open)}
       >
@@ -68,9 +116,13 @@ function FAQItem({ faq }) {
 
       {open && (
         <div className="px-5 pb-5">
-          <p className="text-sm text-muted-foreground font-body leading-relaxed">
-            {faq.a}
-          </p>
+          {typeof faq.a === 'string' ? (
+            <p className="text-sm text-muted-foreground font-body leading-relaxed">
+              {faq.a}
+            </p>
+          ) : (
+            faq.a
+          )}
         </div>
       )}
     </div>
@@ -78,41 +130,32 @@ function FAQItem({ faq }) {
 }
 
 function SizeGuideModal({ type, onClose }) {
-  const isHoodie = type === 'hoodie';
-  const title = isHoodie ? 'Hoodie Size Guide' : 'T-Shirt Size Guide';
-  const image = isHoodie ? '/size-guide-hoodie.png' : '/size-guide-tshirt.png';
+  if (!type) return null;
 
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === 'Escape') onClose();
-    };
+  const image =
+    type === 'hoodie'
+      ? '/size-guide-hoodie.png'
+      : '/size-guide-tshirt.png';
 
-    document.addEventListener('keydown', handleKeyDown);
-    document.body.style.overflow = 'hidden';
-
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-      document.body.style.overflow = '';
-    };
-  }, [onClose]);
+  const title =
+    type === 'hoodie'
+      ? 'Hoodie Size Guide'
+      : 'T-Shirt Size Guide';
 
   return (
     <div
-      className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4"
-      role="dialog"
-      aria-modal="true"
-      aria-label={title}
+      className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center p-4"
       onClick={onClose}
     >
       <div
-        className="relative max-w-5xl w-full max-h-[95vh] flex items-center justify-center"
+        className="relative max-w-5xl w-full max-h-[95vh] overflow-auto"
         onClick={(e) => e.stopPropagation()}
       >
         <button
           type="button"
           onClick={onClose}
-          aria-label="Close size guide"
-          className="absolute -top-2 -right-2 md:top-2 md:right-2 z-10 w-10 h-10 rounded-full bg-background/95 border border-border/60 flex items-center justify-center text-foreground hover:bg-secondary transition-colors shadow-lg"
+          className="absolute top-3 right-3 z-10 bg-black/70 rounded-full p-2 text-white hover:bg-black transition-colors"
+          aria-label={`Close ${title}`}
         >
           <X className="w-5 h-5" />
         </button>
@@ -120,7 +163,7 @@ function SizeGuideModal({ type, onClose }) {
         <img
           src={image}
           alt={title}
-          className="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl"
+          className="w-full h-auto rounded-lg"
         />
       </div>
     </div>
@@ -129,23 +172,43 @@ function SizeGuideModal({ type, onClose }) {
 
 export default function Support() {
   const location = useLocation();
-  const isConsultation = location.state?.issueType === 'Personal Scent Session - Early Access';
+  const isConsultation =
+    location.state?.issueType === 'Personal Scent Session - Early Access';
+
+  const [sizeGuide, setSizeGuide] = useState(null);
 
   const [form, setForm] = useState({
     name: '',
     email: '',
-    issue_type: isConsultation ? 'personal-scent-session' : 'general-enquiry',
+    issue_type: isConsultation
+      ? 'personal-scent-session'
+      : 'general-enquiry',
     message: ''
   });
 
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
-  const [sizeGuide, setSizeGuide] = useState(null);
+
+  useEffect(() => {
+    const handleOpenSizeGuide = (event) => {
+      setSizeGuide(event.detail);
+    };
+
+    window.addEventListener('open-size-guide', handleOpenSizeGuide);
+
+    return () => {
+      window.removeEventListener('open-size-guide', handleOpenSizeGuide);
+    };
+  }, []);
 
   useEffect(() => {
     if (isConsultation) {
-      setForm(f => ({ ...f, issue_type: 'personal-scent-session' }));
+      setForm(f => ({
+        ...f,
+        issue_type: 'personal-scent-session'
+      }));
+
       setTimeout(() => {
         const el = document.getElementById('contact');
         if (el) el.scrollIntoView({ behavior: 'smooth' });
@@ -154,16 +217,14 @@ export default function Support() {
   }, [isConsultation]);
 
   useEffect(() => {
-    if (!location.hash) return;
-
-    const timer = setTimeout(() => {
-      const el = document.getElementById(location.hash.replace('#', ''));
-      if (el) {
-        el.scrollIntoView({ behavior: 'instant' });
-      }
-    }, 100);
-
-    return () => clearTimeout(timer);
+    if (location.hash === '#fragrance-quiz-faqs') {
+      setTimeout(() => {
+        const el = document.getElementById('fragrance-quiz-faqs');
+        if (el) {
+          el.scrollIntoView({ behavior: 'instant' });
+        }
+      }, 100);
+    }
   }, [location.hash]);
 
   const handleSubmit = async (e) => {
@@ -190,65 +251,6 @@ export default function Support() {
     setSubmitting(false);
   };
 
-  const clothingFAQs = [
-    {
-      q: "How do I choose my size?",
-      a: "Please check the measurements carefully before ordering. We recommend measuring a similar item of clothing that fits you well and comparing it with our size guide."
-    },
-    {
-      q: "What size guide should I use?",
-      a: (
-        <>
-          For hoodies, please use our{' '}
-          <SizeGuideButton onClick={() => setSizeGuide('hoodie')}>
-            Hoodie Size Guide
-          </SizeGuideButton>
-          . For T-shirts, please use our{' '}
-          <SizeGuideButton onClick={() => setSizeGuide('tshirt')}>
-            T-Shirt Size Guide
-          </SizeGuideButton>
-          .
-        </>
-      )
-    },
-    {
-      q: "What measurements are included?",
-      a: "Our guides show the garment's length, width and half chest measurements in inches, so you can compare them with a garment you already own."
-    },
-    {
-      q: "What if I am between sizes?",
-      a: "If you are between sizes, we recommend choosing the larger size for a more relaxed fit."
-    },
-    {
-      q: "Are the measurements the same for all clothing?",
-      a: "No. Hoodies and T-shirts have different measurements, so please use the correct guide for the item you are ordering."
-    },
-    {
-      q: "Can I return or exchange an item if I order the wrong size?",
-      a: "Our clothing is made to order, so we cannot accept returns or exchanges because the wrong size was selected. Please check the relevant Size Guide carefully before placing your order."
-    },
-    {
-      q: "What if my item arrives damaged or defective?",
-      a: "If your item arrives damaged or defective, please contact us as soon as possible with photographs. We will look into the issue and arrange an appropriate resolution."
-    },
-    {
-      q: "Can I cancel my order?",
-      a: "Because clothing is made to order, orders can move into production quickly. We cannot cancel items once production has started."
-    },
-    {
-      q: "How should I care for my clothing?",
-      a: "Please follow the washing and care instructions on the garment label to help keep your clothing and print looking its best."
-    },
-  ];
-
-  const issueTypes = [
-    { value: 'general-enquiry', label: 'General enquiry' },
-    { value: 'personal-scent-session', label: 'Personal Scent Session - Early Access' },
-    { value: 'duplicate-result', label: 'Duplicate result received' },
-    { value: 'technical-issue', label: 'Technical issue' },
-    { value: 'other', label: 'Other' },
-  ];
-
   return (
     <div className="min-h-screen px-6 py-20">
       <div className="max-w-2xl mx-auto">
@@ -261,7 +263,9 @@ export default function Support() {
           className="text-center mb-16 scroll-mt-24"
         >
           <Sparkles className="w-7 h-7 text-primary mx-auto mb-5" />
-          <h1 className="font-heading text-4xl text-foreground mb-4">Support & Guidance</h1>
+          <h1 className="font-heading text-4xl text-foreground mb-4">
+            Support & Guidance
+          </h1>
           <p className="text-sm text-muted-foreground font-body leading-relaxed max-w-md mx-auto">
             Everything you need to gift with complete confidence.
           </p>
@@ -277,11 +281,13 @@ export default function Support() {
         >
           <div className="flex items-center justify-center gap-2 mb-8">
             <HelpCircle className="w-4 h-4 text-primary" />
-            <h2 className="font-heading text-2xl text-foreground">Clothing FAQs</h2>
+            <h2 className="font-heading text-2xl text-foreground">
+              Clothing FAQs
+            </h2>
           </div>
 
           <div className="space-y-3">
-            {clothingFAQs.map((faq, i) => (
+            {CLOTHING_FAQS.map((faq, i) => (
               <FAQItem key={i} faq={faq} />
             ))}
           </div>
@@ -297,7 +303,9 @@ export default function Support() {
         >
           <div className="flex items-center justify-center gap-2 mb-8">
             <HelpCircle className="w-4 h-4 text-primary" />
-            <h2 className="font-heading text-2xl text-foreground">Fragrance Quiz FAQs</h2>
+            <h2 className="font-heading text-2xl text-foreground">
+              Fragrance Quiz FAQs
+            </h2>
           </div>
 
           <div className="space-y-3">
@@ -324,7 +332,8 @@ export default function Support() {
 
           {isConsultation && (
             <p className="text-sm text-muted-foreground font-body text-center mb-6 leading-relaxed">
-              Leave your details below and we'll be in touch to confirm your space and introductory rate.
+              Leave your details below and we'll be in touch to confirm your
+              space and introductory rate.
             </p>
           )}
 
@@ -335,14 +344,21 @@ export default function Support() {
                 {isConsultation ? 'Interest registered' : 'Message received'}
               </p>
               <p className="text-sm text-muted-foreground font-body">
-                {isConsultation ? "We'll be in touch shortly to confirm your space." : "We'll be in touch shortly."}
+                {isConsultation
+                  ? "We'll be in touch shortly to confirm your space."
+                  : "We'll be in touch shortly."}
               </p>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="bg-card border border-border/40 rounded-2xl p-8 space-y-5">
+            <form
+              onSubmit={handleSubmit}
+              className="bg-card border border-border/40 rounded-2xl p-8 space-y-5"
+            >
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div className="space-y-2">
-                  <label className="text-xs font-body font-medium text-muted-foreground uppercase tracking-wider">Full Name</label>
+                  <label className="text-xs font-body font-medium text-muted-foreground uppercase tracking-wider">
+                    Full Name
+                  </label>
                   <Input
                     value={form.name}
                     onChange={e => setForm({ ...form, name: e.target.value })}
@@ -353,7 +369,9 @@ export default function Support() {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-xs font-body font-medium text-muted-foreground uppercase tracking-wider">Email Address</label>
+                  <label className="text-xs font-body font-medium text-muted-foreground uppercase tracking-wider">
+                    Email Address
+                  </label>
                   <Input
                     type="email"
                     value={form.email}
@@ -366,24 +384,38 @@ export default function Support() {
               </div>
 
               <div className="space-y-2">
-                <label className="text-xs font-body font-medium text-muted-foreground uppercase tracking-wider">Enquiry Type</label>
+                <label className="text-xs font-body font-medium text-muted-foreground uppercase tracking-wider">
+                  Enquiry Type
+                </label>
                 <select
                   value={form.issue_type}
-                  onChange={e => setForm({ ...form, issue_type: e.target.value })}
+                  onChange={e =>
+                    setForm({ ...form, issue_type: e.target.value })
+                  }
                   className="w-full bg-secondary border border-border/50 rounded-xl h-11 font-body text-sm text-foreground px-3 focus:outline-none focus:ring-1 focus:ring-ring"
                 >
-                  {issueTypes.map(t => (
-                    <option key={t.value} value={t.value}>{t.label}</option>
+                  {ISSUE_TYPES.map(t => (
+                    <option key={t.value} value={t.value}>
+                      {t.label}
+                    </option>
                   ))}
                 </select>
               </div>
 
               <div className="space-y-2">
-                <label className="text-xs font-body font-medium text-muted-foreground uppercase tracking-wider">Message</label>
+                <label className="text-xs font-body font-medium text-muted-foreground uppercase tracking-wider">
+                  Message
+                </label>
                 <textarea
                   value={form.message}
-                  onChange={e => setForm({ ...form, message: e.target.value })}
-                  placeholder={isConsultation ? "Tell us a little about yourself and what you're looking for..." : "Tell us what happened or what you need help with..."}
+                  onChange={e =>
+                    setForm({ ...form, message: e.target.value })
+                  }
+                  placeholder={
+                    isConsultation
+                      ? "Tell us a little about yourself and what you're looking for..."
+                      : "Tell us what happened or what you need help with..."
+                  }
                   required
                   rows={5}
                   className="w-full bg-secondary border border-border/50 rounded-xl font-body text-sm text-foreground px-4 py-3 focus:outline-none focus:ring-1 focus:ring-ring resize-none"
@@ -400,7 +432,11 @@ export default function Support() {
                 size="lg"
                 className="bg-primary text-primary-foreground hover:bg-primary/90 font-body text-sm tracking-wide rounded-full h-12 w-full"
               >
-                {submitting ? 'Sending...' : isConsultation ? 'Register My Interest' : 'Send Message'}
+                {submitting
+                  ? 'Sending...'
+                  : isConsultation
+                    ? 'Register My Interest'
+                    : 'Send Message'}
               </Button>
             </form>
           )}
@@ -411,18 +447,22 @@ export default function Support() {
 
       </div>
 
-      {sizeGuide && (
-        <SizeGuideModal
-          type={sizeGuide}
-          onClose={() => setSizeGuide(null)}
-        />
-      )}
+      <SizeGuideModal
+        type={sizeGuide}
+        onClose={() => setSizeGuide(null)}
+      />
     </div>
   );
 }
 
 function ReviewSection() {
-  const [form, setForm] = useState({ name: '', email: '', location: '', quote: '' });
+  const [form, setForm] = useState({
+    name: '',
+    email: '',
+    location: '',
+    quote: ''
+  });
+
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
@@ -460,27 +500,41 @@ function ReviewSection() {
     >
       <div className="flex items-center justify-center gap-2 mb-8">
         <Star className="w-4 h-4 text-primary" />
-        <h2 className="font-heading text-2xl text-foreground">Leave a Review</h2>
+        <h2 className="font-heading text-2xl text-foreground">
+          Leave a Review
+        </h2>
       </div>
 
       <p className="text-sm text-muted-foreground font-body mb-8 leading-relaxed">
-        Did The Scent Match help you find a fragrance gift they truly loved? We'd be delighted to hear your story.
+        Did The Scent Match help you find a fragrance gift they truly loved?
+        We'd be delighted to hear your story.
       </p>
 
       {submitted ? (
         <div className="text-center py-14 bg-card border border-border/40 rounded-2xl">
           <CheckCircle className="w-10 h-10 text-primary mx-auto mb-4" />
-          <p className="font-heading text-xl text-foreground mb-2">Thank you for sharing</p>
-          <p className="text-sm text-muted-foreground font-body">Your gifting story means a lot to us.</p>
+          <p className="font-heading text-xl text-foreground mb-2">
+            Thank you for sharing
+          </p>
+          <p className="text-sm text-muted-foreground font-body">
+            Your gifting story means a lot to us.
+          </p>
         </div>
       ) : (
-        <form onSubmit={handleSubmit} className="bg-card border border-border/40 rounded-2xl p-8 space-y-5">
+        <form
+          onSubmit={handleSubmit}
+          className="bg-card border border-border/40 rounded-2xl p-8 space-y-5"
+        >
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <div className="space-y-2">
-              <label className="text-xs font-body font-medium text-muted-foreground uppercase tracking-wider">Your Name</label>
+              <label className="text-xs font-body font-medium text-muted-foreground uppercase tracking-wider">
+                Your Name
+              </label>
               <Input
                 value={form.name}
-                onChange={e => setForm({ ...form, name: e.target.value })}
+                onChange={e =>
+                  setForm({ ...form, name: e.target.value })
+                }
                 placeholder="e.g. Sophie R."
                 required
                 className="bg-secondary border-border/50 rounded-xl h-11 font-body text-sm"
@@ -488,11 +542,15 @@ function ReviewSection() {
             </div>
 
             <div className="space-y-2">
-              <label className="text-xs font-body font-medium text-muted-foreground uppercase tracking-wider">Email Address</label>
+              <label className="text-xs font-body font-medium text-muted-foreground uppercase tracking-wider">
+                Email Address
+              </label>
               <Input
                 type="email"
                 value={form.email}
-                onChange={e => setForm({ ...form, email: e.target.value })}
+                onChange={e =>
+                  setForm({ ...form, email: e.target.value })
+                }
                 placeholder="you@example.com"
                 required
                 className="bg-secondary border-border/50 rounded-xl h-11 font-body text-sm"
@@ -500,10 +558,14 @@ function ReviewSection() {
             </div>
 
             <div className="space-y-2">
-              <label className="text-xs font-body font-medium text-muted-foreground uppercase tracking-wider">Location</label>
+              <label className="text-xs font-body font-medium text-muted-foreground uppercase tracking-wider">
+                Location
+              </label>
               <Input
                 value={form.location}
-                onChange={e => setForm({ ...form, location: e.target.value })}
+                onChange={e =>
+                  setForm({ ...form, location: e.target.value })
+                }
                 placeholder="e.g. London, UK"
                 className="bg-secondary border-border/50 rounded-xl h-11 font-body text-sm"
               />
@@ -511,10 +573,14 @@ function ReviewSection() {
           </div>
 
           <div className="space-y-2">
-            <label className="text-xs font-body font-medium text-muted-foreground uppercase tracking-wider">Your Gifting Story</label>
+            <label className="text-xs font-body font-medium text-muted-foreground uppercase tracking-wider">
+              Your Gifting Story
+            </label>
             <textarea
               value={form.quote}
-              onChange={e => setForm({ ...form, quote: e.target.value })}
+              onChange={e =>
+                setForm({ ...form, quote: e.target.value })
+              }
               placeholder="Tell us how the gift was received, or what made the match so right..."
               required
               rows={4}
