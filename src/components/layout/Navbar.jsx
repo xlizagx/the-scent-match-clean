@@ -142,6 +142,7 @@ export default function Navbar() {
   };
 
   const isShopPage = location.pathname === '/shop';
+  const isQuizPage = location.pathname === '/find-a-scent-match';
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-xl border-b border-border/50">
@@ -195,6 +196,52 @@ export default function Navbar() {
                 All
               </a>
             </div>
+          ) : isQuizPage ? (
+            <div className="flex items-center gap-6 ml-8">
+
+              <a
+                href="/find-a-scent-match#how-it-works"
+                onClick={e =>
+                  handleAnchorNav(e, '/find-a-scent-match', 'how-it-works')
+                }
+                className="text-xs font-body text-foreground/80 hover:text-primary transition-colors tracking-wide whitespace-nowrap"
+              >
+                How it works
+              </a>
+
+              <a
+                href="/find-a-scent-match#reviews"
+                onClick={e =>
+                  handleAnchorNav(e, '/find-a-scent-match', 'reviews')
+                }
+                className="text-xs font-body text-foreground/80 hover:text-primary transition-colors tracking-wide whitespace-nowrap"
+              >
+                Reviews
+              </a>
+
+              <a
+                href="/support#support-guidance"
+                onClick={e =>
+                  handleAnchorNav(e, '/support', 'support-guidance')
+                }
+                className="text-xs font-body text-foreground/80 hover:text-primary transition-colors tracking-wide whitespace-nowrap"
+              >
+                FAQs
+              </a>
+
+              <a
+                href="/shop"
+                onClick={e => {
+                  e.preventDefault();
+                  setMobileOpen(false);
+                  navigate('/shop');
+                }}
+                className="text-xs font-body text-foreground/80 hover:text-primary transition-colors tracking-wide whitespace-nowrap"
+              >
+                Shop
+              </a>
+
+            </div>
           ) : (
             <div className="flex items-center gap-6 ml-8">
 
@@ -207,7 +254,7 @@ export default function Navbar() {
                 }}
                 className="text-xs font-body text-foreground/80 hover:text-primary transition-colors tracking-wide whitespace-nowrap"
               >
-                Take The Quiz
+                Find A Fragrance Match
               </a>
 
             </div>
@@ -264,6 +311,52 @@ export default function Navbar() {
               >
                 All
               </a>
+            </div>
+          ) : isQuizPage ? (
+            <div className="flex flex-col gap-4">
+
+              <a
+                href="/find-a-scent-match#how-it-works"
+                onClick={e =>
+                  handleAnchorNav(e, '/find-a-scent-match', 'how-it-works')
+                }
+                className="text-sm font-body text-foreground/80 hover:text-primary transition-colors"
+              >
+                How it works
+              </a>
+
+              <a
+                href="/find-a-scent-match#reviews"
+                onClick={e =>
+                  handleAnchorNav(e, '/find-a-scent-match', 'reviews')
+                }
+                className="text-sm font-body text-foreground/80 hover:text-primary transition-colors"
+              >
+                Reviews
+              </a>
+
+              <a
+                href="/support#support-guidance"
+                onClick={e =>
+                  handleAnchorNav(e, '/support', 'support-guidance')
+                }
+                className="text-sm font-body text-foreground/80 hover:text-primary transition-colors"
+              >
+                FAQs
+              </a>
+
+              <a
+                href="/shop"
+                onClick={e => {
+                  e.preventDefault();
+                  setMobileOpen(false);
+                  navigate('/shop');
+                }}
+                className="text-sm font-body text-foreground/80 hover:text-primary transition-colors"
+              >
+                Shop
+              </a>
+
             </div>
           ) : (
             <div className="flex flex-col gap-4">
