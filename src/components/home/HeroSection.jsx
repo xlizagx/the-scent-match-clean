@@ -34,7 +34,7 @@ export default function HeroSection({ heroImage }) {
           <Button
             asChild
             size="lg"
-            className="w-full sm:w-72 mx-auto md:mx-0 bg-primary text-primary-foreground hover:bg-primary/90 font-body text-sm tracking-wide rounded-full px-8 h-12 flex items-center gap-2"
+            className="w-full sm:w-72 mx-auto bg-primary text-primary-foreground hover:bg-primary/90 font-body text-sm tracking-wide rounded-full px-8 h-12 flex items-center gap-2"
           >
             <Link to="/shop">
               <ShoppingBag className="w-4 h-4" />
@@ -44,7 +44,7 @@ export default function HeroSection({ heroImage }) {
 
           <Link
             to="/find-a-scent-match"
-            className="block mt-6 rounded-xl px-6 py-5 text-center max-w-md mx-auto md:mx-0"
+            className="block mt-6 rounded-xl px-6 py-5 text-center max-w-md mx-auto"
             style={{
               background: 'linear-gradient(145deg, rgba(212,175,55,0.15), rgba(212,175,55,0.05))',
               border: '1px solid rgba(212,175,55,0.5)',
