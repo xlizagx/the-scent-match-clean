@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { CheckCircle, ChevronDown, ChevronUp, Sparkles, MessageSquare, HelpCircle, Star } from 'lucide-react';
+import { CheckCircle, ChevronDown, ChevronUp, Sparkles, MessageSquare, HelpCircle, Star, X } from 'lucide-react';
 
 const FAQS = [
   {
@@ -36,30 +36,93 @@ const FAQS = [
   },
 ];
 
-const ISSUE_TYPES = [
-  { value: 'general-enquiry', label: 'General enquiry' },
-  { value: 'personal-scent-session', label: 'Personal Scent Session - Early Access' },
-  { value: 'duplicate-result', label: 'Duplicate result received' },
-  { value: 'technical-issue', label: 'Technical issue' },
-  { value: 'other', label: 'Other' },
-];
+function SizeGuideButton({ children, onClick }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="text-primary underline underline-offset-2 hover:text-primary/80 transition-colors"
+    >
+      {children}
+    </button>
+  );
+}
 
 function FAQItem({ faq }) {
   const [open, setOpen] = useState(false);
+
   return (
     <div className="border border-border/50 rounded-xl overflow-hidden">
       <button
+        type="button"
         className="w-full text-left p-5 flex items-center justify-between gap-4 font-body text-sm font-medium text-foreground hover:bg-secondary/30 transition-colors"
         onClick={() => setOpen(!open)}
       >
         <span>{faq.q}</span>
-        {open ? <ChevronUp className="w-4 h-4 text-primary shrink-0" /> : <ChevronDown className="w-4 h-4 text-muted-foreground shrink-0" />}
+        {open ? (
+          <ChevronUp className="w-4 h-4 text-primary shrink-0" />
+        ) : (
+          <ChevronDown className="w-4 h-4 text-muted-foreground shrink-0" />
+        )}
       </button>
+
       {open && (
         <div className="px-5 pb-5">
-          <p className="text-sm text-muted-foreground font-body leading-relaxed">{faq.a}</p>
+          <p className="text-sm text-muted-foreground font-body leading-relaxed">
+            {faq.a}
+          </p>
         </div>
       )}
+    </div>
+  );
+}
+
+function SizeGuideModal({ type, onClose }) {
+  const isHoodie = type === 'hoodie';
+  const title = isHoodie ? 'Hoodie Size Guide' : 'T-Shirt Size Guide';
+  const image = isHoodie ? '/size-guide-hoodie.png' : '/size-guide-tshirt.png';
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') onClose();
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = '';
+    };
+  }, [onClose]);
+
+  return (
+    <div
+      className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4"
+      role="dialog"
+      aria-modal="true"
+      aria-label={title}
+      onClick={onClose}
+    >
+      <div
+        className="relative max-w-5xl w-full max-h-[95vh] flex items-center justify-center"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label="Close size guide"
+          className="absolute -top-2 -right-2 md:top-2 md:right-2 z-10 w-10 h-10 rounded-full bg-background/95 border border-border/60 flex items-center justify-center text-foreground hover:bg-secondary transition-colors shadow-lg"
+        >
+          <X className="w-5 h-5" />
+        </button>
+
+        <img
+          src={image}
+          alt={title}
+          className="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl"
+        />
+      </div>
     </div>
   );
 }
@@ -74,9 +137,11 @@ export default function Support() {
     issue_type: isConsultation ? 'personal-scent-session' : 'general-enquiry',
     message: ''
   });
+
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
+  const [sizeGuide, setSizeGuide] = useState(null);
 
   useEffect(() => {
     if (isConsultation) {
@@ -87,6 +152,19 @@ export default function Support() {
       }, 100);
     }
   }, [isConsultation]);
+
+  useEffect(() => {
+    if (!location.hash) return;
+
+    const timer = setTimeout(() => {
+      const el = document.getElementById(location.hash.replace('#', ''));
+      if (el) {
+        el.scrollIntoView({ behavior: 'instant' });
+      }
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, [location.hash]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -112,12 +190,76 @@ export default function Support() {
     setSubmitting(false);
   };
 
+  const clothingFAQs = [
+    {
+      q: "How do I choose my size?",
+      a: "Please check the measurements carefully before ordering. We recommend measuring a similar item of clothing that fits you well and comparing it with our size guide."
+    },
+    {
+      q: "What size guide should I use?",
+      a: (
+        <>
+          For hoodies, please use our{' '}
+          <SizeGuideButton onClick={() => setSizeGuide('hoodie')}>
+            Hoodie Size Guide
+          </SizeGuideButton>
+          . For T-shirts, please use our{' '}
+          <SizeGuideButton onClick={() => setSizeGuide('tshirt')}>
+            T-Shirt Size Guide
+          </SizeGuideButton>
+          .
+        </>
+      )
+    },
+    {
+      q: "What measurements are included?",
+      a: "Our guides show the garment's length, width and half chest measurements in inches, so you can compare them with a garment you already own."
+    },
+    {
+      q: "What if I am between sizes?",
+      a: "If you are between sizes, we recommend choosing the larger size for a more relaxed fit."
+    },
+    {
+      q: "Are the measurements the same for all clothing?",
+      a: "No. Hoodies and T-shirts have different measurements, so please use the correct guide for the item you are ordering."
+    },
+    {
+      q: "Can I return or exchange an item if I order the wrong size?",
+      a: "Our clothing is made to order, so we cannot accept returns or exchanges because the wrong size was selected. Please check the relevant Size Guide carefully before placing your order."
+    },
+    {
+      q: "What if my item arrives damaged or defective?",
+      a: "If your item arrives damaged or defective, please contact us as soon as possible with photographs. We will look into the issue and arrange an appropriate resolution."
+    },
+    {
+      q: "Can I cancel my order?",
+      a: "Because clothing is made to order, orders can move into production quickly. We cannot cancel items once production has started."
+    },
+    {
+      q: "How should I care for my clothing?",
+      a: "Please follow the washing and care instructions on the garment label to help keep your clothing and print looking its best."
+    },
+  ];
+
+  const issueTypes = [
+    { value: 'general-enquiry', label: 'General enquiry' },
+    { value: 'personal-scent-session', label: 'Personal Scent Session - Early Access' },
+    { value: 'duplicate-result', label: 'Duplicate result received' },
+    { value: 'technical-issue', label: 'Technical issue' },
+    { value: 'other', label: 'Other' },
+  ];
+
   return (
     <div className="min-h-screen px-6 py-20">
       <div className="max-w-2xl mx-auto">
 
         {/* Header */}
-        <motion.div id="support-guidance" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-16 scroll-mt-24">
+        <motion.div
+          id="support-guidance"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center mb-16 scroll-mt-24"
+        >
           <Sparkles className="w-7 h-7 text-primary mx-auto mb-5" />
           <h1 className="font-heading text-4xl text-foreground mb-4">Support & Guidance</h1>
           <p className="text-sm text-muted-foreground font-body leading-relaxed max-w-md mx-auto">
@@ -125,19 +267,54 @@ export default function Support() {
           </p>
         </motion.div>
 
-        {/* FAQ */}
-        <motion.section id="faq" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-16 scroll-mt-28">
+        {/* Clothing FAQs */}
+        <motion.section
+          id="clothing-faqs"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mb-16 scroll-mt-28"
+        >
           <div className="flex items-center justify-center gap-2 mb-8">
             <HelpCircle className="w-4 h-4 text-primary" />
-            <h2 className="font-heading text-2xl text-foreground">Frequently Asked Questions</h2>
+            <h2 className="font-heading text-2xl text-foreground">Clothing FAQs</h2>
           </div>
+
           <div className="space-y-3">
-            {FAQS.map((faq, i) => <FAQItem key={i} faq={faq} />)}
+            {clothingFAQs.map((faq, i) => (
+              <FAQItem key={i} faq={faq} />
+            ))}
+          </div>
+        </motion.section>
+
+        {/* Fragrance Quiz FAQs */}
+        <motion.section
+          id="fragrance-quiz-faqs"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mb-16 scroll-mt-28"
+        >
+          <div className="flex items-center justify-center gap-2 mb-8">
+            <HelpCircle className="w-4 h-4 text-primary" />
+            <h2 className="font-heading text-2xl text-foreground">Fragrance Quiz FAQs</h2>
+          </div>
+
+          <div className="space-y-3">
+            {FAQS.map((faq, i) => (
+              <FAQItem key={i} faq={faq} />
+            ))}
           </div>
         </motion.section>
 
         {/* Contact Form */}
-        <motion.section id="contact" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-16 scroll-mt-28">
+        <motion.section
+          id="contact"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mb-16 scroll-mt-28"
+        >
           <div className="flex items-center justify-center gap-2 mb-8">
             <MessageSquare className="w-4 h-4 text-primary" />
             <h2 className="font-heading text-2xl text-foreground">
@@ -174,6 +351,7 @@ export default function Support() {
                     className="bg-secondary border-border/50 rounded-xl h-11 font-body text-sm"
                   />
                 </div>
+
                 <div className="space-y-2">
                   <label className="text-xs font-body font-medium text-muted-foreground uppercase tracking-wider">Email Address</label>
                   <Input
@@ -194,7 +372,7 @@ export default function Support() {
                   onChange={e => setForm({ ...form, issue_type: e.target.value })}
                   className="w-full bg-secondary border border-border/50 rounded-xl h-11 font-body text-sm text-foreground px-3 focus:outline-none focus:ring-1 focus:ring-ring"
                 >
-                  {ISSUE_TYPES.map(t => (
+                  {issueTypes.map(t => (
                     <option key={t.value} value={t.value}>{t.label}</option>
                   ))}
                 </select>
@@ -232,6 +410,13 @@ export default function Support() {
         <ReviewSection />
 
       </div>
+
+      {sizeGuide && (
+        <SizeGuideModal
+          type={sizeGuide}
+          onClose={() => setSizeGuide(null)}
+        />
+      )}
     </div>
   );
 }
@@ -267,11 +452,17 @@ function ReviewSection() {
   };
 
   return (
-    <motion.section id="review" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+    <motion.section
+      id="review"
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+    >
       <div className="flex items-center justify-center gap-2 mb-8">
         <Star className="w-4 h-4 text-primary" />
         <h2 className="font-heading text-2xl text-foreground">Leave a Review</h2>
       </div>
+
       <p className="text-sm text-muted-foreground font-body mb-8 leading-relaxed">
         Did The Scent Match help you find a fragrance gift they truly loved? We'd be delighted to hear your story.
       </p>
@@ -295,6 +486,7 @@ function ReviewSection() {
                 className="bg-secondary border-border/50 rounded-xl h-11 font-body text-sm"
               />
             </div>
+
             <div className="space-y-2">
               <label className="text-xs font-body font-medium text-muted-foreground uppercase tracking-wider">Email Address</label>
               <Input
@@ -306,6 +498,7 @@ function ReviewSection() {
                 className="bg-secondary border-border/50 rounded-xl h-11 font-body text-sm"
               />
             </div>
+
             <div className="space-y-2">
               <label className="text-xs font-body font-medium text-muted-foreground uppercase tracking-wider">Location</label>
               <Input
@@ -316,6 +509,7 @@ function ReviewSection() {
               />
             </div>
           </div>
+
           <div className="space-y-2">
             <label className="text-xs font-body font-medium text-muted-foreground uppercase tracking-wider">Your Gifting Story</label>
             <textarea
