@@ -66,33 +66,6 @@ export default function RecentMatches() {
         <div className="h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
       </div>
 
-      {/* EXPERTISE EXPLANATION */}
-      <div className="max-w-4xl mx-auto mb-14">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center"
-        >
-          <div className="max-w-3xl mx-auto space-y-5">
-            <p className="text-foreground/75 font-body text-sm md:text-base leading-relaxed">
-              We combined years of fragrance knowledge with carefully developed prompts, rules and recommendations to build a fragrance recommendation system that thinks about scent the way a fragrance expert does.
-            </p>
-
-            <p className="text-foreground/75 font-body text-sm md:text-base leading-relaxed">
-              We spent extensive time refining and testing how it interprets the information you provide - from your fragrance preferences and scent styles to the occasion and who you're choosing for. The result is a considered, personal experience designed to feel much closer to a one-to-one fragrance consultation.
-            </p>
-
-            <p className="text-foreground font-body text-sm md:text-base leading-relaxed pt-1">
-              <span className="text-primary font-medium">
-                You'll receive three personalised options
-              </span>{' '}
-              - skip the overwhelm and choose your Safe Match, or throw caution to the wind with your Statement or Wild Card option. The only choice you'll need to make.
-            </p>
-          </div>
-        </motion.div>
-      </div>
-
       {/* REAL RESULTS */}
       <div className="max-w-5xl mx-auto">
         <motion.div

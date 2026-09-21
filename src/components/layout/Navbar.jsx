@@ -254,7 +254,7 @@ export default function Navbar() {
                 }}
                 className="text-xs font-body text-foreground/80 hover:text-primary transition-colors tracking-wide whitespace-nowrap"
               >
-                Find A Fragrance Match
+                Looking For A Fragrance Match Instead?
               </a>
 
             </div>
@@ -370,7 +370,7 @@ export default function Navbar() {
                 }}
                 className="text-sm font-body text-foreground/80 hover:text-primary transition-colors"
               >
-                Take The Quiz
+                Looking For A Fragrance Match Instead?
               </a>
 
             </div>
