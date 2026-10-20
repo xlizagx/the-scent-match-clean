@@ -215,6 +215,11 @@ export default function Support() {
       q: "Are the measurements the same for all clothing?",
       a: "No. Hoodies and T-shirts have different measurements, so please use the correct guide for the item you are ordering."
     },
+    // NEW QUESTION - delivery
+    {
+      q: "How long will my order take to arrive?",
+      a: "Because our clothing is made to order, please allow 7-10 working days for delivery."
+    },
     {
       q: "Can I return or exchange an item if I order the wrong size?",
       a: "Our clothing is made to order, so we cannot accept returns or exchanges because the wrong size was selected. Please check the relevant Size Guide carefully before placing your order."
